@@ -63,16 +63,21 @@ defaults write com.apple.dock autohide                -bool   true
 defaults write com.apple.dock autohide-delay          -float  0
 defaults write com.apple.dock autohide-time-modifier  -float  0.25
 defaults write com.apple.dock launchanim              -bool   true
-defaults write com.apple.dock mineffect               -string "genie"
-defaults write com.apple.dock minimize-to-application -bool   true
+defaults write com.apple.dock mineffect               -string "scale"
+defaults write com.apple.dock minimize-to-application -bool   false
 # Mission Control & Spaces
 defaults write com.apple.dock expose-group-apps       -bool   true
 defaults write com.apple.dock mru-spaces              -bool   false
-# Hot corners (disabled)
-defaults write com.apple.dock wvous-bl-corner         -int    0
-defaults write com.apple.dock wvous-br-corner         -int    0
-defaults write com.apple.dock wvous-tl-corner         -int    0
-defaults write com.apple.dock wvous-tr-corner         -int    0
+# Hot corners (Cmd-gated to prevent accidental triggers; modifier 1048576 = Cmd)
+# Actions: 2=Mission Control, 4=Desktop, 12=Notification Center, 14=Quick Note
+defaults write com.apple.dock wvous-tl-corner         -int    2
+defaults write com.apple.dock wvous-tl-modifier       -int    1048576
+defaults write com.apple.dock wvous-tr-corner         -int    12
+defaults write com.apple.dock wvous-tr-modifier       -int    1048576
+defaults write com.apple.dock wvous-bl-corner         -int    4
+defaults write com.apple.dock wvous-bl-modifier       -int    1048576
+defaults write com.apple.dock wvous-br-corner         -int    14
+defaults write com.apple.dock wvous-br-modifier       -int    1048576
 killall Dock >/dev/null 2>&1 || true
 
 heading "Finished applying defaults."

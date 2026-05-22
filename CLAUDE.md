@@ -69,13 +69,13 @@ Templates (not symlinked, import or copy as needed):
 When adding a new tool, config file, cask, or formula, update all of these in lockstep — missing any one causes documentation drift:
 
 - **Install** — add line to `.Brewfile` or `.Brewfile.work` (tap, cask, brew, vscode, go, uv, etc.)
-- **Linux equivalent** — when adding a `cask`, classify and document:
+- **Linux equivalent** — when adding a `cask`, classify and document. Inspect the cask `.rb` source first (`brew info --json=v2 --cask <name>` for `ruby_source_path`, then fetch from `https://raw.githubusercontent.com/Homebrew/homebrew-cask/master/<path>`):
+  - **Linux-installable via brew** — `.rb` declares `os macos: ..., linux: ...` block with `x86_64_linux`/`arm64_linux` sha256 entries AND uses `binary` artifact, OR uses `font` artifact with no `depends_on macos:`. These install on Linuxbrew via `brew install --cask <name>`. Add row to README "Linux-installable casks" table under `## Casks`. No Flathub pairing needed.
   - **GUI app with Flathub equivalent** — add paired Flathub ID to `.flatpaks` or `.flatpaks.work` (verify via `curl -sI https://flathub.org/api/v2/appstream/<id>` returns 200), and add row to README "Flatpaks" Base/Work table.
   - **GUI app not on Flathub** — add cask name to README "macOS-only → GUI apps not on Flathub" sub-list under `## Flatpaks`.
-  - **CLI tool** (e.g. `codex`, `claude-code`, `1password-cli`) — add cask name to README "macOS-only → CLI tools" sub-list.
-  - **Font cask** (e.g. `font-*`) — add cask name to README "macOS-only → Fonts" sub-list.
+  - **CLI tool, macOS-only** — `pkg`/`installer` artifact, or `binary` without linux sha256. Add to README "macOS-only → CLI tools" sub-list (e.g. `cloudflare-warp`).
   - **macOS-system tool** (e.g. `rectangle`, `maccy`, no Linux concept) — add cask name to README "macOS-only → macOS-system tools" sub-list.
-  - Every cask in `.Brewfile` / `.Brewfile.work` must appear in exactly one of: a Flatpaks Base/Work table, or one of the four macOS-only sub-lists.
+  - Every cask in `.Brewfile` / `.Brewfile.work` must appear in exactly one of: Linux-installable casks table, Flatpaks Base/Work table, or one of the three macOS-only sub-lists.
 - **Symlink** — add `mkdir -p` + `ln -sf` block to `scripts/link.sh` if the tool reads a config file from a fixed path
 - **README "Configuration Files" list** — add bullet under `## Configuration Files` if a config file is symlinked
 - **README "CLI Tools" or "Casks" table** — add row if user-facing CLI/GUI tool
