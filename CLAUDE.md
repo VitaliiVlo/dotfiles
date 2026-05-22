@@ -4,13 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Purpose
 
-macOS dotfiles repository for setting up a development environment. All configs use **Catppuccin Macchiato** (dark) / **Catppuccin Latte** (light) theme where supported, **JetBrains Mono** font (14pt) with **Fira Code**, **Menlo**, **Monaco**, and **Symbols Nerd Font Mono** fallbacks. Configured for **Go 1.26** (via Homebrew), **Python** (via `uv`), and **Node.js** (via `fnm`).
+Cross-platform dotfiles repository (macOS and Linux/GNOME) for setting up a development environment. All configs use **Catppuccin Macchiato** (dark) / **Catppuccin Latte** (light) theme where supported, **JetBrains Mono** font (14pt) with **Fira Code**, **Menlo**, **Monaco**, and **Symbols Nerd Font Mono** fallbacks. Configured for **Go 1.26** (via Homebrew), **Python** (via `uv`), and **Node.js** (via `fnm`).
 
 ## Key Commands
 
 ```bash
-make setup              # Base setup: configure macOS, symlink configs, install base packages, show versions
-make setup-all          # Full setup: base setup + work packages
+make setup              # Base setup: configure OS, symlink configs, install base packages + flatpaks, show versions
+make setup-all          # Full setup: base setup + work packages + work flatpaks
 make symlinks           # Symlink configs to home directory
 make defaults           # Configure macOS defaults: folders, system, screenshots, Finder, Dock (no-op on Linux)
 make linux-defaults     # Configure Linux/GNOME defaults: folders, input, Nautilus, desktop (no-op on macOS / non-GNOME)
@@ -20,7 +20,7 @@ make brew-install       # Install all packages (base + work)
 make brew-install-base  # Install base packages only
 make brew-install-work  # Install work packages only
 make brew-cleanup       # Clean up old versions and cache
-make brew-export        # Export installed packages (incl. VSCode extensions) to Brewfile, then strip Brewfile.work entries; add new work entries to Brewfile.work manually
+make brew-export        # Export installed packages (incl. VSCode extensions) to Brewfile, then strip Brewfile.work entries; add new work entries to Brewfile.work manually (macOS only; Linuxbrew dump would wipe macOS-only casks)
 make flatpaks-install        # Install all flatpaks (base + work); Linux only, no-op on macOS
 make flatpaks-install-base   # Install base flatpaks only
 make flatpaks-install-work   # Install work flatpaks only
@@ -54,8 +54,8 @@ make flatpaks-export         # Export installed user flatpaks to flatpaks, then 
 - `.config/atuin/config.toml` - Atuin shell history (filter parity with `hist_ignore_space`)
 - `.config/bottom/bottom.toml` - Bottom (`btm`) system monitor (tree view + command column + battery, cache memory shown, unnormalized per-core CPU, byte/binary network units, table scroll position)
 - `.config/glow/glow.yml` - Glow Markdown renderer (auto theme, pager on, line numbers in TUI)
-- `.config/tlrc/config.toml` - tlrc (tldr client) — show platform title, short+long flags (macOS-native path)
-- `.config/superfile/config.toml` - Superfile (`spf`) terminal file manager (Catppuccin Macchiato, bat preview with border, binary file sizes, zoxide integration; macOS-native path)
+- `.config/tlrc/config.toml` - tlrc (tldr client) — show platform title, short+long flags (non-XDG on macOS, XDG on Linux)
+- `.config/superfile/config.toml` - Superfile (`spf`) terminal file manager (Catppuccin Macchiato, bat preview with border, binary file sizes, zoxide integration; non-XDG on macOS, XDG on Linux)
 - `.config/vscode/settings.json` - VSCode settings (JSONC format with comments)
 - `docs/vscode-defaults.jsonc` - VSCode defaults snapshot for offline comparison (regenerate via `Preferences: Open Default Settings (JSON)` when stale)
 - `.config/zed/settings.json` - Zed editor (Catppuccin Macchiato/Latte, JetBrains Mono, same UX as VSCode, auto_install_extensions)
@@ -235,10 +235,11 @@ uv python list --only-installed             # Should show installed Python versi
 2. Parse every plain JSON (claude/settings, micro, ccstatusline)
 3. Parse every YAML (gh, lazygit, glow) — needs `yq`
 4. Parse JSONC (zed, vscode) — needs `node`
-5. `brew bundle check --file=Brewfile{,.work}` — needs `brew`
+5. `brew bundle list --file=Brewfile{,.work}` (parse-only; install state reported separately as non-fatal warning) — needs `brew`
 6. Flatpaks ID format lint (`flatpaks`, `flatpaks.work`)
-7. `shellcheck` on every script in `scripts/`
-8. Verify every documented symlink under `$HOME` resolves (skips macOS-native paths on Linux)
+7. `ghostty +validate-config --config-file=.config/ghostty/config` — needs `ghostty`
+8. `shellcheck` on every script in `scripts/`
+9. Verify every documented symlink under `$HOME` resolves (skips macOS-native paths on Linux)
 
 When adding a new tool, extend the matching block in `scripts/validate.sh`.
 

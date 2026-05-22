@@ -134,7 +134,7 @@ Run `make defaults` to configure (in order applied):
 
 - Folders (~/Projects, ~/Screenshots)
 - System defaults (key repeat, natural scrolling, save to disk)
-- Screenshots (save to ~/Screenshots, no shadow, PNG)
+- Screenshots (save to ~/Screenshots, no shadow, PNG, floating thumbnail enabled)
 - Finder (list view, path bar, show extensions, folders first, search current folder)
 - Dock (autohide, no recents, scale minimize effect, minimized windows in own Dock slot, fixed Spaces order, Cmd-gated hot corners: TL Mission Control / TR Notification Center / BL Desktop / BR Quick Note)
 
@@ -233,12 +233,12 @@ After `make setup`, verify everything wired up:
 - `git config --list --show-origin | head -5` — settings come from `~/.config/git/config`
 - `ls -l ~/.config/ghostty/config ~/.zshrc ~/.config/git/config` — symlinks point at this repo
 
-For full audit, run `make validate` (delegates to `scripts/validate.sh`). Covers TOML/JSON/YAML/JSONC parse, `brew bundle check`, flatpaks ID lint, `shellcheck`, and symlink resolution. Skips macOS-native symlinks on Linux.
+For full audit, run `make validate` (delegates to `scripts/validate.sh`). Covers TOML/JSON/YAML/JSONC parse, `brew bundle list` (parse) + non-fatal `brew bundle check` (install state), flatpaks ID lint, `ghostty +validate-config`, `shellcheck`, and symlink resolution. Skips macOS-native symlinks on Linux.
 
 ## Updating
 
 - `brew update && brew upgrade` — update Homebrew formulae and casks
-- `make brew-export` — refresh `Brewfile` from current install state (then add any new work entries to `Brewfile.work` manually; see `docs/consistency.md` "Brewfile maintenance" for strip step semantics)
+- `make brew-export` — refresh `Brewfile` from current install state (macOS only; Linuxbrew dump would wipe macOS-only casks). Add new work entries to `Brewfile.work` manually; see `docs/consistency.md` "Brewfile maintenance" for strip step semantics.
 - `make brew-cleanup` — prune old versions and cache
 - `flatpak update --user` — update installed Flathub apps (Linux)
 - `make flatpaks-export` — refresh `flatpaks` from current install state (then add any new work entries to `flatpaks.work` manually; same strip semantics as `brew-export`)
