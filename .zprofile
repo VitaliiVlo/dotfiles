@@ -8,7 +8,9 @@ fi
 eval "$($BREW_PREFIX/bin/brew shellenv)"
 
 # Core
-export EDITOR="code --wait"
+# VISUAL covers sudoedit / crontab -e / less +v; EDITOR is the fallback consumer.
+export VISUAL="code --wait --reuse-window"
+export EDITOR="$VISUAL"
 export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/ripgreprc"
 
 # Go

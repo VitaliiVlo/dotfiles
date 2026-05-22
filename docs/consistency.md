@@ -226,7 +226,9 @@ Zed delegates git workflow (rebase, autostash, prune, SSH) to `.config/git/confi
 
 `.config/git/config` section order: Identity (`user`, `url`) → Core (`core`, `init`, `interactive`) → Pager (`delta`) → Display (`diff`, `merge`, `log`, `branch`) → Workflow (`fetch`, `pull`, `rebase`, `push`, `rerere`) → Filters (`filter "lfs"`) → Aliases (`alias`, last). Add new sections under the matching group.
 
-**`EDITOR` env var** must match across: `.zprofile` (`code --wait`), `.config/git/config` (`core.editor`), `.config/gh/config.yml` (`editor: code --wait`), `.config/yazi/yazi.toml` (`[opener.edit]` runs `code --wait "$@"`), lazygit (`editPreset: vscode`), Codex (`file_opener = "vscode"`), Superfile (`editor`/`dir_editor = "code --wait"`)
+**`VISUAL` / `EDITOR` env vars** must match across: `.zprofile` (`VISUAL="code --wait --reuse-window"`, `EDITOR="$VISUAL"`), `.config/git/config` (`core.editor`), `.config/gh/config.yml` (`editor: code --wait`), `.config/yazi/yazi.toml` (`[opener.edit]` runs `code --wait "$@"`), lazygit (`editPreset: vscode`), Codex (`file_opener = "vscode"`), Superfile (`editor`/`dir_editor = "code --wait"`).
+
+`VISUAL` is set first because modern consumers (`sudoedit`, `crontab -e`, `less +v`, `man -e`) check `VISUAL` before `EDITOR`. `EDITOR` is the historical fallback for line editors. Setting both to the same value covers every consumer. `--reuse-window` lives only on the env-var path; per-tool configs keep plain `code --wait`. If window-explosion ever becomes annoying in `git commit` / `gh pr edit` / yazi / superfile, propagate `--reuse-window` there too, but be aware the editor tab will attach to whatever VSCode window is currently focused, which can misroute commit messages between projects.
 
 **Claude ↔ Codex** allowed commands must stay in sync between `.config/claude/settings.json` and `.config/codex/rules/`
 
