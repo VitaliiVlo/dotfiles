@@ -26,13 +26,13 @@ Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** 
 
 1. Complete [Prerequisites → macOS](#macos).
 2. Clone this repository.
-3. Run `make setup` (base) or `make setup-all` (base + work) to configure macOS defaults, symlink configs, install brews + casks, and show versions. `flatpaks-install` runs in the chain but no-ops on macOS.
+3. Run `make setup` (base) or `make setup-all` (base + work). `setup` chains `defaults` → `linux-defaults` (no-op) → `symlinks` → `brew-install-base` → `flatpaks-install-base` (no-op) → `versions`. `setup-all` swaps in `brew-install` and `flatpaks-install` for the base+work supersets.
 
 ### Linux (GNOME)
 
 1. Complete [Prerequisites → Linux](#linux).
 2. Clone this repository.
-3. Run `make setup` (base) or `make setup-all` (base + work). `defaults` (macOS) no-ops; `linux-defaults` applies GNOME `gsettings`; `brew-install` installs formulae + the Linux-installable cask subset (`docs/casks.md`); `flatpaks-install` installs Flathub apps at user scope.
+3. Run `make setup` (base) or `make setup-all` (base + work). Same chain as macOS: `defaults` (no-op on Linux) → `linux-defaults` applies GNOME `gsettings` → `symlinks` → `brew-install-base` installs formulae + the Linux-installable cask subset (`docs/casks.md`) → `flatpaks-install-base` installs Flathub apps at user scope → `versions`. `setup-all` swaps in the base+work supersets.
 
 Run `make help` to list all available targets.
 

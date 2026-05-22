@@ -35,7 +35,6 @@ make flatpaks-export         # Export installed user flatpaks to flatpaks, then 
 - `scripts/flatpaks-install.sh` - Installs Flathub apps at user scope from `flatpaks` / `flatpaks.work` (Linux only, no-op on macOS, adds flathub user remote on first run)
 - `scripts/validate.sh` - Full audit runner (parses every TOML/JSON/YAML/JSONC, brew bundle check, flatpaks ID lint, shellcheck, symlink verification). Backs `make validate`. Skips macOS-native symlinks on Linux.
 - `docs/consistency.md` - Cross-config consistency tables (shared behavior across all tools: theme, font, telemetry, git pager, etc.). Read when adding a new tool or auditing drift.
-- `docs/vscode-defaults.jsonc` - VSCode defaults snapshot for offline comparison
 - `Makefile` - Task runner targets (`make help` for list)
 - `Brewfile` - Base packages: shell essentials, fonts, daily-driver apps, VSCode extensions
 - `Brewfile.work` - Work packages: work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN (curated manually)
