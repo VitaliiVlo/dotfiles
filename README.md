@@ -437,12 +437,12 @@ After `make setup`, verify everything wired up:
 - `git config --list --show-origin | head -5` — settings come from `~/.config/git/config`
 - `ls -l ~/.config/ghostty/config ~/.zshrc ~/.config/git/config` — symlinks point at this repo
 
-For full audit recipe (TOML/JSON/YAML/JSONC parsers, `brew bundle check`, `shellcheck`, symlink walk, web verification of suspect keys) see `CLAUDE.md` "Config Validation" section.
+For full audit, run `make validate` (delegates to `scripts/validate.sh`). Covers TOML/JSON/YAML/JSONC parse, `brew bundle check`, flatpaks ID lint, `shellcheck`, and symlink resolution. Skips macOS-native symlinks on Linux.
 
 ## Updating
 
 - `brew update && brew upgrade` — update Homebrew formulae and casks
-- `make brew-export` — refresh `Brewfile` from current install state (then add any new work entries to `Brewfile.work` manually; see CLAUDE.md "Brewfile maintenance" for strip step semantics)
+- `make brew-export` — refresh `Brewfile` from current install state (then add any new work entries to `Brewfile.work` manually; see `docs/consistency.md` "Brewfile maintenance" for strip step semantics)
 - `make brew-cleanup` — prune old versions and cache
 - `flatpak update --user` — update installed Flathub apps (Linux)
 - `make flatpaks-export` — refresh `flatpaks` from current install state (then add any new work entries to `flatpaks.work` manually; same strip semantics as `brew-export`)

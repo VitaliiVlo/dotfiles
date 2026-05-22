@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help setup setup-all link defaults versions brew-install brew-install-base brew-install-work brew-cleanup brew-export flatpaks-install flatpaks-install-base flatpaks-install-work flatpaks-export
+.PHONY: help setup setup-all link defaults versions validate brew-install brew-install-base brew-install-work brew-cleanup brew-export flatpaks-install flatpaks-install-base flatpaks-install-work flatpaks-export
 
 help: ## List available targets
 	@awk 'BEGIN {FS = ":.*## "}; /^[a-zA-Z0-9_-]+:.*## / {printf "  %-22s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -22,6 +22,9 @@ versions: ## Show installed Go, Node, Python versions
 	@fnm list
 	@printf '\n%s\n' "--- Python ---"
 	@uv python list --only-installed
+
+validate: ## Run full audit: parse all TOML/JSON/YAML/JSONC, brew bundle check, flatpaks lint, shellcheck, symlink verification
+	./scripts/validate.sh
 
 brew-install: brew-install-base brew-install-work ## Install all packages from Brewfiles
 
