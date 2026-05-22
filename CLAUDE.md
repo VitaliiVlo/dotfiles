@@ -11,7 +11,7 @@ macOS dotfiles repository for setting up a development environment. All configs 
 ```bash
 make setup              # Base setup: configure macOS, symlink configs, install base packages, show versions
 make setup-all          # Full setup: base setup + work packages
-make link               # Symlink configs to home directory
+make symlinks           # Symlink configs to home directory
 make defaults           # Configure macOS defaults: folders, system, screenshots, Finder, Dock
 make versions           # Show installed Go, Node, Python versions
 make validate           # Full audit: parse configs, check brew + flatpaks, shellcheck, verify symlinks
@@ -28,7 +28,7 @@ make flatpaks-export         # Export installed user flatpaks to flatpaks, then 
 
 ## Repository Structure
 
-- `scripts/link.sh` - Creates symlinks (uses `set -euo pipefail`)
+- `scripts/symlinks.sh` - Creates symlinks (uses `set -euo pipefail`; defines `symlink` helper; branches on `uname -s` for glow/superfile/tlrc/vscode)
 - `scripts/macos-defaults.sh` - macOS defaults via `defaults write` (non-interactive, idempotent)
 - `scripts/flatpaks-install.sh` - Installs Flathub apps at user scope from `flatpaks` / `flatpaks.work` (Linux only, no-op on macOS, adds flathub user remote on first run)
 - `scripts/validate.sh` - Full audit runner (parses every TOML/JSON/YAML/JSONC, brew bundle check, flatpaks ID lint, shellcheck, symlink verification). Backs `make validate`. Skips macOS-native symlinks on Linux.
@@ -80,7 +80,7 @@ When adding a new tool, config file, cask, or formula, update all of these in lo
   - **CLI tool, macOS-only** — `pkg`/`installer` artifact, or `binary` without linux sha256. Add to README "macOS-only → CLI tools" sub-list (e.g. `cloudflare-warp`).
   - **macOS-system tool** (e.g. `rectangle`, `maccy`, no Linux concept) — add cask name to README "macOS-only → macOS-system tools" sub-list.
   - Every cask in `Brewfile` / `Brewfile.work` must appear in exactly one of: Linux-installable casks table, Flatpaks Base/Work table, or one of the three macOS-only sub-lists.
-- **Symlink** — add `mkdir -p` + `ln -sf` block to `scripts/link.sh` if the tool reads a config file from a fixed path
+- **Symlink** — add `symlink <repo-src> <abs-dest>` call to `scripts/symlinks.sh` if the tool reads a config file from a fixed path
 - **README "Configuration Files" list** — add bullet under `## Configuration Files` if a config file is symlinked
 - **README "CLI Tools" or "Casks" table** — add row if user-facing CLI/GUI tool
 - **README "Flatpaks" tables** — add row to Base or Work Flatpaks table if Flathub equivalent paired
@@ -105,9 +105,9 @@ When adding or editing config files, follow this style across all of them:
 
 ## Script Behavior
 
-**scripts/link.sh:**
+**scripts/symlinks.sh:**
 
-- Uses `link <repo-relative-src> <abs-dest>` helper (force symlink via `ln -sf`, auto-creates parent dirs). Overwrites existing symlinks.
+- Uses `symlink <repo-relative-src> <abs-dest>` helper (force symlink via `ln -sf`, auto-creates parent dirs). Overwrites existing symlinks.
 - `DOTFILES_DIR` resolves to repo root via `cd "$(dirname "$0")/.." && pwd` (script lives one level deep in `scripts/`)
 - Repo holds all source-of-truth configs under `.config/<tool>/`. Most tools are XDG-compliant on both OSes (single link target). Four tools (glow, superfile, tlrc, vscode) read from non-XDG paths on macOS and XDG on Linux; the script branches on `uname -s` (`case Darwin|Linux`):
 

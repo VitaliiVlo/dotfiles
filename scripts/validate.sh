@@ -111,7 +111,7 @@ done
 # 7. Lint shell scripts
 heading "shellcheck"
 if command -v shellcheck >/dev/null 2>&1; then
-    if shellcheck scripts/link.sh scripts/macos-defaults.sh scripts/flatpaks-install.sh scripts/validate.sh; then
+    if shellcheck scripts/symlinks.sh scripts/macos-defaults.sh scripts/flatpaks-install.sh scripts/validate.sh; then
         ok "scripts/*.sh"
     else
         bad "scripts/*.sh"

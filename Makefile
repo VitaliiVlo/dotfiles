@@ -1,19 +1,19 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help setup setup-all link defaults versions validate brew-install brew-install-base brew-install-work brew-cleanup brew-export flatpaks-install flatpaks-install-base flatpaks-install-work flatpaks-export
+.PHONY: help setup setup-all symlinks defaults versions validate brew-install brew-install-base brew-install-work brew-cleanup brew-export flatpaks-install flatpaks-install-base flatpaks-install-work flatpaks-export
 
 help: ## List available targets
 	@awk 'BEGIN {FS = ":.*## "}; /^[a-zA-Z0-9_-]+:.*## / {printf "  %-22s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-setup: defaults link brew-install-base versions ## Base setup: configure macOS, symlink configs, install base packages, show versions
+setup: defaults symlinks brew-install-base versions ## Base setup: configure macOS, symlink configs, install base packages, show versions
 
-setup-all: defaults link brew-install versions ## Full setup: base setup + work packages
+setup-all: defaults symlinks brew-install versions ## Full setup: base setup + work packages
 
 defaults: ## Configure macOS defaults: folders, system, screenshots, Finder, Dock
 	./scripts/macos-defaults.sh
 
-link: ## Symlink configs to home directory
-	./scripts/link.sh
+symlinks: ## Symlink configs to home directory
+	./scripts/symlinks.sh
 
 versions: ## Show installed Go, Node, Python versions
 	@printf '%s\n' "--- Go ---"

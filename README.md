@@ -53,7 +53,7 @@ Run `make help` to list all available targets.
 
 ## Configuration Files
 
-The following files are automatically symlinked by running `make link`:
+The following files are automatically symlinked by running `make symlinks`:
 
 - `.zprofile` - Shell environment variables
 - `.zshrc` - Shell configuration and aliases
