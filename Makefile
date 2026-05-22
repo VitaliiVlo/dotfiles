@@ -1,16 +1,19 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help setup setup-all symlinks defaults versions validate brew-install brew-install-base brew-install-work brew-cleanup brew-export flatpaks-install flatpaks-install-base flatpaks-install-work flatpaks-export
+.PHONY: help setup setup-all symlinks defaults linux-defaults versions validate brew-install brew-install-base brew-install-work brew-cleanup brew-export flatpaks-install flatpaks-install-base flatpaks-install-work flatpaks-export
 
 help: ## List available targets
 	@awk 'BEGIN {FS = ":.*## "}; /^[a-zA-Z0-9_-]+:.*## / {printf "  %-22s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-setup: defaults symlinks brew-install-base versions ## Base setup: configure macOS, symlink configs, install base packages, show versions
+setup: defaults linux-defaults symlinks brew-install-base flatpaks-install-base versions ## Base setup: configure OS, symlink configs, install base packages + flatpaks, show versions
 
-setup-all: defaults symlinks brew-install versions ## Full setup: base setup + work packages
+setup-all: defaults linux-defaults symlinks brew-install flatpaks-install versions ## Full setup: base setup + work packages + work flatpaks
 
-defaults: ## Configure macOS defaults: folders, system, screenshots, Finder, Dock
+defaults: ## Configure macOS defaults: folders, system, screenshots, Finder, Dock (no-op on Linux)
 	./scripts/macos-defaults.sh
+
+linux-defaults: ## Configure Linux/GNOME defaults: folders, input, Nautilus, desktop (no-op on macOS / non-GNOME)
+	./scripts/linux-defaults.sh
 
 symlinks: ## Symlink configs to home directory
 	./scripts/symlinks.sh

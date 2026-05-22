@@ -12,7 +12,8 @@ macOS dotfiles repository for setting up a development environment. All configs 
 make setup              # Base setup: configure macOS, symlink configs, install base packages, show versions
 make setup-all          # Full setup: base setup + work packages
 make symlinks           # Symlink configs to home directory
-make defaults           # Configure macOS defaults: folders, system, screenshots, Finder, Dock
+make defaults           # Configure macOS defaults: folders, system, screenshots, Finder, Dock (no-op on Linux)
+make linux-defaults     # Configure Linux/GNOME defaults: folders, input, Nautilus, desktop (no-op on macOS / non-GNOME)
 make versions           # Show installed Go, Node, Python versions
 make validate           # Full audit: parse configs, check brew + flatpaks, shellcheck, verify symlinks
 make brew-install       # Install all packages (base + work)
@@ -29,7 +30,8 @@ make flatpaks-export         # Export installed user flatpaks to flatpaks, then 
 ## Repository Structure
 
 - `scripts/symlinks.sh` - Creates symlinks (uses `set -euo pipefail`; defines `symlink` helper; branches on `uname -s` for glow/superfile/tlrc/vscode)
-- `scripts/macos-defaults.sh` - macOS defaults via `defaults write` (non-interactive, idempotent)
+- `scripts/macos-defaults.sh` - macOS defaults via `defaults write` (non-interactive, idempotent; guards `uname -s == Darwin`, no-op on Linux)
+- `scripts/linux-defaults.sh` - Linux/GNOME defaults via `gsettings` (non-interactive, idempotent; guards `uname -s == Linux`, requires `gsettings` + `XDG_CURRENT_DESKTOP=*GNOME*`, no-op on macOS / KDE / headless)
 - `scripts/flatpaks-install.sh` - Installs Flathub apps at user scope from `flatpaks` / `flatpaks.work` (Linux only, no-op on macOS, adds flathub user remote on first run)
 - `scripts/validate.sh` - Full audit runner (parses every TOML/JSON/YAML/JSONC, brew bundle check, flatpaks ID lint, shellcheck, symlink verification). Backs `make validate`. Skips macOS-native symlinks on Linux.
 - `docs/consistency.md` - Cross-config consistency tables (shared behavior across all tools: theme, font, telemetry, git pager, etc.). Read when adding a new tool or auditing drift.
@@ -126,6 +128,15 @@ When adding or editing config files, follow this style across all of them:
 - Non-interactive: applies all categories unconditionally (Folders, System defaults, Screenshots, Finder, Dock)
 - Restarts affected processes (Finder, Dock, SystemUIServer)
 - Safe to re-run: idempotent `mkdir -p` and `defaults write` commands
+- Guards `uname -s == Darwin`; exits 0 on Linux so the shared `make setup` chain stays safe to invoke cross-OS
+
+**scripts/linux-defaults.sh:**
+
+- Non-interactive: applies Folders, Input (touchpad + mouse natural scroll, keyboard repeat), Files/Nautilus (list view, hidden files, folders-first, recursive-search=never), Desktop (dash-to-dock click action, battery %, clock, color scheme `prefer-dark`), Power (no AC suspend)
+- Safe to re-run: idempotent `mkdir -p` plus `gsettings set` only when the schema/key exists (`set_if_exists` helper guards against missing GNOME components like `dash-to-dock`)
+- Guards in order: `uname -s == Linux` → `command -v gsettings` → `XDG_CURRENT_DESKTOP` contains `GNOME`. Non-GNOME DEs (KDE, Sway, headless SSH) skip with a message
+- No process restart needed (GNOME applies `gsettings` changes live)
+- Screenshot folder: created at `~/Screenshots`, but GNOME Screenshot UI follows XDG `Pictures/Screenshots` by default; remap via `~/.config/user-dirs.dirs` (out of scope here)
 
 **scripts/flatpaks-install.sh:**
 

@@ -1,4 +1,10 @@
-BREW_PREFIX="${BREW_PREFIX:-/opt/homebrew}"
+if [[ -z "${BREW_PREFIX:-}" ]]; then
+  if [[ "$(uname -s)" == "Linux" ]]; then
+    BREW_PREFIX="/home/linuxbrew/.linuxbrew"
+  else
+    BREW_PREFIX="/opt/homebrew"
+  fi
+fi
 
 # History
 HISTFILE="$HOME/.zsh_history"

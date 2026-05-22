@@ -8,6 +8,7 @@ Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** 
 - [Prerequisites](#prerequisites)
 - [Configuration Files](#configuration-files)
 - [macOS Settings](#macos-settings)
+- [Linux Settings](#linux-settings)
 - [macOS Tips](docs/macos-tips.md) — non-obvious shortcuts and behaviors (clipboard, screenshots, Finder, Mission Control, Spotlight, Continuity, shell helpers)
 - [Applications](docs/applications.md) — curated GUI app picks by category, VSCode setup, search engine bangs
 - [CLI Tools](#cli-tools)
@@ -21,13 +22,23 @@ Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** 
 
 ## Quick Start
 
-1. Complete [Prerequisites](#prerequisites) (Xcode CLT, Homebrew, SSH key, Touch ID).
+### macOS
+
+1. Complete [Prerequisites → macOS](#macos).
 2. Clone this repository.
-3. Run `make setup` (base packages) or `make setup-all` (base + work packages) to configure macOS, symlink configs, install packages, and show versions.
+3. Run `make setup` (base) or `make setup-all` (base + work) to configure macOS defaults, symlink configs, install brews + casks, and show versions. `flatpaks-install` runs in the chain but no-ops on macOS.
+
+### Linux (GNOME)
+
+1. Complete [Prerequisites → Linux](#linux).
+2. Clone this repository.
+3. Run `make setup` (base) or `make setup-all` (base + work). `defaults` (macOS) no-ops; `linux-defaults` applies GNOME `gsettings`; `brew-install` installs formulae + the Linux-installable cask subset (`docs/casks.md`); `flatpaks-install` installs Flathub apps at user scope.
 
 Run `make help` to list all available targets.
 
 ## Prerequisites
+
+### macOS
 
 > Apple Silicon only. Homebrew prefix defaults to `/opt/homebrew` in `.zshrc` / `.zprofile` (override via `BREW_PREFIX` env), but Intel `/usr/local` layout is not tested or supported.
 
@@ -50,6 +61,32 @@ Run `make help` to list all available targets.
   sudo nano /etc/pam.d/sudo_local
   # Uncomment: auth sufficient pam_tid.so
   ```
+
+### Linux
+
+> Tested on GNOME-based distros (Ubuntu, Fedora, Pop!\_OS). KDE / Sway sessions skip the `gsettings` defaults block but everything else applies. Linuxbrew prefix defaults to `/home/linuxbrew/.linuxbrew` in `.zshrc` / `.zprofile` (override via `BREW_PREFIX` env).
+
+- **Install build prerequisites** (Debian/Ubuntu shown; substitute equivalents on Fedora/Arch):
+  ```bash
+  sudo apt-get update
+  sudo apt-get install -y build-essential procps curl file git zsh flatpak
+  ```
+- **Install Homebrew (Linuxbrew)**
+  ```bash
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  ```
+- **Set zsh as login shell** (`.zprofile` / `.zshrc` are sourced only by zsh)
+  ```bash
+  chsh -s "$(command -v zsh)"
+  ```
+- **Generate SSH key for Git**
+  ```bash
+  ssh-keygen -t ed25519 -C "your_email@example.com"
+  # Pipe pubkey to clipboard: wl-copy < ~/.ssh/id_ed25519.pub  (Wayland)
+  #                          xclip -selection clipboard < ~/.ssh/id_ed25519.pub  (X11)
+  ```
+- **GNOME-only defaults:** `make linux-defaults` skips silently outside GNOME (`XDG_CURRENT_DESKTOP` check). Other DEs configure their own way.
 
 ## Configuration Files
 
@@ -100,6 +137,22 @@ Run `make defaults` to configure (in order applied):
 - Screenshots (save to ~/Screenshots, no shadow, PNG)
 - Finder (list view, path bar, show extensions, folders first, search current folder)
 - Dock (autohide, no recents, scale minimize effect, minimized windows in own Dock slot, fixed Spaces order, Cmd-gated hot corners: TL Mission Control / TR Notification Center / BL Desktop / BR Quick Note)
+
+No-op on Linux (script guards `uname -s == Darwin`).
+
+## Linux Settings
+
+Run `make linux-defaults` to configure (GNOME via `gsettings`):
+
+- Folders (~/Projects, ~/Screenshots)
+- Input (touchpad + mouse natural scroll, keyboard repeat enabled with 250ms delay / 30ms interval)
+- Files / Nautilus (list view, hidden files, folders-first, search current folder only)
+- Desktop (dash-to-dock click=minimize when extension present, battery %, clock weekday, `prefer-dark` color scheme)
+- Power (disable AC auto-suspend)
+
+Guards: skips silently on non-Linux, when `gsettings` missing, or when `XDG_CURRENT_DESKTOP` is not GNOME. KDE / Sway / headless sessions are unaffected.
+
+`gsettings` writes to user-scope dconf; safe to re-run (`set_if_exists` helper checks schema existence before each write).
 
 ## macOS Tips
 

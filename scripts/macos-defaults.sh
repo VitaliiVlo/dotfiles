@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+if [[ "$(uname -s)" != "Darwin" ]]; then
+    echo "macos-defaults: macOS only (current: $(uname -s)), skipping."
+    exit 0
+fi
+
 heading() { printf "\n\033[1;34m%s\033[0m\n" "$*"; }
 
 heading "→ Creating folders…"
