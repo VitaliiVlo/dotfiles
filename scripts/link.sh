@@ -4,84 +4,67 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
+link() {
+    local src="$DOTFILES_DIR/$1"
+    local dest="$2"
+    mkdir -p "$(dirname "$dest")"
+    ln -sf "$src" "$dest"
+}
+
 echo "Creating symbolic links from $DOTFILES_DIR to $HOME..."
 
 # Shell
-ln -sf "$DOTFILES_DIR/.zprofile" "$HOME/.zprofile"
-ln -sf "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
+link ".zprofile" "$HOME/.zprofile"
+link ".zshrc"    "$HOME/.zshrc"
 
 # Shell tools (history, pager, system monitor, terminal, search, prompt)
-mkdir -p "$HOME/.config/atuin"
-ln -sf "$DOTFILES_DIR/.config/atuin/config.toml" "$HOME/.config/atuin/config.toml"
-
-mkdir -p "$HOME/.config/bat"
-ln -sf "$DOTFILES_DIR/.config/bat/config" "$HOME/.config/bat/config"
-
-mkdir -p "$HOME/.config/bottom"
-ln -sf "$DOTFILES_DIR/.config/bottom/bottom.toml" "$HOME/.config/bottom/bottom.toml"
-
-mkdir -p "$HOME/.config/ghostty"
-ln -sf "$DOTFILES_DIR/.config/ghostty/config" "$HOME/.config/ghostty/config"
-
-mkdir -p "$HOME/.config/ripgrep"
-ln -sf "$DOTFILES_DIR/.config/ripgrep/ripgreprc" "$HOME/.config/ripgrep/ripgreprc"
-
-ln -sf "$DOTFILES_DIR/.config/starship.toml" "$HOME/.config/starship.toml"
+link ".config/atuin/config.toml"   "$HOME/.config/atuin/config.toml"
+link ".config/bat/config"          "$HOME/.config/bat/config"
+link ".config/bottom/bottom.toml"  "$HOME/.config/bottom/bottom.toml"
+link ".config/ghostty/config"      "$HOME/.config/ghostty/config"
+link ".config/ripgrep/ripgreprc"   "$HOME/.config/ripgrep/ripgreprc"
+link ".config/starship.toml"       "$HOME/.config/starship.toml"
 
 # Git/file tools
-mkdir -p "$HOME/.config/gh"
-ln -sf "$DOTFILES_DIR/.config/gh/config.yml" "$HOME/.config/gh/config.yml"
-
-mkdir -p "$HOME/.config/git"
-ln -sf "$DOTFILES_DIR/.config/git/config" "$HOME/.config/git/config"
-ln -sf "$DOTFILES_DIR/.config/git/ignore" "$HOME/.config/git/ignore"
-
-mkdir -p "$HOME/.config/lazygit"
-ln -sf "$DOTFILES_DIR/.config/lazygit/config.yml" "$HOME/.config/lazygit/config.yml"
-
-mkdir -p "$HOME/.config/yazi"
-ln -sf "$DOTFILES_DIR/.config/yazi/yazi.toml" "$HOME/.config/yazi/yazi.toml"
+link ".config/gh/config.yml"       "$HOME/.config/gh/config.yml"
+link ".config/git/config"          "$HOME/.config/git/config"
+link ".config/git/ignore"          "$HOME/.config/git/ignore"
+link ".config/lazygit/config.yml"  "$HOME/.config/lazygit/config.yml"
+link ".config/yazi/yazi.toml"      "$HOME/.config/yazi/yazi.toml"
 
 # Editors
-mkdir -p "$HOME/.config/micro"
-ln -sf "$DOTFILES_DIR/.config/micro/settings.json" "$HOME/.config/micro/settings.json"
+link ".config/micro/settings.json" "$HOME/.config/micro/settings.json"
+link ".config/zed/settings.json"   "$HOME/.config/zed/settings.json"
 
-mkdir -p "$HOME/.config/zed"
-ln -sf "$DOTFILES_DIR/.config/zed/settings.json" "$HOME/.config/zed/settings.json"
+# AI agents (non-XDG, identical on both OSes)
+link ".config/ccstatusline/settings.json" "$HOME/.config/ccstatusline/settings.json"
+link ".config/claude/settings.json"       "$HOME/.claude/settings.json"
+link ".config/claude/CLAUDE.md"           "$HOME/.claude/CLAUDE.md"
+link ".config/codex/config.toml"          "$HOME/.codex/config.toml"
+link ".config/codex/AGENTS.md"            "$HOME/.codex/AGENTS.md"
+link ".config/codex/rules/dev.rules"      "$HOME/.codex/rules/dev.rules"
+link ".config/codex/rules/git.rules"      "$HOME/.codex/rules/git.rules"
+link ".config/codex/rules/infra.rules"    "$HOME/.codex/rules/infra.rules"
+link ".config/codex/rules/shell.rules"    "$HOME/.codex/rules/shell.rules"
 
-# macOS-native config paths (tools that ignore XDG); sources live in repo .config/<tool>/
-GLOW_DIR="$HOME/Library/Preferences/glow"
-mkdir -p "$GLOW_DIR"
-ln -sf "$DOTFILES_DIR/.config/glow/glow.yml" "$GLOW_DIR/glow.yml"
-
-SUPERFILE_DIR="$HOME/Library/Application Support/superfile"
-mkdir -p "$SUPERFILE_DIR"
-ln -sf "$DOTFILES_DIR/.config/superfile/config.toml" "$SUPERFILE_DIR/config.toml"
-
-TLRC_DIR="$HOME/Library/Application Support/tlrc"
-mkdir -p "$TLRC_DIR"
-ln -sf "$DOTFILES_DIR/.config/tlrc/config.toml" "$TLRC_DIR/config.toml"
-
-VSCODE_DIR="$HOME/Library/Application Support/Code/User"
-mkdir -p "$VSCODE_DIR"
-ln -sf "$DOTFILES_DIR/.config/vscode/settings.json" "$VSCODE_DIR/settings.json"
-
-# AI agents
-mkdir -p "$HOME/.config/ccstatusline"
-ln -sf "$DOTFILES_DIR/.config/ccstatusline/settings.json" "$HOME/.config/ccstatusline/settings.json"
-
-mkdir -p "$HOME/.claude"
-ln -sf "$DOTFILES_DIR/.config/claude/settings.json" "$HOME/.claude/settings.json"
-ln -sf "$DOTFILES_DIR/.config/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
-
-mkdir -p "$HOME/.codex"
-ln -sf "$DOTFILES_DIR/.config/codex/config.toml" "$HOME/.codex/config.toml"
-ln -sf "$DOTFILES_DIR/.config/codex/AGENTS.md" "$HOME/.codex/AGENTS.md"
-
-mkdir -p "$HOME/.codex/rules"
-ln -sf "$DOTFILES_DIR/.config/codex/rules/dev.rules" "$HOME/.codex/rules/dev.rules"
-ln -sf "$DOTFILES_DIR/.config/codex/rules/git.rules" "$HOME/.codex/rules/git.rules"
-ln -sf "$DOTFILES_DIR/.config/codex/rules/infra.rules" "$HOME/.codex/rules/infra.rules"
-ln -sf "$DOTFILES_DIR/.config/codex/rules/shell.rules" "$HOME/.codex/rules/shell.rules"
+# Platform-native paths: glow, superfile, tlrc, vscode read from
+# ~/Library/* on macOS but XDG ~/.config/* on Linux.
+case "$(uname -s)" in
+    Darwin)
+        link ".config/glow/glow.yml"        "$HOME/Library/Preferences/glow/glow.yml"
+        link ".config/superfile/config.toml" "$HOME/Library/Application Support/superfile/config.toml"
+        link ".config/tlrc/config.toml"     "$HOME/Library/Application Support/tlrc/config.toml"
+        link ".config/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
+        ;;
+    Linux)
+        link ".config/glow/glow.yml"        "$HOME/.config/glow/glow.yml"
+        link ".config/superfile/config.toml" "$HOME/.config/superfile/config.toml"
+        link ".config/tlrc/config.toml"     "$HOME/.config/tlrc/config.toml"
+        link ".config/vscode/settings.json" "$HOME/.config/Code/User/settings.json"
+        ;;
+    *)
+        echo "Unsupported OS: $(uname -s) — skipping glow/superfile/tlrc/vscode symlinks." >&2
+        ;;
+esac
 
 echo "✅ Symbolic links created successfully!"

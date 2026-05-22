@@ -154,10 +154,17 @@ macos_paths=(
     "$HOME/Library/Application Support/tlrc/config.toml"
     "$HOME/Library/Application Support/superfile/config.toml"
 )
+linux_paths=(
+    "$HOME/.config/glow/glow.yml"
+    "$HOME/.config/superfile/config.toml"
+    "$HOME/.config/tlrc/config.toml"
+    "$HOME/.config/Code/User/settings.json"
+)
 paths=("${common_paths[@]}")
-if [[ "$(uname -s)" == "Darwin" ]]; then
-    paths+=("${macos_paths[@]}")
-fi
+case "$(uname -s)" in
+    Darwin) paths+=("${macos_paths[@]}") ;;
+    Linux)  paths+=("${linux_paths[@]}") ;;
+esac
 for p in "${paths[@]}"; do
     if [[ -L "$p" ]]; then
         ok "$p"

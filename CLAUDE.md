@@ -107,15 +107,19 @@ When adding or editing config files, follow this style across all of them:
 
 **scripts/link.sh:**
 
-- Uses `ln -sf` (force symlink) - overwrites existing files
-- Creates parent directories as needed for nested configs
+- Uses `link <repo-relative-src> <abs-dest>` helper (force symlink via `ln -sf`, auto-creates parent dirs). Overwrites existing symlinks.
 - `DOTFILES_DIR` resolves to repo root via `cd "$(dirname "$0")/.." && pwd` (script lives one level deep in `scripts/`)
-- Repo holds all source-of-truth configs under `.config/<tool>/`. Tools that ignore XDG on macOS are linked into native paths inside `scripts/link.sh`:
-  - glow → `~/Library/Preferences/glow/`
-  - superfile → `~/Library/Application Support/superfile/`
-  - tlrc → `~/Library/Application Support/tlrc/`
-  - VSCode → `~/Library/Application Support/Code/User/`
-- Symlinks grouped by category (in this order): Shell → Shell tools (history/pager/system monitor/terminal/search/prompt) → Git/file tools → Editors → macOS-native paths → AI agents. Within each group, tools are alphabetized. Add new symlinks under the matching group in alpha order.
+- Repo holds all source-of-truth configs under `.config/<tool>/`. Most tools are XDG-compliant on both OSes (single link target). Four tools (glow, superfile, tlrc, vscode) read from non-XDG paths on macOS and XDG on Linux; the script branches on `uname -s` (`case Darwin|Linux`):
+
+  | Tool | macOS | Linux |
+  |---|---|---|
+  | glow | `~/Library/Preferences/glow/glow.yml` | `~/.config/glow/glow.yml` |
+  | superfile | `~/Library/Application Support/superfile/config.toml` | `~/.config/superfile/config.toml` |
+  | tlrc | `~/Library/Application Support/tlrc/config.toml` | `~/.config/tlrc/config.toml` |
+  | VSCode | `~/Library/Application Support/Code/User/settings.json` | `~/.config/Code/User/settings.json` (capital `C`, not `vscode/`) |
+
+  Unknown OS prints a warning and skips this block. Claude/Codex use `~/.claude` and `~/.codex` on both OSes (non-XDG always); no branching needed there.
+- Symlinks grouped by category (in this order): Shell → Shell tools (history/pager/system monitor/terminal/search/prompt) → Git/file tools → Editors → AI agents → platform-native paths. Within each group, tools are alphabetized. Add new symlinks under the matching group in alpha order. For tools with split macOS/Linux paths, add to both branches of the `case` block.
 
 **scripts/macos-defaults.sh:**
 
