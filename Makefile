@@ -26,29 +26,29 @@ versions: ## Show installed Go, Node, Python versions
 brew-install: brew-install-base brew-install-work ## Install all packages from Brewfiles
 
 brew-install-base: ## Install base packages (shell, fonts, daily-driver apps)
-	brew bundle install --file=.Brewfile
+	brew bundle install --file=Brewfile
 
 brew-install-work: ## Install work packages (work GUIs: API, K8s, DB, runtime, comms, VPN)
-	brew bundle install --file=.Brewfile.work
+	brew bundle install --file=Brewfile.work
 
 brew-cleanup: ## Clean up old versions and cache
 	brew cleanup --prune=all
 
-brew-export: ## Export installed packages to .Brewfile, then strip .Brewfile.work entries; add new work entries to .Brewfile.work manually
-	brew bundle dump --file=.Brewfile --force
-	@grep -E '^(brew|cask|tap|vscode|mas) "' .Brewfile.work | grep -vxFf - .Brewfile > .Brewfile.tmp && mv .Brewfile.tmp .Brewfile
-	@echo "Stripped .Brewfile.work entries from .Brewfile"
+brew-export: ## Export installed packages to Brewfile, then strip Brewfile.work entries; add new work entries to Brewfile.work manually
+	brew bundle dump --file=Brewfile --force
+	@grep -E '^(brew|cask|tap|vscode|mas) "' Brewfile.work | grep -vxFf - Brewfile > Brewfile.tmp && mv Brewfile.tmp Brewfile
+	@echo "Stripped Brewfile.work entries from Brewfile"
 
-flatpaks-install: flatpaks-install-base flatpaks-install-work ## Install all flatpaks from .flatpaks files (Linux only)
+flatpaks-install: flatpaks-install-base flatpaks-install-work ## Install all flatpaks from flatpaks files (Linux only)
 
 flatpaks-install-base: ## Install base flatpaks (Linux only; no-op on macOS)
-	./scripts/flatpaks-install.sh .flatpaks
+	./scripts/flatpaks-install.sh flatpaks
 
 flatpaks-install-work: ## Install work flatpaks (Linux only; no-op on macOS)
-	./scripts/flatpaks-install.sh .flatpaks.work
+	./scripts/flatpaks-install.sh flatpaks.work
 
-flatpaks-export: ## Export installed user flatpaks to .flatpaks, then strip .flatpaks.work entries; add new work entries to .flatpaks.work manually
+flatpaks-export: ## Export installed user flatpaks to flatpaks, then strip flatpaks.work entries; add new work entries to flatpaks.work manually
 	@if [ "$$(uname -s)" != "Linux" ]; then echo "flatpaks-export: Linux only, skipping."; exit 0; fi; \
-	flatpak list --user --app --columns=application > .flatpaks && \
-	grep -vE '^\s*(#|$$)' .flatpaks.work | grep -vxFf - .flatpaks > .flatpaks.tmp && mv .flatpaks.tmp .flatpaks && \
-	echo "Stripped .flatpaks.work entries from .flatpaks"
+	flatpak list --user --app --columns=application > flatpaks && \
+	grep -vE '^\s*(#|$$)' flatpaks.work | grep -vxFf - flatpaks > flatpaks.tmp && mv flatpaks.tmp flatpaks && \
+	echo "Stripped flatpaks.work entries from flatpaks"

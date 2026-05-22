@@ -2,9 +2,9 @@
 
 set -euo pipefail
 
-# Usage: ./scripts/flatpaks-install.sh [.flatpaks | .flatpaks.work]
+# Usage: ./scripts/flatpaks-install.sh [flatpaks | flatpaks.work]
 
-file="${1:-.flatpaks}"
+file="${1:-flatpaks}"
 
 if [[ "$(uname -s)" != "Linux" ]]; then
     echo "flatpaks-install: Linux only (current: $(uname -s)), skipping."

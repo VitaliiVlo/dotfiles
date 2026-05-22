@@ -18,23 +18,23 @@ make brew-install       # Install all packages (base + work)
 make brew-install-base  # Install base packages only
 make brew-install-work  # Install work packages only
 make brew-cleanup       # Clean up old versions and cache
-make brew-export        # Export installed packages (incl. VSCode extensions) to .Brewfile, then strip .Brewfile.work entries; add new work entries to .Brewfile.work manually
+make brew-export        # Export installed packages (incl. VSCode extensions) to Brewfile, then strip Brewfile.work entries; add new work entries to Brewfile.work manually
 make flatpaks-install        # Install all flatpaks (base + work); Linux only, no-op on macOS
 make flatpaks-install-base   # Install base flatpaks only
 make flatpaks-install-work   # Install work flatpaks only
-make flatpaks-export         # Export installed user flatpaks to .flatpaks, then strip .flatpaks.work entries; add new work entries to .flatpaks.work manually
+make flatpaks-export         # Export installed user flatpaks to flatpaks, then strip flatpaks.work entries; add new work entries to flatpaks.work manually
 ```
 
 ## Repository Structure
 
 - `scripts/link.sh` - Creates symlinks (uses `set -euo pipefail`)
 - `scripts/macos-defaults.sh` - macOS defaults via `defaults write` (non-interactive, idempotent)
-- `scripts/flatpaks-install.sh` - Installs Flathub apps at user scope from `.flatpaks` / `.flatpaks.work` (Linux only, no-op on macOS, adds flathub user remote on first run)
+- `scripts/flatpaks-install.sh` - Installs Flathub apps at user scope from `flatpaks` / `flatpaks.work` (Linux only, no-op on macOS, adds flathub user remote on first run)
 - `Makefile` - Task runner targets (`make help` for list)
-- `.Brewfile` - Base packages: shell essentials, fonts, daily-driver apps, VSCode extensions
-- `.Brewfile.work` - Work packages: work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN (curated manually)
-- `.flatpaks` - Base Flathub app IDs for Linux, bare one-per-line (no comments — `make flatpaks-export` would wipe them; see "Flatpaks maintenance" below). Paired with `.Brewfile` casks where a Flathub equivalent exists; see README "Flatpaks" section for cross-ref table.
-- `.flatpaks.work` - Work Flathub app IDs for Linux (paired with `.Brewfile.work` casks; curated manually, same bare-line format as `.flatpaks`)
+- `Brewfile` - Base packages: shell essentials, fonts, daily-driver apps, VSCode extensions
+- `Brewfile.work` - Work packages: work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN (curated manually)
+- `flatpaks` - Base Flathub app IDs for Linux, bare one-per-line (no comments — `make flatpaks-export` would wipe them; see "Flatpaks maintenance" below). Paired with `Brewfile` casks where a Flathub equivalent exists; see README "Flatpaks" section for cross-ref table.
+- `flatpaks.work` - Work Flathub app IDs for Linux (paired with `Brewfile.work` casks; curated manually, same bare-line format as `flatpaks`)
 - `.zshrc` / `.zprofile` - Zsh config (starship prompt, fnm, uv, fzf with bat preview, eza aliases, syntax-highlighting, autosuggestions)
 - `.config/git/config` / `.config/git/ignore` - Git settings (delta pager, rebase workflow, SSH for GitHub, zdiff3 conflicts, rerere, git-lfs filters) — XDG path
 - `.config/ripgrep/ripgreprc` - Ripgrep defaults (smart-case, hidden files, follow symlinks); resolved via `RIPGREP_CONFIG_PATH`
@@ -68,14 +68,14 @@ Templates (not symlinked, import or copy as needed):
 
 When adding a new tool, config file, cask, or formula, update all of these in lockstep — missing any one causes documentation drift:
 
-- **Install** — add line to `.Brewfile` or `.Brewfile.work` (tap, cask, brew, vscode, go, uv, etc.)
+- **Install** — add line to `Brewfile` or `Brewfile.work` (tap, cask, brew, vscode, go, uv, etc.)
 - **Linux equivalent** — when adding a `cask`, classify and document. Inspect the cask `.rb` source first (`brew info --json=v2 --cask <name>` for `ruby_source_path`, then fetch from `https://raw.githubusercontent.com/Homebrew/homebrew-cask/master/<path>`):
   - **Linux-installable via brew** — `.rb` declares `os macos: ..., linux: ...` block with `x86_64_linux`/`arm64_linux` sha256 entries AND uses `binary` artifact, OR uses `font` artifact with no `depends_on macos:`. These install on Linuxbrew via `brew install --cask <name>`. Add row to README "Linux-installable casks" table under `## Casks`. No Flathub pairing needed.
-  - **GUI app with Flathub equivalent** — add paired Flathub ID to `.flatpaks` or `.flatpaks.work` (verify via `curl -sI https://flathub.org/api/v2/appstream/<id>` returns 200), and add row to README "Flatpaks" Base/Work table.
+  - **GUI app with Flathub equivalent** — add paired Flathub ID to `flatpaks` or `flatpaks.work` (verify via `curl -sI https://flathub.org/api/v2/appstream/<id>` returns 200), and add row to README "Flatpaks" Base/Work table.
   - **GUI app not on Flathub** — add cask name to README "macOS-only → GUI apps not on Flathub" sub-list under `## Flatpaks`.
   - **CLI tool, macOS-only** — `pkg`/`installer` artifact, or `binary` without linux sha256. Add to README "macOS-only → CLI tools" sub-list (e.g. `cloudflare-warp`).
   - **macOS-system tool** (e.g. `rectangle`, `maccy`, no Linux concept) — add cask name to README "macOS-only → macOS-system tools" sub-list.
-  - Every cask in `.Brewfile` / `.Brewfile.work` must appear in exactly one of: Linux-installable casks table, Flatpaks Base/Work table, or one of the three macOS-only sub-lists.
+  - Every cask in `Brewfile` / `Brewfile.work` must appear in exactly one of: Linux-installable casks table, Flatpaks Base/Work table, or one of the three macOS-only sub-lists.
 - **Symlink** — add `mkdir -p` + `ln -sf` block to `scripts/link.sh` if the tool reads a config file from a fixed path
 - **README "Configuration Files" list** — add bullet under `## Configuration Files` if a config file is symlinked
 - **README "CLI Tools" or "Casks" table** — add row if user-facing CLI/GUI tool
@@ -126,8 +126,8 @@ When adding or editing config files, follow this style across all of them:
 - User scope only (`--user`): writes to `~/.local/share/flatpak`, no sudo
 - Adds `flathub` as user remote on first run (`flatpak remote-add --user --if-not-exists`)
 - Idempotent: uses `--noninteractive --or-update`, so repeated runs upgrade existing apps
-- Accepts an optional file path arg (default `.flatpaks`); strips `#` comments and blank lines before invoking `flatpak install`
-- Scope decision rationale: see "Plain .flatpaks vs Brewfile flatpak keyword" below
+- Accepts an optional file path arg (default `flatpaks`); strips `#` comments and blank lines before invoking `flatpak install`
+- Scope decision rationale: see "Plain flatpaks vs Brewfile flatpak keyword" below
 
 ## Shell Aliases
 
@@ -242,11 +242,11 @@ for f in .config/zed/settings.json .config/vscode/settings.json; do
 done
 
 # 5. Brewfiles — verify all listed packages installable/installed
-brew bundle check --file=.Brewfile --verbose
-brew bundle check --file=.Brewfile.work --verbose
+brew bundle check --file=Brewfile --verbose
+brew bundle check --file=Brewfile.work --verbose
 
 # 6. Flatpaks files — sanity parse (Linux-only check; on mac just verify format)
-for f in .flatpaks .flatpaks.work; do
+for f in flatpaks flatpaks.work; do
   grep -vE '^\s*(#|$)' "$f" | awk 'NF && $0 !~ /^[A-Za-z0-9_.-]+$/ {print "BAD ID line " NR ": " $0; bad=1} END {exit bad+0}' \
     && echo "OK $f"
 done
@@ -451,13 +451,13 @@ When modifying any config file, ensure these values stay consistent across all t
 
 **Shell linting/formatting** — extension + binary pairs (both must be present):
 
-- `shellcheck` (brew) ↔ `timonwong.shellcheck` (VSCode extension); both in `.Brewfile`. Extension auto-discovers binary from `PATH`.
-- `shfmt` (brew) ↔ `foxundermoon.shell-format` (VSCode extension); both in `.Brewfile`. Extension auto-discovers binary from `PATH`.
+- `shellcheck` (brew) ↔ `timonwong.shellcheck` (VSCode extension); both in `Brewfile`. Extension auto-discovers binary from `PATH`.
+- `shfmt` (brew) ↔ `foxundermoon.shell-format` (VSCode extension); both in `Brewfile`. Extension auto-discovers binary from `PATH`.
 - Zed: built-in shell highlighting; no extension installed. `shellcheck`/`shfmt` invoked directly from `PATH` if a project formatter is configured.
 
 **Extension management** — reproducible across machines:
 
-- VSCode: `vscode` entries in `.Brewfile` (managed by `brew bundle dump` / `brew bundle install`)
+- VSCode: `vscode` entries in `Brewfile` (managed by `brew bundle dump` / `brew bundle install`)
 - Zed: `auto_install_extensions` in `.config/zed/settings.json` (auto-installed on launch)
 
 **Zed overrides from defaults:** `auto_signature_help: true` (Zed default is `false`, set to match VSCode `parameterHints.enabled`)
@@ -553,25 +553,25 @@ Do not attempt to rename the Codex side to `caveman` — Codex will treat it as 
 
 **Brewfile maintenance:**
 
-- `.Brewfile` is **the dump target**: `make brew-export` overwrites it via `brew bundle dump --force`, then strips any line that also appears in `.Brewfile.work`. Net effect: base stays curated, work entries stay separate.
-- `.Brewfile.work` is **manually curated**: `brew bundle dump` does not respect file boundaries, so new work entries must be added by hand to `.Brewfile.work` after install. Otherwise the next `make brew-export` will leak them into base.
-- `.Brewfile.work` lines must use the same format `brew bundle dump` emits (`cask "name"`, `brew "name"`, etc.). The strip step prefilters `.Brewfile.work` through `grep -E '^(brew|cask|tap|vscode|mas) "'` before whole-line fixed-string match, so blank lines and comments in `.Brewfile.work` are tolerated, but malformed entries (wrong prefix, trailing whitespace) still leak through.
-- **Known gap:** the strip regex does not cover `go "..."` / `uv "..."` DSL prefixes. `.Brewfile.work` is casks-only today, so no live leak — but a future work-only `go`/`uv` entry would not be eligible for stripping, and the next `make brew-export` would drop it from `.Brewfile` on the round-trip. Extend the regex in `Makefile` and this block if that scope ever expands.
+- `Brewfile` is **the dump target**: `make brew-export` overwrites it via `brew bundle dump --force`, then strips any line that also appears in `Brewfile.work`. Net effect: base stays curated, work entries stay separate.
+- `Brewfile.work` is **manually curated**: `brew bundle dump` does not respect file boundaries, so new work entries must be added by hand to `Brewfile.work` after install. Otherwise the next `make brew-export` will leak them into base.
+- `Brewfile.work` lines must use the same format `brew bundle dump` emits (`cask "name"`, `brew "name"`, etc.). The strip step prefilters `Brewfile.work` through `grep -E '^(brew|cask|tap|vscode|mas) "'` before whole-line fixed-string match, so blank lines and comments in `Brewfile.work` are tolerated, but malformed entries (wrong prefix, trailing whitespace) still leak through.
+- **Known gap:** the strip regex does not cover `go "..."` / `uv "..."` DSL prefixes. `Brewfile.work` is casks-only today, so no live leak — but a future work-only `go`/`uv` entry would not be eligible for stripping, and the next `make brew-export` would drop it from `Brewfile` on the round-trip. Extend the regex in `Makefile` and this block if that scope ever expands.
 - Do not re-sort either Brewfile by hand — `brew bundle dump` owns ordering.
 
 **Flatpaks maintenance:**
 
-- `.flatpaks` is **the dump target**: `make flatpaks-export` overwrites it via `flatpak list --user --app --columns=application`, then strips any line that also appears in `.flatpaks.work` (same `.tmp` + atomic `mv` pattern as `brew-export`). The `.tmp` file is a shell limitation, not a design choice — `> .flatpaks` would truncate the file before `grep` reads it.
-- `.flatpaks.work` is **manually curated**: `flatpak list` has no file-boundary awareness, so new work entries must be added by hand to `.flatpaks.work` after install. Otherwise the next `make flatpaks-export` will leak them into base.
-- **No comments in either file.** Both use bare Flathub IDs (one per line). Comments and blank lines are tolerated by the install loop but wiped by `make flatpaks-export` on first run (the `flatpak list` dump emits only IDs). Symmetric with `.Brewfile` / `.Brewfile.work` which are also comment-free. The install-side `grep -vE '^\s*(#|$)'` filter exists only as a defensive guard.
+- `flatpaks` is **the dump target**: `make flatpaks-export` overwrites it via `flatpak list --user --app --columns=application`, then strips any line that also appears in `flatpaks.work` (same `.tmp` + atomic `mv` pattern as `brew-export`). The `.tmp` file is a shell limitation, not a design choice — `> flatpaks` would truncate the file before `grep` reads it.
+- `flatpaks.work` is **manually curated**: `flatpak list` has no file-boundary awareness, so new work entries must be added by hand to `flatpaks.work` after install. Otherwise the next `make flatpaks-export` will leak them into base.
+- **No comments in either file.** Both use bare Flathub IDs (one per line). Comments and blank lines are tolerated by the install loop but wiped by `make flatpaks-export` on first run (the `flatpak list` dump emits only IDs). Symmetric with `Brewfile` / `Brewfile.work` which are also comment-free. The install-side `grep -vE '^\s*(#|$)'` filter exists only as a defensive guard.
 - `flatpak list --columns=application` emits sorted alphabetically by app ID — do not re-sort by hand.
-- Both files are **user-scope** (`--user`); system-scope entries from `/var/lib/flatpak` will not appear in `flatpak list --user` and will be lost on `make flatpaks-export`. Stick to one scope (user). See "Plain .flatpaks vs Brewfile flatpak keyword" below.
+- Both files are **user-scope** (`--user`); system-scope entries from `/var/lib/flatpak` will not appear in `flatpak list --user` and will be lost on `make flatpaks-export`. Stick to one scope (user). See "Plain flatpaks vs Brewfile flatpak keyword" below.
 
-**Plain .flatpaks vs Brewfile flatpak keyword:**
+**Plain flatpaks vs Brewfile flatpak keyword:**
 
-The Brewfile DSL gained a `flatpak` keyword in brew 5.0.4+. Install side is cross-OS-safe — `brew bundle` skips cask entries on Linux and flatpak entries on macOS with a friendly warning. But this repo uses a separate `.flatpaks` file for two reasons:
+The Brewfile DSL gained a `flatpak` keyword in brew 5.0.4+. Install side is cross-OS-safe — `brew bundle` skips cask entries on Linux and flatpak entries on macOS with a friendly warning. But this repo uses a separate `flatpaks` file for two reasons:
 
-- **Dump asymmetry destroys the other-OS side.** `brew bundle dump --force` on macOS emits zero flatpak lines (no flatpak installed), wiping every `flatpak "X"` entry from `.Brewfile` on each `make brew-export`. Same in reverse: dump on Linux drops all `cask` entries. A single cross-OS Brewfile cannot survive `dump --force` on alternating hosts. Separate per-OS files sidestep the problem entirely — each file is owned by its host and never touched by the other.
+- **Dump asymmetry destroys the other-OS side.** `brew bundle dump --force` on macOS emits zero flatpak lines (no flatpak installed), wiping every `flatpak "X"` entry from `Brewfile` on each `make brew-export`. Same in reverse: dump on Linux drops all `cask` entries. A single cross-OS Brewfile cannot survive `dump --force` on alternating hosts. Separate per-OS files sidestep the problem entirely — each file is owned by its host and never touched by the other.
 - **Brewfile flatpak DSL has no `--user` parameter.** It defaults to system scope (`/var/lib/flatpak`, sudo required). Personal-laptop convention is `--user`: no sudo, no `/var/lib` bloat, app state lives in `$HOME`, all Flathub apps work identically in user scope on a single-user laptop (sandbox is per-app, not per-scope), and mixing scopes duplicates runtime extensions (`org.freedesktop.Platform.*`) on disk. Community consensus (Arch Wiki, Flathub docs, Bluefin docs, openSUSE forums) recommends `--user` for personal laptops. Brew analogy: `brew` installs to `/opt/homebrew` without sudo; `flatpak --user` installs to `~/.local/share/flatpak` without sudo — same model.
 
 ## Claude Code Settings

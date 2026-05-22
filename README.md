@@ -83,11 +83,11 @@ The following files are automatically symlinked by running `make link`:
 
 **Not symlinked (used directly from repo):**
 
-- `.Brewfile` - Base Brewfile (shell, fonts, daily-driver apps, VSCode extensions)
-- `.Brewfile.work` - Work Brewfile (work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN; curated manually)
-- `.flatpaks` - Base Flathub app IDs for Linux (paired with `.Brewfile` casks where an equivalent exists)
-- `.flatpaks.work` - Work Flathub app IDs for Linux (paired with `.Brewfile.work` casks; curated manually)
-- `scripts/flatpaks-install.sh` - Installs `.flatpaks` / `.flatpaks.work` at user scope (Linux only, no-op on macOS)
+- `Brewfile` - Base Brewfile (shell, fonts, daily-driver apps, VSCode extensions)
+- `Brewfile.work` - Work Brewfile (work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN; curated manually)
+- `flatpaks` - Base Flathub app IDs for Linux (paired with `Brewfile` casks where an equivalent exists)
+- `flatpaks.work` - Work Flathub app IDs for Linux (paired with `Brewfile.work` casks; curated manually)
+- `scripts/flatpaks-install.sh` - Installs `flatpaks` / `flatpaks.work` at user scope (Linux only, no-op on macOS)
 - `CLAUDE.md` - Repository instructions for Claude Code (auto-discovered in cwd; Codex reads it via `project_doc_fallback_filenames`)
 - `.config/vscode/defaultSettings.jsonc` - VSCode defaults for comparing settings
 
@@ -368,14 +368,14 @@ Install via official installers or Homebrew Cask:
 
 ## CLI Tools
 
-Installed via Homebrew formulae and casks (see `.Brewfile` and `.Brewfile.work`):
+Installed via Homebrew formulae and casks (see `Brewfile` and `Brewfile.work`):
 
 ```bash
 make brew-install       # Install all packages (base + work)
 make brew-install-base  # Install base packages only
 make brew-install-work  # Install work packages only
 make brew-cleanup       # Clean up old versions and cache
-make brew-export        # Export installed packages (incl. VSCode extensions) to .Brewfile, then strip .Brewfile.work entries; add new work entries to .Brewfile.work manually
+make brew-export        # Export installed packages (incl. VSCode extensions) to Brewfile, then strip Brewfile.work entries; add new work entries to Brewfile.work manually
 make versions           # Show installed Go, Node, Python versions
 ```
 
@@ -442,10 +442,10 @@ For full audit recipe (TOML/JSON/YAML/JSONC parsers, `brew bundle check`, `shell
 ## Updating
 
 - `brew update && brew upgrade` — update Homebrew formulae and casks
-- `make brew-export` — refresh `.Brewfile` from current install state (then add any new work entries to `.Brewfile.work` manually; see CLAUDE.md "Brewfile maintenance" for strip step semantics)
+- `make brew-export` — refresh `Brewfile` from current install state (then add any new work entries to `Brewfile.work` manually; see CLAUDE.md "Brewfile maintenance" for strip step semantics)
 - `make brew-cleanup` — prune old versions and cache
 - `flatpak update --user` — update installed Flathub apps (Linux)
-- `make flatpaks-export` — refresh `.flatpaks` from current install state (then add any new work entries to `.flatpaks.work` manually; same strip semantics as `brew-export`)
+- `make flatpaks-export` — refresh `flatpaks` from current install state (then add any new work entries to `flatpaks.work` manually; same strip semantics as `brew-export`)
 - VSCode / Zed / Ghostty — auto-update enabled, no action needed
 - Go: `brew upgrade go`. Node: `fnm install <version>`. Python: `uv python install <version>`.
 
@@ -499,7 +499,7 @@ GUI applications, CLIs, and fonts installed via Homebrew Cask:
 
 ### Linux-installable casks
 
-Homebrew 4.5+ added preliminary Linux cask support. A small subset of `.Brewfile` casks installs via `brew install --cask <name>` on Linuxbrew because the cask source declares either an `os macos: ..., linux: ...` block with `x86_64_linux` / `arm64_linux` sha256 entries (binary CLIs), or a `font` artifact (font files install to the platform font dir). All other casks are macOS-only by artifact (`app`, `pkg`, `darwin` arch) and skipped on Linux with a warning.
+Homebrew 4.5+ added preliminary Linux cask support. A small subset of `Brewfile` casks installs via `brew install --cask <name>` on Linuxbrew because the cask source declares either an `os macos: ..., linux: ...` block with `x86_64_linux` / `arm64_linux` sha256 entries (binary CLIs), or a `font` artifact (font files install to the platform font dir). All other casks are macOS-only by artifact (`app`, `pkg`, `darwin` arch) and skipped on Linux with a warning.
 
 | Cask                        | Why Linux works                                  |
 | --------------------------- | ------------------------------------------------ |
@@ -514,12 +514,12 @@ Net: 6 of 34 casks are cross-platform via brew. The remaining 28 still need Flat
 
 ## Flatpaks
 
-GUI applications for Linux installed via Flathub at **user scope** (`~/.local/share/flatpak`, no sudo). Mirrors the `.Brewfile` / `.Brewfile.work` split.
+GUI applications for Linux installed via Flathub at **user scope** (`~/.local/share/flatpak`, no sudo). Mirrors the `Brewfile` / `Brewfile.work` split.
 
-- `make flatpaks-install-base` — install `.flatpaks`
-- `make flatpaks-install-work` — install `.flatpaks.work`
+- `make flatpaks-install-base` — install `flatpaks`
+- `make flatpaks-install-work` — install `flatpaks.work`
 - `make flatpaks-install` — both
-- `make flatpaks-export` — refresh `.flatpaks` from installed state (strips `.flatpaks.work` entries; add new work entries manually)
+- `make flatpaks-export` — refresh `flatpaks` from installed state (strips `flatpaks.work` entries; add new work entries manually)
 
 All targets no-op on macOS. Requires `flatpak` (install via `brew install flatpak` on Linux). Bootstrap adds the Flathub user remote automatically on first run.
 
