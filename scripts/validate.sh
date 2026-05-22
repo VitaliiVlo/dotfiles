@@ -89,8 +89,19 @@ else
 fi
 
 # 5. Brewfiles
+# `brew bundle list` parses the manifest and lists entries; fails loud on syntax
+# errors (catches manifest typos). `brew bundle check` is install-state and
+# reported as a non-fatal warning since validate must work on any host.
 heading "Brewfiles"
 if command -v brew >/dev/null 2>&1; then
+    for f in Brewfile Brewfile.work; do
+        if brew bundle list --file="$f" >/dev/null 2>&1; then
+            ok "$f (parse)"
+        else
+            bad "$f (parse)"
+        fi
+    done
+    echo "--- install state (non-fatal) ---"
     brew bundle check --file=Brewfile --verbose || true
     brew bundle check --file=Brewfile.work --verbose || true
 else
@@ -108,7 +119,19 @@ for f in flatpaks flatpaks.work; do
     fi
 done
 
-# 7. Lint shell scripts
+# 7. Ghostty config (parsed by ghostty CLI; flagged kv-pairs would error)
+heading "Ghostty"
+if command -v ghostty >/dev/null 2>&1; then
+    if ghostty +validate-config --config-file=.config/ghostty/config >/dev/null 2>&1; then
+        ok ".config/ghostty/config"
+    else
+        bad ".config/ghostty/config"
+    fi
+else
+    echo "SKIP (ghostty not installed)"
+fi
+
+# 8. Lint shell scripts
 heading "shellcheck"
 if command -v shellcheck >/dev/null 2>&1; then
     if shellcheck scripts/symlinks.sh scripts/macos-defaults.sh scripts/linux-defaults.sh scripts/flatpaks-install.sh scripts/validate.sh; then
@@ -120,7 +143,7 @@ else
     echo "SKIP (shellcheck not installed)"
 fi
 
-# 8. Verify documented symlinks resolve
+# 9. Verify documented symlinks resolve
 heading "Symlinks"
 common_paths=(
     "$HOME/.zprofile"
