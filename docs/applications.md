@@ -2,7 +2,7 @@
 
 **Prerequisites:**
 
-- macOS available (Linux is a plus)
+- macOS or Linux. Most GUI picks below are macOS-first (medical imaging, OrbStack, several utilities are macOS-only by vendor); Linux equivalents are documented in [`docs/flatpaks.md`](flatpaks.md) and [`docs/casks.md`](casks.md).
 
 **Selection criteria (ranked by priority):**
 

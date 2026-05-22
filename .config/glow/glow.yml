@@ -1,4 +1,5 @@
-# Symlinked into ~/Library/Preferences/glow/ (macOS ignores XDG here)
+# macOS: ~/Library/Preferences/glow/glow.yml (glow ignores XDG on Darwin)
+# Linux: ~/.config/glow/glow.yml
 
 # Display
 style: "auto"

@@ -218,9 +218,9 @@ ghostty +show-config                        # Should round-trip current config, 
 bat --list-themes | grep -i catppuccin     # Should show "Catppuccin Macchiato"
 delta --list-syntax-themes | grep -i catppuccin  # Should show Catppuccin themes
 btm --version                               # Should show version
-glow --version                              # Should show version (config at Library/Preferences/glow/glow.yml)
+glow --version                              # macOS: config at ~/Library/Preferences/glow/glow.yml; Linux: ~/.config/glow/glow.yml
 atuin doctor                                # Should show config + DB ok
-tldr --config-path                          # Should print Library/Application Support/tlrc/config.toml
+tldr --config-path                          # macOS: ~/Library/Application Support/tlrc/config.toml; Linux: ~/.config/tlrc/config.toml
 tldr --info                                 # Should show cache age + language
 starship config                             # Should show TOML config
 git config --list --show-origin             # Should show ~/.config/git/config as source

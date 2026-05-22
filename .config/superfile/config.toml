@@ -1,4 +1,5 @@
-# Symlinked into ~/Library/Application Support/superfile/ (macOS ignores XDG here)
+# macOS: ~/Library/Application Support/superfile/config.toml (superfile ignores XDG on Darwin)
+# Linux: ~/.config/superfile/config.toml
 
 # Defaults
 editor = "code --wait"

@@ -239,6 +239,8 @@ Do not attempt to rename the Codex side to `caveman` — Codex will treat it as 
 
 **Built-in Codex marketplaces:** `openai-curated` is pre-registered by the Codex CLI binary — do not declare `[marketplaces.openai-curated]` in `.config/codex/config.toml`. Plugin references like `[plugins."slack@openai-curated"]` resolve through the built-in registry. Only third-party marketplaces (e.g. `caveman-repo`) need explicit `[marketplaces.<name>]` blocks.
 
+**Third-party marketplace state fields:** Codex CLI writes `last_updated` and `last_revision` into the `[marketplaces.<name>]` block on every `codex plugin marketplace update`. They are intentionally **not** committed in `.config/codex/config.toml` because each refresh produces a noisy diff. Only `source_type` and `source` are tracked; the timestamp + revision fields repopulate locally after the first update.
+
 **VSCode `git.blame.*` is split** into `git.blame.editorDecoration.enabled` (inline editor decoration) and `git.blame.statusBarItem.enabled` (status bar item), each with its own `template`. Do not use the legacy flat `git.blame.enabled` key — it is silently ignored.
 
 **Brewfile maintenance:**

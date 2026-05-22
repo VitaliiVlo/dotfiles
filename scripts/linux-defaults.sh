@@ -42,7 +42,7 @@ set_if_exists org.gnome.desktop.peripherals.keyboard repeat-interval 'uint32 30'
 heading "→ Configuring screenshots…"
 # GNOME Screenshot UI saves to XDG Pictures/Screenshots by default; no per-user gsetting.
 # User XDG dirs override via ~/.config/user-dirs.dirs (out of scope here).
-mkdir -p "$HOME/Screenshots"
+# ~/Screenshots already created in Folders section above.
 
 heading "→ Configuring Files (Nautilus)…"
 # List view default

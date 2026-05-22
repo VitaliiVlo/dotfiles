@@ -1,4 +1,5 @@
-# Symlinked into ~/Library/Application Support/tlrc/ (macOS ignores XDG here)
+# macOS: ~/Library/Application Support/tlrc/config.toml (tlrc ignores XDG on Darwin)
+# Linux: ~/.config/tlrc/config.toml
 
 [cache]
 auto_update = true
