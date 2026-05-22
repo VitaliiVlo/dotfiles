@@ -40,10 +40,11 @@ brew-install-work: ## Install work packages (work GUIs: API, K8s, DB, runtime, c
 brew-cleanup: ## Clean up old versions and cache
 	brew cleanup --prune=all
 
-brew-export: ## Export installed packages to Brewfile, then strip Brewfile.work entries; add new work entries to Brewfile.work manually
-	brew bundle dump --file=Brewfile --force
-	@grep -E '^(brew|cask|tap|vscode|mas) "' Brewfile.work | grep -vxFf - Brewfile > Brewfile.tmp && mv Brewfile.tmp Brewfile
-	@echo "Stripped Brewfile.work entries from Brewfile"
+brew-export: ## Export installed packages to Brewfile, then strip Brewfile.work entries; add new work entries to Brewfile.work manually (macOS only; Linuxbrew install state would wipe macOS-only casks)
+	@if [ "$$(uname -s)" != "Darwin" ]; then echo "brew-export: macOS only (current: $$(uname -s)), skipping to avoid wiping macOS-only casks."; exit 0; fi; \
+	brew bundle dump --file=Brewfile --force && \
+	grep -E '^(brew|cask|tap|vscode|mas) "' Brewfile.work | grep -vxFf - Brewfile > Brewfile.tmp && mv Brewfile.tmp Brewfile && \
+	echo "Stripped Brewfile.work entries from Brewfile"
 
 flatpaks-install: flatpaks-install-base flatpaks-install-work ## Install all flatpaks from flatpaks files (Linux only)
 
