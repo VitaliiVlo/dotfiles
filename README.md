@@ -89,7 +89,7 @@ The following files are automatically symlinked by running `make link`:
 - `flatpaks.work` - Work Flathub app IDs for Linux (paired with `Brewfile.work` casks; curated manually)
 - `scripts/flatpaks-install.sh` - Installs `flatpaks` / `flatpaks.work` at user scope (Linux only, no-op on macOS)
 - `CLAUDE.md` - Repository instructions for Claude Code (auto-discovered in cwd; Codex reads it via `project_doc_fallback_filenames`)
-- `.config/vscode/defaultSettings.jsonc` - VSCode defaults for comparing settings
+- `docs/vscode-defaults.jsonc` - VSCode defaults snapshot for offline comparison (regenerate via `Preferences: Open Default Settings (JSON)`)
 
 ## macOS Settings
 

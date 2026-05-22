@@ -51,7 +51,7 @@ make flatpaks-export         # Export installed user flatpaks to flatpaks, then 
 - `.config/tlrc/config.toml` - tlrc (tldr client) — show platform title, short+long flags (macOS-native path)
 - `.config/superfile/config.toml` - Superfile (`spf`) terminal file manager (Catppuccin Macchiato, bat preview with border, binary file sizes, zoxide integration; macOS-native path)
 - `.config/vscode/settings.json` - VSCode settings (JSONC format with comments)
-- `.config/vscode/defaultSettings.jsonc` - VSCode defaults reference (for comparing settings)
+- `docs/vscode-defaults.jsonc` - VSCode defaults snapshot for offline comparison (regenerate via `Preferences: Open Default Settings (JSON)` when stale)
 - `.config/zed/settings.json` - Zed editor (Catppuccin Macchiato/Latte, JetBrains Mono, same UX as VSCode, auto_install_extensions)
 - `.config/claude/CLAUDE.md` - Claude Code user-level instructions (symlinked to `~/.claude/CLAUDE.md`)
 - `.config/claude/settings.json` - Claude Code permissions (web, git, docker, build tools, sensitive file protection)
@@ -279,7 +279,7 @@ done
 
 When modifying `.config/vscode/settings.json`:
 
-- Compare against `defaultSettings.jsonc` to check if a setting matches the default (keep explicit defaults — intentional)
+- Compare against `docs/vscode-defaults.jsonc` to check if a setting matches the default (keep explicit defaults — intentional). Regenerate via VSCode `Preferences: Open Default Settings (JSON)` when stale.
 - Settings use JSONC format (JSON with comments and trailing commas allowed)
 - Section dividers use `// Name` (single-line) for parity with `.config/zed/settings.json`; do not use `/* Name */` block-style
 - Section order: Theme → Workbench → Window → Font & Indentation → Cursor & Scrolling → Editor UX → Inline diagnostics (ErrorLens) → IntelliSense → Formatting → Search → Files → Terminal → Git → Testing & Debug → JavaScript/TypeScript → Python → Go tooling → AI → Updates → Telemetry → Liveshare → Clipboard manager
