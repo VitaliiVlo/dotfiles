@@ -37,7 +37,7 @@ make flatpaks-export         # Export installed user flatpaks to flatpaks, then 
 - `Makefile` - Task runner targets (`make help` for list)
 - `Brewfile` - Base packages: shell essentials, fonts, daily-driver apps, VSCode extensions
 - `Brewfile.work` - Work packages: work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN (curated manually)
-- `flatpaks` - Base Flathub app IDs for Linux, bare one-per-line (no comments — `make flatpaks-export` would wipe them; see "Flatpaks maintenance" in `docs/consistency.md`). Paired with `Brewfile` casks where a Flathub equivalent exists; see README "Flatpaks" section for cross-ref table.
+- `flatpaks` - Base Flathub app IDs for Linux, bare one-per-line (no comments — `make flatpaks-export` would wipe them; see "Flatpaks maintenance" in `docs/consistency.md`). Paired with `Brewfile` casks where a Flathub equivalent exists; see `docs/flatpaks.md` for cross-ref table.
 - `flatpaks.work` - Work Flathub app IDs for Linux (paired with `Brewfile.work` casks; curated manually, same bare-line format as `flatpaks`)
 - `.zshrc` / `.zprofile` - Zsh config (starship prompt, fnm, uv, fzf with bat preview, eza aliases, syntax-highlighting, autosuggestions)
 - `.config/git/config` / `.config/git/ignore` - Git settings (delta pager, rebase workflow, SSH for GitHub, zdiff3 conflicts, rerere, git-lfs filters) — XDG path
@@ -66,7 +66,7 @@ make flatpaks-export         # Export installed user flatpaks to flatpaks, then 
 
 Templates (not symlinked, import or copy as needed):
 
-- `templates/bookmarks.html` - Netscape bookmark template (universal URLs only: GitHub `/pulls/*`, AI chats, web tools). One-shot import per project; rename `<Employer>` / `<Project>` folders after import.
+- `docs/bookmarks.template.html` - Netscape bookmark template (universal URLs only: GitHub `/pulls/*`, AI chats, web tools). One-shot import per project; rename `<Employer>` / `<Project>` folders after import.
 
 ## When Adding a New Tool/Config (Doc Drift Checklist)
 
@@ -74,17 +74,17 @@ When adding a new tool, config file, cask, or formula, update all of these in lo
 
 - **Install** — add line to `Brewfile` or `Brewfile.work` (tap, cask, brew, vscode, go, uv, etc.)
 - **Linux equivalent** — when adding a `cask`, classify and document. Inspect the cask `.rb` source first (`brew info --json=v2 --cask <name>` for `ruby_source_path`, then fetch from `https://raw.githubusercontent.com/Homebrew/homebrew-cask/master/<path>`):
-  - **Linux-installable via brew** — `.rb` declares `os macos: ..., linux: ...` block with `x86_64_linux`/`arm64_linux` sha256 entries AND uses `binary` artifact, OR uses `font` artifact with no `depends_on macos:`. These install on Linuxbrew via `brew install --cask <name>`. Add row to README "Linux-installable casks" table under `## Casks`. No Flathub pairing needed.
-  - **GUI app with Flathub equivalent** — add paired Flathub ID to `flatpaks` or `flatpaks.work` (verify via `curl -sI https://flathub.org/api/v2/appstream/<id>` returns 200), and add row to README "Flatpaks" Base/Work table.
-  - **GUI app not on Flathub** — add cask name to README "macOS-only → GUI apps not on Flathub" sub-list under `## Flatpaks`.
-  - **CLI tool, macOS-only** — `pkg`/`installer` artifact, or `binary` without linux sha256. Add to README "macOS-only → CLI tools" sub-list (e.g. `cloudflare-warp`).
-  - **macOS-system tool** (e.g. `rectangle`, `maccy`, no Linux concept) — add cask name to README "macOS-only → macOS-system tools" sub-list.
-  - Every cask in `Brewfile` / `Brewfile.work` must appear in exactly one of: Linux-installable casks table, Flatpaks Base/Work table, or one of the three macOS-only sub-lists.
+  - **Linux-installable via brew** — `.rb` declares `os macos: ..., linux: ...` block with `x86_64_linux`/`arm64_linux` sha256 entries AND uses `binary` artifact, OR uses `font` artifact with no `depends_on macos:`. These install on Linuxbrew via `brew install --cask <name>`. Add row to "Linux-installable casks" table in `docs/casks.md`. No Flathub pairing needed.
+  - **GUI app with Flathub equivalent** — add paired Flathub ID to `flatpaks` or `flatpaks.work` (verify via `curl -sI https://flathub.org/api/v2/appstream/<id>` returns 200), and add row to Base/Work table in `docs/flatpaks.md`.
+  - **GUI app not on Flathub** — add cask name to "macOS-only → GUI apps not on Flathub" sub-list in `docs/flatpaks.md`.
+  - **CLI tool, macOS-only** — `pkg`/`installer` artifact, or `binary` without linux sha256. Add to "macOS-only → CLI tools" sub-list in `docs/flatpaks.md` (e.g. `cloudflare-warp`).
+  - **macOS-system tool** (e.g. `rectangle`, `maccy`, no Linux concept) — add cask name to "macOS-only → macOS-system tools" sub-list in `docs/flatpaks.md`.
+  - Every cask in `Brewfile` / `Brewfile.work` must appear in exactly one of: `docs/casks.md` Linux-installable table, `docs/flatpaks.md` Base/Work table, or one of the three `docs/flatpaks.md` macOS-only sub-lists.
 - **Symlink** — add `symlink <repo-src> <abs-dest>` call to `scripts/symlinks.sh` if the tool reads a config file from a fixed path
 - **README "Configuration Files" list** — add bullet under `## Configuration Files` if a config file is symlinked
-- **README "CLI Tools" or "Casks" table** — add row if user-facing CLI/GUI tool
-- **README "Flatpaks" tables** — add row to Base or Work Flatpaks table if Flathub equivalent paired
-- **README "Applications" table** — add row if GUI app fits an existing category, or add new category row
+- **README "CLI Tools" table** or **`docs/casks.md`** — add row if user-facing CLI / GUI tool
+- **`docs/flatpaks.md` tables** — add row to Base or Work Flatpaks table if Flathub equivalent paired
+- **`docs/applications.md` table** — add row if GUI app fits an existing category, or add new category row
 - **CLAUDE.md "Repository Structure" list** — add bullet describing the file's purpose
 - **`docs/consistency.md` tables** — add row(s) if the tool shares behavior (theme, font, tab size, hidden files, telemetry, auto-update, git pager, etc.) with existing tools
 - **`scripts/validate.sh`** — extend the matching block (TOML/JSON/YAML/JSONC parse list, or symlink list) so `make validate` covers the new config
@@ -260,7 +260,7 @@ When modifying `.config/vscode/settings.json`:
 
 ## Applications List Maintenance
 
-When updating the Applications table in README.md, see the selection criteria documented there. Key guidelines:
+When updating the Applications table in `docs/applications.md`, see the selection criteria documented there. Key guidelines:
 
 - Tools in **bold** are primary recommendations (one per category)
 - GUI apps go in Applications section, text-based/TUI tools go in CLI Tools section
