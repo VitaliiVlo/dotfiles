@@ -36,12 +36,12 @@ symlink ".config/yazi/yazi.toml"      "$HOME/.config/yazi/yazi.toml"
 symlink ".config/micro/settings.json" "$HOME/.config/micro/settings.json"
 symlink ".config/zed/settings.json"   "$HOME/.config/zed/settings.json"
 
-# AI agents (non-XDG, identical on both OSes)
+# AI agents (non-XDG, identical on both OSes; ASCII alpha within each tool)
 symlink ".config/ccstatusline/settings.json" "$HOME/.config/ccstatusline/settings.json"
-symlink ".config/claude/settings.json"       "$HOME/.claude/settings.json"
 symlink ".config/claude/CLAUDE.md"           "$HOME/.claude/CLAUDE.md"
-symlink ".config/codex/config.toml"          "$HOME/.codex/config.toml"
+symlink ".config/claude/settings.json"       "$HOME/.claude/settings.json"
 symlink ".config/codex/AGENTS.md"            "$HOME/.codex/AGENTS.md"
+symlink ".config/codex/config.toml"          "$HOME/.codex/config.toml"
 symlink ".config/codex/rules/dev.rules"      "$HOME/.codex/rules/dev.rules"
 symlink ".config/codex/rules/git.rules"      "$HOME/.codex/rules/git.rules"
 symlink ".config/codex/rules/infra.rules"    "$HOME/.codex/rules/infra.rules"
