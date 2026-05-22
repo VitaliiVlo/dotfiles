@@ -26,8 +26,7 @@ ln -sf "$DOTFILES_DIR/.config/ghostty/config" "$HOME/.config/ghostty/config"
 mkdir -p "$HOME/.config/ripgrep"
 ln -sf "$DOTFILES_DIR/.config/ripgrep/ripgreprc" "$HOME/.config/ripgrep/ripgreprc"
 
-# starship reads ~/.config/starship.toml (flat path per starship.rs)
-ln -sf "$DOTFILES_DIR/.config/starship/starship.toml" "$HOME/.config/starship.toml"
+ln -sf "$DOTFILES_DIR/.config/starship.toml" "$HOME/.config/starship.toml"
 
 # Git/file tools
 mkdir -p "$HOME/.config/gh"

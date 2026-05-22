@@ -61,7 +61,7 @@ The following files are automatically symlinked by running `make link`:
 - `.config/git/ignore` - Global gitignore (XDG path)
 - `.config/ripgrep/ripgreprc` - Ripgrep defaults (smart-case, hidden files, follow symlinks); resolved via `RIPGREP_CONFIG_PATH`
 - `.config/ghostty/config` - Ghostty configuration
-- `.config/starship/starship.toml` - Starship configuration (symlinked to `~/.config/starship.toml`, flat path per starship.rs)
+- `.config/starship.toml` - Starship configuration (flat path per starship.rs)
 - `.config/bat/config` - Bat configuration
 - `.config/gh/config.yml` - GitHub CLI settings
 - `.config/lazygit/config.yml` - Lazygit settings

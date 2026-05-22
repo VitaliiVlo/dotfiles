@@ -39,7 +39,7 @@ make flatpaks-export         # Export installed user flatpaks to flatpaks, then 
 - `.config/git/config` / `.config/git/ignore` - Git settings (delta pager, rebase workflow, SSH for GitHub, zdiff3 conflicts, rerere, git-lfs filters) — XDG path
 - `.config/ripgrep/ripgreprc` - Ripgrep defaults (smart-case, hidden files, follow symlinks); resolved via `RIPGREP_CONFIG_PATH`
 - `.config/ghostty/config` - Terminal emulator
-- `.config/starship/starship.toml` - Shell prompt (nerd-font-symbols preset)
+- `.config/starship.toml` - Shell prompt (nerd-font-symbols preset; flat path per starship.rs)
 - `.config/bat/config` - Cat replacement with syntax highlighting
 - `.config/gh/config.yml` - GitHub CLI settings (SSH protocol, delta pager)
 - `.config/lazygit/config.yml` - Git TUI (nerd fonts, delta pager, vscode editor)
@@ -215,7 +215,7 @@ uv python list --only-installed             # Should show installed Python versi
 ```bash
 # 1. Parse every TOML
 for f in .config/codex/config.toml .config/atuin/config.toml .config/bottom/bottom.toml \
-         .config/yazi/yazi.toml .config/starship/starship.toml .config/tlrc/config.toml \
+         .config/yazi/yazi.toml .config/starship.toml .config/tlrc/config.toml \
          .config/superfile/config.toml; do
   python3 -c "import tomllib,sys; tomllib.loads(open(sys.argv[1]).read()); print('OK', sys.argv[1])" "$f"
 done
@@ -475,7 +475,7 @@ When modifying any config file, ensure these values stay consistent across all t
 
 **Nerd Font icons** — `Symbols Nerd Font Mono` in font fallback chain enables icons across:
 
-- starship: nerd-font-symbols preset (`.config/starship/starship.toml`)
+- starship: nerd-font-symbols preset (`.config/starship.toml`)
 - eza: `--icons=auto` in aliases
 - lazygit: `nerdFontsVersion: "3"`
 - yazi: auto-detected
