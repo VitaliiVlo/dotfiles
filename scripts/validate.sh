@@ -149,6 +149,32 @@ else
     echo "SKIP (shfmt not installed)"
 fi
 
+# 7c. zsh syntax-check on .zshrc / .zprofile. shellcheck/shfmt do not parse zsh,
+# so only `zsh -n` catches typos before next shell launch.
+heading "zsh -n"
+if command -v zsh >/dev/null 2>&1; then
+    for f in .zshrc .zprofile; do
+        if zsh -n "$f" 2>/dev/null; then
+            ok "$f"
+        else
+            bad "$f"
+        fi
+    done
+else
+    echo "SKIP (zsh not installed)"
+fi
+
+# 7d. Codex rule files use a custom DSL with no upstream validator. The most we
+# can check is that every non-comment, non-blank line begins with prefix_rule(.
+heading "Codex rules"
+for f in .config/codex/rules/*.rules; do
+    if grep -Ev '^\s*(#|$)' "$f" | grep -qvE '^prefix_rule\('; then
+        bad "$f (bad line)"
+    else
+        ok "$f"
+    fi
+done
+
 # 8. Verify documented symlinks resolve
 heading "Symlinks"
 common_paths=(

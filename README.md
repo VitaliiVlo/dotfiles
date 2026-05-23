@@ -193,7 +193,7 @@ make versions           # Show installed Go, Node, Python versions
 | awscli                  | AWS command-line interface                              |
 | bat                     | `cat` with syntax highlighting                          |
 | bottom                  | System monitor TUI (`btm`, modern `htop`)               |
-| corepack                | Node package-manager bootstrap (npm-shipped)            |
+| corepack                | Node package-manager bootstrap (Node-shipped)           |
 | delve                   | Go debugger (binary: `dlv`)                             |
 | dua-cli                 | Interactive disk usage analyzer (alternative to gdu)    |
 | exiftool                | Read/write image/audio/video metadata                   |
@@ -217,7 +217,7 @@ make versions           # Show installed Go, Node, Python versions
 | gotests                 | Go test boilerplate generator                           |
 | helm                    | Kubernetes package manager                              |
 | impl                    | Go interface method stub generator                      |
-| jq / yq                 | JSON / YAML processors                                  |
+| jq                      | Command-line JSON processor                             |
 | k9s                     | Kubernetes TUI                                          |
 | kdash                   | Kubernetes dashboard TUI (Rust)                         |
 | kubectl                 | Kubernetes CLI                                          |
@@ -245,6 +245,7 @@ make versions           # Show installed Go, Node, Python versions
 | typescript-language-server | TypeScript / JavaScript language server              |
 | uv                      | Python version/package manager                          |
 | yazi                    | Terminal file manager                                   |
+| yq                      | Command-line YAML processor                             |
 | zoxide                  | Smarter `cd` (learns from usage)                        |
 | zsh-autosuggestions     | Fish-like command suggestions                           |
 | zsh-completions         | Additional shell completions                            |

@@ -28,11 +28,15 @@ Linux GUI apps install via vendor deb/rpm. Per-app commands in `docs/linux-packa
 ## Repository structure
 
 - `LICENSE` - MIT license
+- `README.md` - Quick start, prerequisites, configuration inventory, validation, updating, plugin/marketplace summary, templates
 - `scripts/symlinks.sh` - Creates symlinks (uses `set -euo pipefail`; defines `symlink` helper; branches on `uname -s` for glow/superfile/tlrc/vscode)
 - `scripts/macos-defaults.sh` - macOS defaults via `defaults write` (non-interactive, idempotent; guards `uname -s == Darwin`, no-op on Linux)
 - `scripts/linux-defaults.sh` - Linux/GNOME defaults via `gsettings` (non-interactive, idempotent; guards `uname -s == Linux`, requires `gsettings` + `XDG_CURRENT_DESKTOP=*GNOME*`, no-op on macOS / KDE / headless)
-- `scripts/validate.sh` - Full audit runner (parses every TOML/JSON/YAML/JSONC, brew bundle check, shellcheck, symlink verification). Backs `make validate`. Skips macOS-native symlinks on Linux.
+- `scripts/validate.sh` - Full audit runner (parses every TOML/JSON/YAML/JSONC, brew bundle check, ghostty validate, shellcheck, shfmt, `zsh -n` on `.zshrc`/`.zprofile`, codex/rules sanity grep, symlink verification). Backs `make validate`. Skips macOS-native symlinks on Linux.
+- `docs/applications.md` - Curated GUI app picks per category, VSCode setup, search-engine bangs
+- `docs/casks.md` - Homebrew Cask inventory split into base, work, and Linux-installable subsets
 - `docs/conventions.md` - Cross-config consistency tables (shared behavior across all tools: theme, font, telemetry, git pager, etc.). Read when adding a new tool or auditing drift.
+- `docs/macos-tips.md` - Non-obvious shortcuts and behaviors (clipboard, screenshots, Finder, Mission Control, Spotlight, Continuity, shell helpers)
 - `Makefile` - Task runner targets (`make help` for list)
 - `Brewfile` - Base packages: shell essentials, fonts, daily-driver apps, VSCode extensions
 - `Brewfile.work` - Work packages: work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN, browser (curated manually)
@@ -224,8 +228,10 @@ Run `make validate` (delegates to `scripts/validate.sh`). Covers:
 4. Parse JSONC (zed, vscode) — needs `node`
 5. `brew bundle list --file=Brewfile{,.work}` (parse-only; install state reported separately as non-fatal warning) — needs `brew`
 6. `ghostty +validate-config --config-file=.config/ghostty/config` — needs `ghostty`
-7. `shellcheck` on every script in `scripts/`
-8. Verify every documented symlink under `$HOME` resolves (skips macOS-native paths on Linux)
+7. `shellcheck` + `shfmt` on every script in `scripts/`
+8. `zsh -n` on `.zshrc` and `.zprofile` (syntax-only; needs `zsh`)
+9. Sanity grep on `.config/codex/rules/*.rules` (every non-comment, non-blank line must start with `prefix_rule(`)
+10. Verify every documented symlink under `$HOME` resolves (skips macOS-native paths on Linux)
 
 When adding a new tool, extend the matching block in `scripts/validate.sh`.
 

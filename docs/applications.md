@@ -45,7 +45,7 @@ Install via official installers or Homebrew Cask.
 | Office                | **Apple iWork** (Pages, Numbers, Keynote), Google Workspace, Microsoft 365           |
 | macOS Utilities       | **Rectangle**, Maccy, Keka, KeepingYouAwake, Thaw, MiddleClick, LinearMouse, balenaEtcher |
 | Networking            | **Tailscale**, Cloudflare WARP, LocalSend                                            |
-| Linux Distros         | **Fedora Workstation**, Bluefin, elementary OS, Fedora Silverblue, Pop!_OS, Ubuntu, Zorin OS |
+| Linux Distros         | **Fedora Workstation**, elementary OS, Pop!_OS, Ubuntu, Zorin OS, Bluefin, Fedora Silverblue |
 
 ## VSCode setup
 
