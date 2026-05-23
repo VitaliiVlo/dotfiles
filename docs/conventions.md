@@ -1,8 +1,8 @@
-# Cross-Config Consistency Rules
+# Conventions
 
-When modifying any config file, ensure these values stay consistent across all tools.
+Shared-behavior rules across every tool in this repo: theme, font, tab size, hidden files, telemetry, auto-update, git pager, and other invariants that must stay aligned when configs change. When adding a new tool, add rows for any behavior it shares with an existing tool.
 
-This document is the source of truth for shared-behavior tables. CLAUDE.md links here from its `## Cross-Config Consistency Rules` stub. When adding a new tool, add rows here for any shared behavior (theme, font, tab size, hidden files, telemetry, auto-update, git pager, etc.) per the doc-drift checklist in CLAUDE.md.
+## Editor settings
 
 | Setting | VSCode | Zed | Micro | Ghostty | Bat | Delta | Yazi |
 |---|---|---|---|---|---|---|---|
@@ -62,7 +62,9 @@ This document is the source of truth for shared-behavior tables. CLAUDE.md links
 | Inline diagnostics | ErrorLens extension | `diagnostics.inline.enabled: true` | — | — | — | — | — |
 | Theme detection | `autoDetectColorScheme: true` | `theme.mode: "system"` | — | — | — | — | — |
 
-**Telemetry** — minimize across all tools:
+## Telemetry
+
+Minimize across all tools:
 
 | Tool | Setting | Value |
 |---|---|---|
@@ -72,7 +74,9 @@ This document is the source of truth for shared-behavior tables. CLAUDE.md links
 | Claude Code | `feedbackSurveyRate` | `0` |
 | Codex | `analytics.enabled` / `feedback.enabled` | `false` / `false` |
 
-**File search/listing tools** must stay in sync across: `fd` alias in `.zshrc`, `.config/ripgrep/ripgreprc`, yazi, eza aliases, Finder defaults, superfile
+## File search/listing tools
+
+Must stay in sync across: `fd` alias in `.zshrc`, `.config/ripgrep/ripgreprc`, yazi, eza aliases, Finder defaults, superfile
 
 | Behavior | fd | rg | yazi | eza | Finder | superfile |
 |---|---|---|---|---|---|---|
@@ -84,19 +88,25 @@ This document is the source of truth for shared-behavior tables. CLAUDE.md links
 | Sort reverse | — | — | `sort_reverse = false` | — | — | `sort_order_reversed = false` |
 | No extra columns | — | — | `linemode = "none"` | — | — | `file_panel_extra_columns = 0` |
 
-**Italic text rendering** must stay consistent:
+## Italic text rendering
+
+Must stay consistent:
 
 - VSCode Catppuccin: `italicComments: true`, `italicKeywords: true`
 - bat: `--italic-text=always`
 - Delta inherits from bat theme engine (Catppuccin Macchiato italic support)
 
-**Smooth scrolling** enabled everywhere:
+## Smooth scrolling
+
+Enabled everywhere:
 
 - VSCode: `editor.smoothScrolling`, `workbench.list.smoothScrolling`, `terminal.integrated.smoothScrolling` (all `true`)
 - Zed: native smooth scrolling (macOS)
 - Ghostty: native smooth scrolling (macOS)
 
-**AI agent** enabled in both editors:
+## AI agent
+
+Enabled in both editors:
 
 - VSCode: `chat.agent.enabled: true`
 - Zed: `agent.enabled: true`
@@ -104,7 +114,9 @@ This document is the source of truth for shared-behavior tables. CLAUDE.md links
 
 **Zed keybindings:** `base_keymap: "VSCode"` — Zed mirrors VSCode shortcuts for consistency
 
-**Pager = delta** across all git-aware tools:
+## Pager = delta
+
+Across all git-aware tools:
 
 | Tool | Config | Value |
 |---|---|---|
@@ -113,18 +125,22 @@ This document is the source of truth for shared-behavior tables. CLAUDE.md links
 | gh CLI | `pager` | `delta` |
 | lazygit | `git.pagers` | `delta --paging=never` (lazygit handles scroll) |
 
-**Modified file indicators** in tabs:
+## Modified file indicators
+
+In tabs:
 
 - VSCode: `workbench.editor.highlightModifiedTabs: true`
 - Zed: `tabs.git_status: true`
 - Micro: `diffgutter: true`
 
-**Line numbers in preview tools** (consistent with editors showing line numbers):
+## Line numbers in preview tools
+
+Consistent with editors showing line numbers:
 
 - bat: `--style="numbers,changes,header,grid"`
 - Delta: `line-numbers = true`
 
-**Window/system theme follows OS:**
+## Window/system theme follows OS
 
 - Ghostty: `window-theme = system` + `theme = light:Catppuccin Latte,dark:Catppuccin Macchiato`
 - Zed: `theme.mode: "system"` (light: Catppuccin Latte, dark: Catppuccin Macchiato)
@@ -134,36 +150,48 @@ This document is the source of truth for shared-behavior tables. CLAUDE.md links
 - Codex: `tui.theme = "catppuccin-macchiato"` (TUI only, no light/system mode)
 - Superfile: `theme = "catppuccin-macchiato"` (TUI only, no light/system mode; built-in theme file at `Library/Application Support/superfile/theme/catppuccin-macchiato.toml`)
 
-**Inline diagnostics** (errors/warnings shown on affected lines):
+## Inline diagnostics
+
+Errors/warnings shown on affected lines:
 
 - VSCode: `errorlens` extension (installed via Brewfile)
 - Zed: `diagnostics.inline.enabled: true` (built-in, matches ErrorLens behavior)
 
-**Shell linting/formatting** — extension + binary pairs (both must be present):
+## Shell linting/formatting
+
+Extension + binary pairs (both must be present):
 
 - `shellcheck` (brew) ↔ `timonwong.shellcheck` (VSCode extension); both in `Brewfile`. Extension auto-discovers binary from `PATH`.
 - `shfmt` (brew) ↔ `foxundermoon.shell-format` (VSCode extension); both in `Brewfile`. Extension auto-discovers binary from `PATH`.
 - Zed: built-in shell highlighting; no extension installed. `shellcheck`/`shfmt` invoked directly from `PATH` if a project formatter is configured.
 
-**Extension management** — reproducible across machines:
+## Extension management
+
+Reproducible across machines:
 
 - VSCode: `vscode` entries in `Brewfile` (managed by `brew bundle dump` / `brew bundle install`)
 - Zed: `auto_install_extensions` in `.config/zed/settings.json` (auto-installed on launch)
 
 **Zed overrides from defaults:** `auto_signature_help: true` (Zed default is `false`, set to match VSCode `parameterHints.enabled`)
 
-**Trim final newlines** (known gap):
+## Trim final newlines
+
+Known gap:
 
 - VSCode: `files.trimFinalNewlines: true` (trims extra blank lines at EOF)
 - Zed: `ensure_final_newline_on_save: true` (adds one, does NOT trim extras)
 - Micro: `eofnewline: true` (adds one, does not trim extras)
 
-**Hidden files / case-insensitive matching at shell level** (supplements file search table above):
+## Hidden files at shell level
+
+Supplements the file-search table above with case-insensitive matching:
 
 - zsh: `setopt globdots` (glob matches dotfiles — consistent with fd/rg `--hidden`)
 - zsh completions: `matcher-list 'm:{a-zA-Z}={A-Za-z}'` (supplements smart-case in rg/Zed/yazi)
 
-**Nerd Font icons** — `Symbols Nerd Font Mono` in font fallback chain enables icons across:
+## Nerd Font icons
+
+`Symbols Nerd Font Mono` in font fallback chain enables icons across:
 
 - starship: nerd-font-symbols preset (`.config/starship.toml`)
 - eza: `--icons=auto` in aliases
@@ -173,17 +201,19 @@ This document is the source of truth for shared-behavior tables. CLAUDE.md links
 - VSCode/Zed: via font fallback chain
 - Ghostty: via font fallback chain (`Symbols Nerd Font Mono`)
 
-**Shell integration:**
+## Shell integration
 
 - Ghostty: `shell-integration = zsh`
 - `.zshrc`: sources fzf (`fzf --zsh`), fnm, uv, zoxide, starship
 
-**Clipboard whitespace:**
+## Clipboard whitespace
 
 - Ghostty: `clipboard-trim-trailing-spaces = true` (trim on copy)
 - Editors: trim trailing whitespace on save (VSCode, Zed, Micro)
 
-**Update channel and auto-update** — stable everywhere, auto-update enabled:
+## Update channel and auto-update
+
+Stable everywhere, auto-update enabled:
 
 | Tool | Auto-update | Channel | Setting |
 |---|---|---|---|
@@ -203,9 +233,13 @@ This document is the source of truth for shared-behavior tables. CLAUDE.md links
 
 **Codex ↔ Claude shared docs:** Codex `project_doc_fallback_filenames = ["CLAUDE.md"]` — both agents read same `CLAUDE.md` files
 
-**Exclusion lists** must stay in sync across: `.config/ripgrep/ripgreprc`, `fd` alias in `.zshrc`, VSCode `search.exclude`, Zed `file_scan_exclusions`, `.config/git/ignore`. Core set: `.git`, `node_modules`, `.venv`, `venv`, `__pycache__`, `.pytest_cache`, `.terraform`, `vendor`, `dist`, `build`, `coverage`
+## Exclusion lists
 
-**Git settings** must stay consistent across: `.config/git/config` (authoritative), VSCode, Zed, `gh` CLI, lazygit
+Must stay in sync across: `.config/ripgrep/ripgreprc`, `fd` alias in `.zshrc`, VSCode `search.exclude`, Zed `file_scan_exclusions`, `.config/git/ignore`. Core set: `.git`, `node_modules`, `.venv`, `venv`, `__pycache__`, `.pytest_cache`, `.terraform`, `vendor`, `dist`, `build`, `coverage`
+
+## Git settings
+
+Must stay consistent across: `.config/git/config` (authoritative), VSCode, Zed, `gh` CLI, lazygit
 
 | Setting | `.config/git/config` | VSCode | gh CLI | lazygit | Zed |
 |---|---|---|---|---|---|
@@ -226,13 +260,17 @@ Zed delegates git workflow (rebase, autostash, prune, SSH) to `.config/git/confi
 
 `.config/git/config` section order: Identity (`user`, `url`) → Core (`core`, `init`, `interactive`) → Pager (`delta`) → Display (`diff`, `merge`, `log`, `branch`) → Workflow (`fetch`, `pull`, `rebase`, `push`, `rerere`) → Filters (`filter "lfs"`) → Aliases (`alias`, last). Add new sections under the matching group.
 
-**`VISUAL` / `EDITOR` env vars** must match across: `.zprofile` (`VISUAL="code --wait --reuse-window"`, `EDITOR="$VISUAL"`), `.config/git/config` (`core.editor`), `.config/gh/config.yml` (`editor: code --wait`), `.config/yazi/yazi.toml` (`[opener.edit]` runs `code --wait "$@"`), lazygit (`editPreset: vscode`), Codex (`file_opener = "vscode"`), Superfile (`editor`/`dir_editor = "code --wait"`).
+## VISUAL / EDITOR env vars
+
+Must match across: `.zprofile` (`VISUAL="code --wait --reuse-window"`, `EDITOR="$VISUAL"`), `.config/git/config` (`core.editor`), `.config/gh/config.yml` (`editor: code --wait`), `.config/yazi/yazi.toml` (`[opener.edit]` runs `code --wait "$@"`), lazygit (`editPreset: vscode`), Codex (`file_opener = "vscode"`), Superfile (`editor`/`dir_editor = "code --wait"`).
 
 `VISUAL` is set first because modern consumers (`sudoedit`, `crontab -e`, `less +v`, `man -e`) check `VISUAL` before `EDITOR`. `EDITOR` is the historical fallback for line editors. Setting both to the same value covers every consumer. `--reuse-window` lives only on the env-var path; per-tool configs keep plain `code --wait`. If window-explosion ever becomes annoying in `git commit` / `gh pr edit` / yazi / superfile, propagate `--reuse-window` there too, but be aware the editor tab will attach to whatever VSCode window is currently focused, which can misroute commit messages between projects.
 
 **Claude ↔ Codex** allowed commands must stay in sync between `.config/claude/settings.json` and `.config/codex/rules/`
 
-**Marketplace identifiers** are intentionally divergent between Claude and Codex when both tools register the same upstream repo, because Codex CLI does not support renaming a marketplace key after `codex plugin marketplace add` (the key is fixed by the add command). Current state for the shared `caveman` repo (https://github.com/JuliusBrussee/caveman):
+## Marketplace identifiers
+
+Intentionally divergent between Claude and Codex when both tools register the same upstream repo, because Codex CLI does not support renaming a marketplace key after `codex plugin marketplace add` (the key is fixed by the add command). Current state for the shared `caveman` repo (https://github.com/JuliusBrussee/caveman):
 
 - `.config/claude/settings.json` → `extraKnownMarketplaces.caveman`
 - `.config/codex/config.toml` → `[marketplaces.caveman-repo]` + `[plugins."caveman@caveman-repo"]`
@@ -245,25 +283,13 @@ Do not attempt to rename the Codex side to `caveman` — Codex will treat it as 
 
 **VSCode `git.blame.*` is split** into `git.blame.editorDecoration.enabled` (inline editor decoration) and `git.blame.statusBarItem.enabled` (status bar item), each with its own `template`. Do not use the legacy flat `git.blame.enabled` key — it is silently ignored.
 
-**Brewfile maintenance:**
+## Brewfile maintenance
 
-- `Brewfile` is **the dump target**: `make brew-export` overwrites it via `brew bundle dump --force`, then strips any line that also appears in `Brewfile.work`. Net effect: base stays curated, work entries stay separate. **macOS only**: the target self-skips on Linux because Linuxbrew install state covers only the 6 Linux-installable casks, so a Linux dump would wipe the 28 macOS-only cask entries from `Brewfile`. Symmetric with `flatpaks-export` (Linux only).
+- `Brewfile` is **the dump target**: `make brew-export` overwrites it via `brew bundle dump --force`, then strips any line that also appears in `Brewfile.work`. Net effect: base stays curated, work entries stay separate. **macOS only**: the target self-skips on Linux because Linuxbrew install state covers only the 6 Linux-installable casks, so a Linux dump would wipe the 20 macOS-only cask entries from `Brewfile` (the 8 work casks live in `Brewfile.work`, which `brew bundle dump --file=Brewfile` never touches).
 - `Brewfile.work` is **manually curated**: `brew bundle dump` does not respect file boundaries, so new work entries must be added by hand to `Brewfile.work` after install. Otherwise the next `make brew-export` will leak them into base.
-- `Brewfile.work` lines must use the same format `brew bundle dump` emits (`cask "name"`, `brew "name"`, etc.). The strip step prefilters `Brewfile.work` through `grep -E '^(brew|cask|tap|vscode|mas) "'` before whole-line fixed-string match, so blank lines and comments in `Brewfile.work` are tolerated, but malformed entries (wrong prefix, trailing whitespace) still leak through.
-- **Known gap:** the strip regex does not cover `go "..."` / `uv "..."` DSL prefixes. `Brewfile.work` is casks-only today, so no live leak — but a future work-only `go`/`uv` entry would not be eligible for stripping, and the next `make brew-export` would drop it from `Brewfile` on the round-trip. Extend the regex in `Makefile` and this block if that scope ever expands.
+- `Brewfile.work` lines must use the same format `brew bundle dump` emits (`cask "name"`, `brew "name"`, etc.). The strip step prefilters `Brewfile.work` through `grep -E '^(brew|cask|tap|vscode|mas|go|uv|npm) "'` before whole-line fixed-string match, so blank lines and comments in `Brewfile.work` are tolerated, but malformed entries (wrong prefix, trailing whitespace) still leak through.
 - Do not re-sort either Brewfile by hand — `brew bundle dump` owns ordering.
 
-**Flatpaks maintenance:**
+## Linux GUI apps
 
-- `flatpaks` is **the dump target**: `make flatpaks-export` overwrites it via `flatpak list --user --app --columns=application`, then strips any line that also appears in `flatpaks.work` (same `.tmp` + atomic `mv` pattern as `brew-export`). The `.tmp` file is a shell limitation, not a design choice — `> flatpaks` would truncate the file before `grep` reads it.
-- `flatpaks.work` is **manually curated**: `flatpak list` has no file-boundary awareness, so new work entries must be added by hand to `flatpaks.work` after install. Otherwise the next `make flatpaks-export` will leak them into base.
-- **No comments in either file.** Both use bare Flathub IDs (one per line). Comments and blank lines are tolerated by the install loop but wiped by `make flatpaks-export` on first run (the `flatpak list` dump emits only IDs). Symmetric with `Brewfile` / `Brewfile.work` which are also comment-free. The install-side `grep -vE '^\s*(#|$)'` filter exists only as a defensive guard.
-- `flatpak list --columns=application` emits sorted alphabetically by app ID — do not re-sort by hand.
-- Both files are **user-scope** (`--user`); system-scope entries from `/var/lib/flatpak` will not appear in `flatpak list --user` and will be lost on `make flatpaks-export`. Stick to one scope (user). See "Plain flatpaks vs Brewfile flatpak keyword" below.
-
-**Plain flatpaks vs Brewfile flatpak keyword:**
-
-The Brewfile DSL gained a `flatpak` keyword in brew 5.0.4+. Install side is cross-OS-safe — `brew bundle` skips cask entries on Linux and flatpak entries on macOS with a friendly warning. But this repo uses a separate `flatpaks` file for two reasons:
-
-- **Dump asymmetry destroys the other-OS side.** `brew bundle dump --force` on macOS emits zero flatpak lines (no flatpak installed), wiping every `flatpak "X"` entry from `Brewfile` on each `make brew-export`. Same in reverse: dump on Linux drops all `cask` entries. A single cross-OS Brewfile cannot survive `dump --force` on alternating hosts. Separate per-OS files sidestep the problem entirely — each file is owned by its host and never touched by the other.
-- **Brewfile flatpak DSL has no `--user` parameter.** It defaults to system scope (`/var/lib/flatpak`, sudo required). Personal-laptop convention is `--user`: no sudo, no `/var/lib` bloat, app state lives in `$HOME`, all Flathub apps work identically in user scope on a single-user laptop (sandbox is per-app, not per-scope), and mixing scopes duplicates runtime extensions (`org.freedesktop.Platform.*`) on disk. Community consensus (Arch Wiki, Flathub docs, Bluefin docs, openSUSE forums) recommends `--user` for personal laptops. Brew analogy: `brew` installs to `/opt/homebrew` without sudo; `flatpak --user` installs to `~/.local/share/flatpak` without sudo — same model.
+Vendor `.deb` / `.rpm` packages install separately from the Brewfile. Per-app install commands live in [`linux-packages.md`](linux-packages.md). Flatpak is intentionally not used: vendor packages respect `~/.config/<tool>/`, integrate with `apt` / `dnf` for updates, and avoid the `XDG_CONFIG_HOME` remap that would break the repo's symlinks. Casks without a Linux build (`horos`, `orbstack`, macOS-system tools) are listed in `linux-packages.md` under "Casks with no Linux build".

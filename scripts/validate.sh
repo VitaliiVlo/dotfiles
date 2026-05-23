@@ -8,8 +8,11 @@ cd "$DOTFILES_DIR"
 fail=0
 
 heading() { printf '\n=== %s ===\n' "$1"; }
-ok()      { printf 'OK %s\n' "$1"; }
-bad()     { printf 'FAIL %s\n' "$1"; fail=1; }
+ok() { printf 'OK %s\n' "$1"; }
+bad() {
+    printf 'FAIL %s\n' "$1"
+    fail=1
+}
 
 # 1. Parse every TOML
 heading "TOML"
@@ -108,18 +111,7 @@ else
     echo "SKIP (brew not installed)"
 fi
 
-# 6. Flatpaks files (format only; install state is OS-dependent)
-heading "Flatpaks (format)"
-for f in flatpaks flatpaks.work; do
-    if grep -vE '^\s*(#|$)' "$f" \
-        | awk 'NF && $0 !~ /^[A-Za-z0-9_.-]+$/ {print "BAD ID line " NR ": " $0; bad=1} END {exit bad+0}'; then
-        ok "$f"
-    else
-        bad "$f"
-    fi
-done
-
-# 7. Ghostty config (parsed by ghostty CLI; flagged kv-pairs would error)
+# 6. Ghostty config (parsed by ghostty CLI; flagged kv-pairs would error)
 heading "Ghostty"
 if command -v ghostty >/dev/null 2>&1; then
     if ghostty +validate-config --config-file=.config/ghostty/config >/dev/null 2>&1; then
@@ -131,10 +123,10 @@ else
     echo "SKIP (ghostty not installed)"
 fi
 
-# 8. Lint shell scripts
+# 7. Lint shell scripts
 heading "shellcheck"
 if command -v shellcheck >/dev/null 2>&1; then
-    if shellcheck scripts/symlinks.sh scripts/macos-defaults.sh scripts/linux-defaults.sh scripts/flatpaks-install.sh scripts/validate.sh; then
+    if shellcheck scripts/symlinks.sh scripts/macos-defaults.sh scripts/linux-defaults.sh scripts/validate.sh; then
         ok "scripts/*.sh"
     else
         bad "scripts/*.sh"
@@ -143,7 +135,21 @@ else
     echo "SKIP (shellcheck not installed)"
 fi
 
-# 9. Verify documented symlinks resolve
+# 7b. Format-check shell scripts. Repo style: 4-space indent (-i 4), case branches
+# indented (-ci), and column-aligned trailing tokens preserved (-kp). shfmt
+# defaults to tabs and collapses padding, so all three flags must stay pinned.
+heading "shfmt"
+if command -v shfmt >/dev/null 2>&1; then
+    if shfmt -d -i 4 -ci -kp scripts/symlinks.sh scripts/macos-defaults.sh scripts/linux-defaults.sh scripts/validate.sh; then
+        ok "scripts/*.sh"
+    else
+        bad "scripts/*.sh"
+    fi
+else
+    echo "SKIP (shfmt not installed)"
+fi
+
+# 8. Verify documented symlinks resolve
 heading "Symlinks"
 common_paths=(
     "$HOME/.zprofile"

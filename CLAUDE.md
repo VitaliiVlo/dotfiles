@@ -2,44 +2,41 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Repository Purpose
+## Repository purpose
 
 Cross-platform dotfiles repository (macOS and Linux/GNOME) for setting up a development environment. All configs use **Catppuccin Macchiato** (dark) / **Catppuccin Latte** (light) theme where supported, **JetBrains Mono** font (14pt) with **Fira Code**, **Menlo**, **Monaco**, and **Symbols Nerd Font Mono** fallbacks. Configured for **Go 1.26** (via Homebrew), **Python** (via `uv`), and **Node.js** (via `fnm`).
 
-## Key Commands
+## Key commands
 
 ```bash
-make setup              # Base setup: configure OS, symlink configs, install base packages + flatpaks, show versions
-make setup-all          # Full setup: base setup + work packages + work flatpaks
+make setup              # Base setup: configure OS, symlink configs, install base packages, show versions
+make setup-all          # Full setup: base setup + work packages
 make symlinks           # Symlink configs to home directory
-make defaults           # Configure macOS defaults: folders, system, screenshots, Finder, Dock (no-op on Linux)
+make macos-defaults     # Configure macOS defaults: folders, system, screenshots, Finder, Dock (no-op on Linux)
 make linux-defaults     # Configure Linux/GNOME defaults: folders, input, Nautilus, desktop (no-op on macOS / non-GNOME)
 make versions           # Show installed Go, Node, Python versions
-make validate           # Full audit: parse configs, check brew + flatpaks, shellcheck, verify symlinks
+make validate           # Full audit: parse configs, check brew, shellcheck, verify symlinks
 make brew-install       # Install all packages (base + work)
 make brew-install-base  # Install base packages only
 make brew-install-work  # Install work packages only
 make brew-cleanup       # Clean up old versions and cache
 make brew-export        # Export installed packages (incl. VSCode extensions) to Brewfile, then strip Brewfile.work entries; add new work entries to Brewfile.work manually (macOS only; Linuxbrew dump would wipe macOS-only casks)
-make flatpaks-install        # Install all flatpaks (base + work); Linux only, no-op on macOS
-make flatpaks-install-base   # Install base flatpaks only
-make flatpaks-install-work   # Install work flatpaks only
-make flatpaks-export         # Export installed user flatpaks to flatpaks, then strip flatpaks.work entries; add new work entries to flatpaks.work manually
 ```
 
-## Repository Structure
+Linux GUI apps install via vendor deb/rpm. Per-app commands in `docs/linux-packages.md`. No Flatpak.
 
+## Repository structure
+
+- `LICENSE` - MIT license
 - `scripts/symlinks.sh` - Creates symlinks (uses `set -euo pipefail`; defines `symlink` helper; branches on `uname -s` for glow/superfile/tlrc/vscode)
 - `scripts/macos-defaults.sh` - macOS defaults via `defaults write` (non-interactive, idempotent; guards `uname -s == Darwin`, no-op on Linux)
 - `scripts/linux-defaults.sh` - Linux/GNOME defaults via `gsettings` (non-interactive, idempotent; guards `uname -s == Linux`, requires `gsettings` + `XDG_CURRENT_DESKTOP=*GNOME*`, no-op on macOS / KDE / headless)
-- `scripts/flatpaks-install.sh` - Installs Flathub apps at user scope from `flatpaks` / `flatpaks.work` (Linux only, no-op on macOS, adds flathub user remote on first run)
-- `scripts/validate.sh` - Full audit runner (parses every TOML/JSON/YAML/JSONC, brew bundle check, flatpaks ID lint, shellcheck, symlink verification). Backs `make validate`. Skips macOS-native symlinks on Linux.
-- `docs/consistency.md` - Cross-config consistency tables (shared behavior across all tools: theme, font, telemetry, git pager, etc.). Read when adding a new tool or auditing drift.
+- `scripts/validate.sh` - Full audit runner (parses every TOML/JSON/YAML/JSONC, brew bundle check, shellcheck, symlink verification). Backs `make validate`. Skips macOS-native symlinks on Linux.
+- `docs/conventions.md` - Cross-config consistency tables (shared behavior across all tools: theme, font, telemetry, git pager, etc.). Read when adding a new tool or auditing drift.
 - `Makefile` - Task runner targets (`make help` for list)
 - `Brewfile` - Base packages: shell essentials, fonts, daily-driver apps, VSCode extensions
 - `Brewfile.work` - Work packages: work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN, browser (curated manually)
-- `flatpaks` - Base Flathub app IDs for Linux, bare one-per-line (no comments — `make flatpaks-export` would wipe them; see "Flatpaks maintenance" in `docs/consistency.md`). Paired with `Brewfile` casks where a Flathub equivalent exists; see `docs/flatpaks.md` for cross-ref table.
-- `flatpaks.work` - Work Flathub app IDs for Linux (paired with `Brewfile.work` casks; curated manually, same bare-line format as `flatpaks`)
+- `docs/linux-packages.md` - Native deb/rpm install commands for each cask on Linux (vendor apt/dnf repos, signed keys, GitHub release downloads)
 - `.zshrc` / `.zprofile` - Zsh config. `.zprofile` sets `BREW_PREFIX`, XDG base-dir vars, `GOPATH=$XDG_DATA_HOME/go` (Go doesn't honor XDG natively), and `VISUAL`/`EDITOR`. `.zshrc` re-detects `BREW_PREFIX` defensively for non-login shells, keeps `HISTFILE` under `$XDG_STATE_HOME/zsh/history`, loads starship prompt, fnm, uv, fzf with bat preview, eza aliases, syntax-highlighting, autosuggestions.
 - `.config/git/config` / `.config/git/ignore` - Git settings (delta pager, rebase workflow, SSH for GitHub, zdiff3 conflicts, rerere, git-lfs filters) — XDG path
 - `.config/ripgrep/ripgreprc` - Ripgrep defaults (smart-case, hidden files, follow symlinks); resolved via `RIPGREP_CONFIG_PATH`
@@ -69,30 +66,29 @@ Templates (not symlinked, import or copy as needed):
 
 - `docs/bookmarks.template.html` - Netscape bookmark template (universal URLs only: GitHub `/pulls/*`, AI chats, web tools). One-shot import per project; rename `<Employer>` / `<Project>` folders after import.
 
-## When Adding a New Tool/Config (Doc Drift Checklist)
+## Doc-drift checklist
 
 When adding a new tool, config file, cask, or formula, update all of these in lockstep — missing any one causes documentation drift:
 
 - **Install** — add line to `Brewfile` or `Brewfile.work` (tap, cask, brew, vscode, go, uv, etc.)
 - **Linux equivalent** — when adding a `cask`, classify and document. Inspect the cask `.rb` source first (`brew info --json=v2 --cask <name>` for `ruby_source_path`, then fetch from `https://raw.githubusercontent.com/Homebrew/homebrew-cask/master/<path>`):
-  - **Linux-installable via brew** — `.rb` declares `os macos: ..., linux: ...` block with `x86_64_linux`/`arm64_linux` sha256 entries AND uses `binary` artifact, OR uses `font` artifact with no `depends_on macos:`. These install on Linuxbrew via `brew install --cask <name>`. Add row to "Linux-installable casks" table in `docs/casks.md`. No Flathub pairing needed.
-  - **GUI app with Flathub equivalent** — add paired Flathub ID to `flatpaks` or `flatpaks.work` (verify via `curl -sI https://flathub.org/api/v2/appstream/<id>` returns 200), and add row to Base/Work table in `docs/flatpaks.md`. Skip Flathub when the app's Flatpak remaps `XDG_CONFIG_HOME` away from `~/.config/<tool>/` (would break the repo's symlinks); list under "Native Linux install (deb/rpm)" in `docs/flatpaks.md` instead and document the deb/rpm install step in README Prerequisites → Linux.
-  - **GUI app not on Flathub** — add cask name to "macOS-only → GUI apps not on Flathub" sub-list in `docs/flatpaks.md`.
-  - **CLI tool, macOS-only** — `pkg`/`installer` artifact, or `binary` without linux sha256. Add to "macOS-only → CLI tools" sub-list in `docs/flatpaks.md` (e.g. `cloudflare-warp`).
-  - **macOS-system tool** (e.g. `rectangle`, `maccy`, no Linux concept) — add cask name to "macOS-only → macOS-system tools" sub-list in `docs/flatpaks.md`.
-  - Every cask in `Brewfile` / `Brewfile.work` must appear in exactly one of: `docs/casks.md` Linux-installable table, `docs/flatpaks.md` Base/Work table, `docs/flatpaks.md` "Native Linux install (deb/rpm)" sub-list, or one of the three `docs/flatpaks.md` macOS-only sub-lists.
+  - **Linux-installable via brew** — `.rb` declares `os macos: ..., linux: ...` block with `x86_64_linux`/`arm64_linux` sha256 entries AND uses `binary` artifact, OR uses `font` artifact with no `depends_on macos:`. These install on Linuxbrew via `brew install --cask <name>`. Add row to "Linux-installable casks" table in `docs/casks.md`. No native package step needed.
+  - **GUI app with native deb/rpm** — vendor ships `.deb` + `.rpm` (apt/dnf repo or GitHub release). Add per-app install commands to `docs/linux-packages.md` under "Base apps" or "Work apps".
+  - **GUI app without official deb/rpm** — community Copr / community deb / tarball / install script. Document under matching app section in `docs/linux-packages.md` with upstream + community sources.
+  - **No Linux build at all** — `pkg`/`installer` artifact, or macOS-system-only tool (e.g. `rectangle`, `maccy`). Add cask name to "Casks with no Linux build" section in `docs/linux-packages.md`.
+  - Every cask in `Brewfile` / `Brewfile.work` must appear in exactly one of: `docs/casks.md` Linux-installable table, `docs/linux-packages.md` Base/Work app section, or `docs/linux-packages.md` "Casks with no Linux build" section.
 - **Symlink** — add `symlink <repo-src> <abs-dest>` call to `scripts/symlinks.sh` if the tool reads a config file from a fixed path
-- **README "Configuration Files" list** — add bullet under `## Configuration Files` if a config file is symlinked
-- **README "CLI Tools" table** or **`docs/casks.md`** — add row if user-facing CLI / GUI tool
-- **`docs/flatpaks.md` tables** — add row to Base or Work Flatpaks table if Flathub equivalent paired
+- **README "Configuration files" list** — add bullet under `## Configuration files` if a config file is symlinked
+- **README "CLI tools" table** or **`docs/casks.md`** — add row if user-facing CLI / GUI tool
+- **`docs/linux-packages.md`** — add per-app section with deb/rpm commands if the cask has a Linux build
 - **`docs/applications.md` table** — add row if GUI app fits an existing category, or add new category row
-- **CLAUDE.md "Repository Structure" list** — add bullet describing the file's purpose
-- **`docs/consistency.md` tables** — add row(s) if the tool shares behavior (theme, font, tab size, hidden files, telemetry, auto-update, git pager, etc.) with existing tools
+- **CLAUDE.md "Repository structure" list** — add bullet describing the file's purpose
+- **`docs/conventions.md` tables** — add row(s) if the tool shares behavior (theme, font, tab size, hidden files, telemetry, auto-update, git pager, etc.) with existing tools
 - **`scripts/validate.sh`** — extend the matching block (TOML/JSON/YAML/JSONC parse list, or symlink list) so `make validate` covers the new config
 
 When removing a tool, sweep the same list in reverse.
 
-## Comment Style in Configs
+## Comment style in configs
 
 When adding or editing config files, follow this style across all of them:
 
@@ -104,9 +100,9 @@ When adding or editing config files, follow this style across all of them:
 - **Trim verbose schema docs** — when a tool emits its config with full per-key docstrings (e.g. `gh config init`), strip them; keys are self-documenting.
 - **Plain JSON files (no comments allowed)** — micro's `settings.json` is parsed by Go's strict `encoding/json`, which rejects `//` and `/* */`. Use **blank lines** between key clusters for visual grouping; document the cluster meaning in this file. Current micro grouping: `tabsize`/`tabstospaces`/`autoindent`/`smartpaste` (indentation) → `rmtrailingws`/`eofnewline`/`fileformat` (whitespace & save) → `syntax`/`cursorline`/`matchbrace`/`colorcolumn`/`scrollbar`/`scrollmargin`/`diffgutter`/`basename`/`hlsearch`/`savecursor`/`wordwrap` (display) → `encoding`/`truecolor` (encoding).
 
-## Script Behavior
+## Script behavior
 
-**scripts/symlinks.sh:**
+### scripts/symlinks.sh
 
 - Uses `symlink <repo-relative-src> <abs-dest>` helper (force symlink via `ln -sf`, auto-creates parent dirs). Overwrites existing symlinks.
 - `DOTFILES_DIR` resolves to repo root via `cd "$(dirname "$0")/.." && pwd` (script lives one level deep in `scripts/`)
@@ -122,32 +118,22 @@ When adding or editing config files, follow this style across all of them:
   Unknown OS prints a warning and skips this block. Claude/Codex use `~/.claude` and `~/.codex` on both OSes (non-XDG always); no branching needed there.
 - Symlinks grouped by category (in this order): Shell → Shell tools (history/pager/system monitor/terminal/search/prompt) → Git/file tools → Editors → AI agents → platform-native paths. Within each group, tools are alphabetized. Add new symlinks under the matching group in alpha order. For tools with split macOS/Linux paths, add to both branches of the `case` block.
 
-**scripts/macos-defaults.sh:**
+### scripts/macos-defaults.sh
 
 - Non-interactive: applies all categories unconditionally (Folders, System defaults, Screenshots, Finder + DS_Store suppression on network/USB, Dock)
 - Restarts affected processes (Finder, Dock, SystemUIServer)
 - Safe to re-run: idempotent `mkdir -p` and `defaults write` commands
 - Guards `uname -s == Darwin`; exits 0 on Linux so the shared `make setup` chain stays safe to invoke cross-OS
 
-**scripts/linux-defaults.sh:**
+### scripts/linux-defaults.sh
 
 - Non-interactive: applies Folders, Input (touchpad + mouse natural scroll, keyboard repeat), Files/Nautilus (list view, hidden files, folders-first, recursive-search=never), Desktop (dash-to-dock click action, battery %, clock, color scheme `prefer-dark`), Power (no AC suspend)
 - Safe to re-run: idempotent `mkdir -p` plus `gsettings set` only when the schema/key exists (`set_if_exists` helper guards against missing GNOME components like `dash-to-dock`)
 - Guards in order: `uname -s == Linux` → `command -v gsettings` → `XDG_CURRENT_DESKTOP` contains `GNOME`. Non-GNOME DEs (KDE, Sway, headless SSH) skip with a message
 - No process restart needed (GNOME applies `gsettings` changes live)
-- Screenshot folder: created at `~/Pictures/Screenshots` (XDG user-dir convention; matches GNOME Screenshot UI default and `make defaults` on macOS)
+- Screenshot folder: created at `~/Pictures/Screenshots` (XDG user-dir convention; matches GNOME Screenshot UI default and `make macos-defaults` on macOS)
 
-**scripts/flatpaks-install.sh:**
-
-- Linux only. On any non-Linux host: prints a skip message and exits 0 (Makefile targets remain safe to invoke on macOS)
-- Requires `flatpak` binary (install via `brew install flatpak` on Linux)
-- User scope only (`--user`): writes to `~/.local/share/flatpak`, no sudo
-- Adds `flathub` as user remote on first run (`flatpak remote-add --user --if-not-exists`)
-- Idempotent: uses `--noninteractive --or-update`, so repeated runs upgrade existing apps
-- Accepts an optional file path arg (default `flatpaks`); strips `#` comments and blank lines before invoking `flatpak install`
-- Scope decision rationale: see "Plain flatpaks vs Brewfile flatpak keyword" in `docs/consistency.md`
-
-## Shell Aliases
+## Shell aliases
 
 Defined in `.zshrc`:
 
@@ -163,7 +149,7 @@ Defined in `.zshrc`:
 | `lt`     | `eza` tree view (2 levels)             |
 | `lr`     | `eza` sorted by modified (recent first) |
 
-## Shell Tool Integration
+## Shell tool integration
 
 fd and ripgrep share consistent defaults for daily use:
 
@@ -191,7 +177,7 @@ git-delta is configured as the git pager (`.config/git/config`) with Catppuccin 
 
 `.zshrc` load order is intentional: history/options → aliases → fd/eza shared opts → completions → autosuggestions → fzf → fnm → uv → zoxide → starship → atuin (after fzf, so it owns `Ctrl+R`/Up) → zsh-syntax-highlighting (must be last per upstream docs). Do not reorder — atuin and syntax-highlighting are load-order-sensitive.
 
-## Git Aliases
+## Git aliases
 
 Defined in `.config/git/config`:
 
@@ -208,9 +194,9 @@ Defined in `.config/git/config`:
 | `undo` | `reset --soft HEAD~1`              |
 | `wipe` | `reset --hard HEAD`                |
 
-## Config Validation
+## Config validation
 
-**Spot checks (per-tool):**
+### Spot checks (per-tool)
 
 ```bash
 ghostty +show-config --default --docs      # Should show parsed config, no errors
@@ -228,23 +214,24 @@ fnm list                                    # Should show installed Node version
 uv python list --only-installed             # Should show installed Python versions
 ```
 
-**Full audit:** run `make validate` (delegates to `scripts/validate.sh`). Covers:
+### Full audit
+
+Run `make validate` (delegates to `scripts/validate.sh`). Covers:
 
 1. Parse every TOML (`.config/codex/config.toml`, atuin, bottom, yazi, starship, tlrc, superfile)
 2. Parse every plain JSON (claude/settings, micro, ccstatusline)
 3. Parse every YAML (gh, lazygit, glow) — needs `yq`
 4. Parse JSONC (zed, vscode) — needs `node`
 5. `brew bundle list --file=Brewfile{,.work}` (parse-only; install state reported separately as non-fatal warning) — needs `brew`
-6. Flatpaks ID format lint (`flatpaks`, `flatpaks.work`)
-7. `ghostty +validate-config --config-file=.config/ghostty/config` — needs `ghostty`
-8. `shellcheck` on every script in `scripts/`
-9. Verify every documented symlink under `$HOME` resolves (skips macOS-native paths on Linux)
+6. `ghostty +validate-config --config-file=.config/ghostty/config` — needs `ghostty`
+7. `shellcheck` on every script in `scripts/`
+8. Verify every documented symlink under `$HOME` resolves (skips macOS-native paths on Linux)
 
 When adding a new tool, extend the matching block in `scripts/validate.sh`.
 
 **Web verification rule:** when a config key looks suspect (unfamiliar value, version-specific), confirm against the tool's official docs before flagging it as invalid. Examples that look wrong but are valid: Codex `model = "gpt-5.5"`/`gpt-5.4`/`gpt-5.4-mini`, Codex `personality = "friendly"`, Codex `[features].fast_mode`/`prevent_idle_sleep`, Codex `commit_attribution`, Claude `effortLevel = "xhigh"`, Claude `model = "opus[1m]"`, atuin `inline_height_shell_up_key_binding`, atuin `enter_accept = false` (intentional default-flip: Enter selects/edits, doesn't auto-execute), ghostty `cursor-opacity`/`adjust-cursor-thickness`. All confirmed valid via vendor docs.
 
-## VSCode Settings
+## VSCode settings
 
 When modifying `.config/vscode/settings.json`:
 
@@ -255,7 +242,7 @@ When modifying `.config/vscode/settings.json`:
 - Configured for Go, Python, and Node.js backend development
 - Uses Ruff for Python formatting/linting
 
-**Layout (settings.json):**
+### Layout (settings.json)
 
 - `window.commandCenter`: false (no project name in title bar)
 - `workbench.navigationControl.enabled`: false (no back/forward buttons)
@@ -263,33 +250,33 @@ When modifying `.config/vscode/settings.json`:
 - `workbench.activityBar.location`: bottom (compact, under primary side bar)
 - `workbench.secondarySideBar.defaultVisibility`: "hidden" (toggle with `Cmd+Option+B` on demand)
 
-**Layout (UI only, View → Appearance / Customize Layout):**
+### Layout (UI only, View → Appearance / Customize Layout)
 
 - Quick input position: center
 - Panel alignment: justify (full window width)
 - Secondary side bar: right (`Cmd+Option+B`)
 
-## Applications List Maintenance
+## Applications list maintenance
 
 When updating the Applications table in `docs/applications.md`, see the selection criteria documented there. Key guidelines:
 
 - Tools in **bold** are primary recommendations (one per category)
-- GUI apps go in Applications section, text-based/TUI tools go in CLI Tools section
+- GUI apps go in Applications section, text-based/TUI tools go in CLI tools section
 - Include 3-5 apps per category when possible
 - Verify apps are actively maintained before adding
 - Research community sentiment (Reddit, GitHub issues, HN) before adding new tools
 
-## Cross-Config Consistency Rules
+## Conventions
 
-Shared-behavior tables live in `docs/consistency.md`. Read that file when:
+Shared-behavior tables live in `docs/conventions.md`. Read that file when:
 
 - Adding a new tool that overlaps an existing tool's behavior (theme, font, tab size, hidden files, telemetry, auto-update, git pager, scroll margin, cursor style, etc.)
 - Changing a value already covered in any consistency table (must update the table + every other tool's matching setting)
 - Auditing whether a tool drifted from the shared invariants
 
-The doc covers: editor settings matrix (VSCode/Zed/Micro/Ghostty/Bat/Delta/Yazi), telemetry, file-search defaults (fd/rg/yazi/eza/Finder/superfile), italic rendering, smooth scrolling, AI agent enablement, pager=delta, modified-file indicators, preview line numbers, OS theme follow, inline diagnostics, shell linting pairs, extension management, font icons, shell integration, clipboard whitespace, update channels, exclusion lists, git-settings cross-tool table, `EDITOR` env var, Claude↔Codex command parity, marketplace identifiers, Brewfile + flatpaks maintenance rules.
+The doc covers: editor settings matrix (VSCode/Zed/Micro/Ghostty/Bat/Delta/Yazi), telemetry, file-search defaults (fd/rg/yazi/eza/Finder/superfile), italic rendering, smooth scrolling, AI agent enablement, pager=delta, modified-file indicators, preview line numbers, OS theme follow, inline diagnostics, shell linting pairs, extension management, font icons, shell integration, clipboard whitespace, update channels, exclusion lists, git-settings cross-tool table, `EDITOR` env var, Claude↔Codex command parity, marketplace identifiers, Brewfile maintenance rules.
 
-## Claude Code Settings
+## Claude Code settings
 
 The `.config/claude/settings.json` configures permissions and plugins:
 
@@ -304,7 +291,7 @@ The `.config/claude/settings.json` configures permissions and plugins:
 
 See `.config/claude/settings.json` for the full permission list.
 
-## Codex Settings
+## Codex settings
 
 The `.config/codex/config.toml` configures model selection, sandboxing, profiles, plugins, and MCP integrations:
 

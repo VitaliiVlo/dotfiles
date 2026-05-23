@@ -4,35 +4,36 @@ Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** 
 
 ## Contents
 
-- [Quick Start](#quick-start)
+- [Quick start](#quick-start)
 - [Prerequisites](#prerequisites)
-- [Configuration Files](#configuration-files)
-- [macOS Settings](#macos-settings)
-- [Linux Settings](#linux-settings)
-- [macOS Tips](docs/macos-tips.md) — non-obvious shortcuts and behaviors (clipboard, screenshots, Finder, Mission Control, Spotlight, Continuity, shell helpers)
+- [Configuration files](#configuration-files)
+- [macOS settings](#macos-settings)
+- [Linux settings](#linux-settings)
+- [macOS tips](docs/macos-tips.md) — non-obvious shortcuts and behaviors (clipboard, screenshots, Finder, Mission Control, Spotlight, Continuity, shell helpers)
 - [Applications](docs/applications.md) — curated GUI app picks by category, VSCode setup, search engine bangs
-- [CLI Tools](#cli-tools)
+- [CLI tools](#cli-tools)
 - [Validate](#validate)
 - [Updating](#updating)
 - [Casks](docs/casks.md) — Homebrew Cask inventory (base, work, Linux-installable)
-- [Flatpaks](docs/flatpaks.md) — Flathub inventory for Linux, paired with casks
+- [Linux packages](docs/linux-packages.md) — native deb/rpm install paths for each cask on Linux
 - [Claude Code](#claude-code)
 - [Codex](#codex)
 - [Templates](#templates)
 
-## Quick Start
+## Quick start
 
 ### macOS
 
 1. Complete [Prerequisites → macOS](#macos).
 2. Clone this repository.
-3. Run `make setup` (base) or `make setup-all` (base + work). `setup` chains `defaults` → `linux-defaults` (no-op) → `symlinks` → `brew-install-base` → `flatpaks-install-base` (no-op) → `versions`. `setup-all` swaps in `brew-install` and `flatpaks-install` for the base+work supersets.
+3. Run `make setup` (base) or `make setup-all` (base + work). `setup` chains `macos-defaults` → `linux-defaults` (no-op) → `symlinks` → `brew-install-base` → `versions`. `setup-all` swaps in `brew-install` for the base+work superset.
 
 ### Linux (GNOME)
 
 1. Complete [Prerequisites → Linux](#linux).
 2. Clone this repository.
-3. Run `make setup` (base) or `make setup-all` (base + work). Same chain as macOS: `defaults` (no-op on Linux) → `linux-defaults` applies GNOME `gsettings` → `symlinks` → `brew-install-base` installs formulae + the Linux-installable cask subset (`docs/casks.md`) → `flatpaks-install-base` installs Flathub apps at user scope → `versions`. `setup-all` swaps in the base+work supersets.
+3. Run `make setup` (base) or `make setup-all` (base + work). Same chain as macOS: `macos-defaults` (no-op on Linux) → `linux-defaults` applies GNOME `gsettings` → `symlinks` → `brew-install-base` installs formulae + the Linux-installable cask subset (`docs/casks.md`) → `versions`. `setup-all` swaps in `brew-install` for the base+work superset.
+4. Install GUI apps via vendor `.deb` / `.rpm`. See [`docs/linux-packages.md`](docs/linux-packages.md) for per-app commands.
 
 Run `make help` to list all available targets.
 
@@ -64,12 +65,19 @@ Run `make help` to list all available targets.
 
 ### Linux
 
-> Tested on GNOME-based distros (Ubuntu, Fedora, Pop!\_OS). KDE / Sway sessions skip the `gsettings` defaults block but everything else applies. Linuxbrew prefix defaults to `/home/linuxbrew/.linuxbrew` in `.zshrc` / `.zprofile` (override via `BREW_PREFIX` env).
+> Targets GNOME-based distros listed in [Applications](docs/applications.md): elementary OS, Fedora Workstation, Pop!_OS. Immutable variants (Bluefin, Fedora Silverblue) work too, but extra packages must be layered via `rpm-ostree` (or installed inside Distrobox/Toolbox) instead of `dnf`. KDE / Sway sessions skip the `gsettings` defaults block but everything else applies. Linuxbrew prefix defaults to `/home/linuxbrew/.linuxbrew` in `.zshrc` / `.zprofile` (override via `BREW_PREFIX` env).
 
-- **Install build prerequisites** (Debian/Ubuntu shown; substitute equivalents on Fedora/Arch):
+- **Install build prerequisites:**
   ```bash
+  # Debian/Ubuntu (Pop!_OS, elementary OS)
   sudo apt-get update
-  sudo apt-get install -y build-essential procps curl file git zsh flatpak
+  sudo apt-get install -y build-essential procps curl file git zsh
+
+  # Fedora Workstation
+  sudo dnf install -y @development-tools procps-ng curl file git zsh
+
+  # Fedora Silverblue / Bluefin (immutable; layer once, then reboot)
+  sudo rpm-ostree install zsh
   ```
 - **Install Homebrew (Linuxbrew)**
   ```bash
@@ -86,10 +94,12 @@ Run `make help` to list all available targets.
   # Pipe pubkey to clipboard: wl-copy < ~/.ssh/id_ed25519.pub  (Wayland)
   #                          xclip -selection clipboard < ~/.ssh/id_ed25519.pub  (X11)
   ```
-- **Install VSCode and Zed via vendor deb/rpm, not Flatpak.** Both are on Flathub but their Flatpaks remap `XDG_CONFIG_HOME` to `~/.var/app/<id>/config/`, so the repo's `~/.config/Code/User/settings.json` and `~/.config/zed/settings.json` symlinks would be ignored. VSCode: Microsoft apt/dnf repo (<https://code.visualstudio.com/docs/setup/linux>). Zed: `curl -f https://zed.dev/install.sh | sh`.
+- **Install GUI apps via vendor deb/rpm.** Per-app commands (apt/dnf repos, signed keys, GitHub release downloads) live in [`docs/linux-packages.md`](docs/linux-packages.md). Vendor packages respect `~/.config/<tool>/`, so the repo's symlinks resolve without Flatpak-sandbox quirks.
 - **GNOME-only defaults:** `make linux-defaults` skips silently outside GNOME (`XDG_CURRENT_DESKTOP` check). Other DEs configure their own way.
 
-## Configuration Files
+## Configuration files
+
+### Symlinked
 
 The following files are automatically symlinked by running `make symlinks`:
 
@@ -119,19 +129,19 @@ The following files are automatically symlinked by running `make symlinks`:
 - `.config/codex/AGENTS.md` - Codex user-level instructions
 - `.config/codex/rules/` - Codex permission rules (git, dev, shell, infra)
 
-**Not symlinked (used directly from repo):**
+### Not symlinked
+
+Used directly from the repo:
 
 - `Brewfile` - Base Brewfile (shell, fonts, daily-driver apps, VSCode extensions)
 - `Brewfile.work` - Work Brewfile (work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN, browser; curated manually)
-- `flatpaks` - Base Flathub app IDs for Linux (paired with `Brewfile` casks where an equivalent exists)
-- `flatpaks.work` - Work Flathub app IDs for Linux (paired with `Brewfile.work` casks; curated manually)
-- `scripts/flatpaks-install.sh` - Installs `flatpaks` / `flatpaks.work` at user scope (Linux only, no-op on macOS)
+- `docs/linux-packages.md` - Native deb/rpm install commands for each cask on Linux
 - `CLAUDE.md` - Repository instructions for Claude Code (auto-discovered in cwd; Codex reads it via `project_doc_fallback_filenames`)
 - `docs/vscode-defaults.jsonc` - VSCode defaults snapshot for offline comparison (regenerate via `Preferences: Open Default Settings (JSON)`)
 
-## macOS Settings
+## macOS settings
 
-Run `make defaults` to configure (in order applied):
+Run `make macos-defaults` to configure (in order applied):
 
 - Folders (~/Projects, ~/Pictures/Screenshots)
 - System defaults (key repeat, natural scrolling, save to disk)
@@ -141,7 +151,7 @@ Run `make defaults` to configure (in order applied):
 
 No-op on Linux (script guards `uname -s == Darwin`).
 
-## Linux Settings
+## Linux settings
 
 Run `make linux-defaults` to configure (GNOME via `gsettings`):
 
@@ -155,7 +165,7 @@ Guards: skips silently on non-Linux, when `gsettings` missing, or when `XDG_CURR
 
 `gsettings` writes to user-scope dconf; safe to re-run (`set_if_exists` helper checks schema existence before each write).
 
-## macOS Tips
+## macOS tips
 
 Non-obvious shortcuts and behaviors (clipboard, screenshots, Finder, Mission Control, Spotlight, Continuity, shell helpers): see [`docs/macos-tips.md`](docs/macos-tips.md).
 
@@ -163,7 +173,7 @@ Non-obvious shortcuts and behaviors (clipboard, screenshots, Finder, Mission Con
 
 Curated GUI app picks by category, VSCode setup, and search engine bangs: see [`docs/applications.md`](docs/applications.md).
 
-## CLI Tools
+## CLI tools
 
 Installed via Homebrew formulae and casks (see `Brewfile` and `Brewfile.work`):
 
@@ -183,6 +193,8 @@ make versions           # Show installed Go, Node, Python versions
 | awscli                  | AWS command-line interface                              |
 | bat                     | `cat` with syntax highlighting                          |
 | bottom                  | System monitor TUI (`btm`, modern `htop`)               |
+| corepack                | Node package-manager bootstrap (npm-shipped)            |
+| delve                   | Go debugger (binary: `dlv`)                             |
 | dua-cli                 | Interactive disk usage analyzer (alternative to gdu)    |
 | exiftool                | Read/write image/audio/video metadata                   |
 | eza                     | Modern `ls` replacement                                 |
@@ -198,7 +210,13 @@ make versions           # Show installed Go, Node, Python versions
 | gitui                   | Git TUI (Rust, alternative to lazygit)                  |
 | glow                    | Terminal Markdown renderer                              |
 | go                      | Go toolchain (1.26)                                     |
+| golangci-lint           | Go meta-linter                                          |
+| goose                   | Go database migration tool                              |
+| goplay                  | Go playground CLI client                                |
+| gopls                   | Go language server                                      |
+| gotests                 | Go test boilerplate generator                           |
 | helm                    | Kubernetes package manager                              |
+| impl                    | Go interface method stub generator                      |
 | jq / yq                 | JSON / YAML processors                                  |
 | k9s                     | Kubernetes TUI                                          |
 | kdash                   | Kubernetes dashboard TUI (Rust)                         |
@@ -209,16 +227,22 @@ make versions           # Show installed Go, Node, Python versions
 | lazysql                 | Multi-engine SQL TUI                                    |
 | litecli                 | SQLite CLI with autocomplete                            |
 | micro                   | Terminal text editor                                    |
+| mockgen                 | Go mock generator (`go.uber.org/mock`)                  |
+| oapi-codegen            | OpenAPI 3 client/server Go code generator               |
 | pgcli                   | PostgreSQL CLI with autocomplete                        |
 | protobuf                | Protocol Buffers compiler (`protoc`)                    |
 | rainfrog                | Postgres/MySQL/SQLite database TUI (alternative to lazysql) |
 | ripgrep                 | Fast `grep` replacement                                 |
+| ruff                    | Python linter / formatter (Rust)                        |
 | sevenzip                | 7-Zip file archiver                                     |
 | shellcheck              | Shell script static analyzer                            |
 | shfmt                   | Shell script formatter                                  |
 | starship                | Cross-shell prompt                                      |
 | superfile               | Modern terminal file manager (alternative to yazi)      |
+| swag                    | Swagger 2.0 doc generator for Go                        |
 | tlrc                    | `tldr` client (Rust); binary is `tldr`                  |
+| typescript              | TypeScript compiler (`tsc`)                             |
+| typescript-language-server | TypeScript / JavaScript language server              |
 | uv                      | Python version/package manager                          |
 | yazi                    | Terminal file manager                                   |
 | zoxide                  | Smarter `cd` (learns from usage)                        |
@@ -234,15 +258,14 @@ After `make setup`, verify everything wired up:
 - `git config --list --show-origin | head -5` — settings come from `~/.config/git/config`
 - `ls -l ~/.config/ghostty/config ~/.zshrc ~/.config/git/config` — symlinks point at this repo
 
-For full audit, run `make validate` (delegates to `scripts/validate.sh`). Covers TOML/JSON/YAML/JSONC parse, `brew bundle list` (parse) + non-fatal `brew bundle check` (install state), flatpaks ID lint, `ghostty +validate-config`, `shellcheck`, and symlink resolution. Skips macOS-native symlinks on Linux.
+For full audit, run `make validate` (delegates to `scripts/validate.sh`). Covers TOML/JSON/YAML/JSONC parse, `brew bundle list` (parse) + non-fatal `brew bundle check` (install state), `ghostty +validate-config`, `shellcheck`, and symlink resolution. Skips macOS-native symlinks on Linux.
 
 ## Updating
 
 - `brew update && brew upgrade` — update Homebrew formulae and casks
-- `make brew-export` — refresh `Brewfile` from current install state (macOS only; Linuxbrew dump would wipe macOS-only casks). Add new work entries to `Brewfile.work` manually; see `docs/consistency.md` "Brewfile maintenance" for strip step semantics.
+- `make brew-export` — refresh `Brewfile` from current install state (macOS only; Linuxbrew dump would wipe macOS-only casks). Add new work entries to `Brewfile.work` manually; see `docs/conventions.md` "Brewfile maintenance" for strip step semantics.
 - `make brew-cleanup` — prune old versions and cache
-- `flatpak update --user` — update installed Flathub apps (Linux)
-- `make flatpaks-export` — refresh `flatpaks` from current install state (then add any new work entries to `flatpaks.work` manually; same strip semantics as `brew-export`)
+- Linux GUI apps: `sudo apt-get upgrade` (Debian/Ubuntu) or `sudo dnf upgrade` (Fedora) — vendor apt/dnf repos ship updates; GitHub-release apps (Obsidian, LocalSend, etc.) auto-update in-app or require manual re-download
 - VSCode / Zed / Ghostty — auto-update enabled, no action needed
 - Go: `brew upgrade go`. Node: `fnm install <version>`. Python: `uv python install <version>`.
 
@@ -250,9 +273,9 @@ For full audit, run `make validate` (delegates to `scripts/validate.sh`). Covers
 
 Homebrew Cask inventory (base, work, Linux-installable subset): see [`docs/casks.md`](docs/casks.md).
 
-## Flatpaks
+## Linux packages
 
-Flathub inventory for Linux (paired with casks): see [`docs/flatpaks.md`](docs/flatpaks.md).
+Native deb/rpm install commands for each cask on Linux: see [`docs/linux-packages.md`](docs/linux-packages.md).
 
 ## Claude Code
 
@@ -287,7 +310,7 @@ One-shot starter files for new projects. Not symlinked — import or copy as nee
 
 **`bookmarks.template.html`** ships universal-only URLs (no org-specific subdomains, no project domains). `Services`, `Dev`, `Stage`, `Prod` ship empty — fill with org/project-specific URLs in the browser after import.
 
-**Folder contents:**
+### Folder contents
 
 - **`<Employer>`** — Employer-wide accounts shared across all client projects. Personal mail, calendar, timetracking, HR portal, employer-wide tools.
 - **`<Project>`** — Client/project-specific daily hits. Project mail/calendar account, Jira board, GitHub PR queues + org repos + code search, planning poker, most-used Confluence docs and pages.

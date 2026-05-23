@@ -1,8 +1,8 @@
 # macOS Tips
 
-Non-obvious shortcuts and behaviors worth remembering. `defaults write` recipes already applied by `make defaults` are not repeated here, see `scripts/macos-defaults.sh`.
+Non-obvious shortcuts and behaviors worth remembering. `defaults write` recipes already applied by `make macos-defaults` are not repeated here, see `scripts/macos-defaults.sh`.
 
-**Clipboard and paste:**
+## Clipboard and paste
 
 | Shortcut                         | Use                                                                                      |
 | -------------------------------- | ---------------------------------------------------------------------------------------- |
@@ -10,18 +10,18 @@ Non-obvious shortcuts and behaviors worth remembering. `defaults write` recipes 
 | Universal Clipboard              | Copy on iPhone / iPad / Mac, paste on another nearby Apple device                        |
 | Clipboard history (macOS Tahoe+) | Browse recent copied items                                                               |
 
-**Screenshots and screen recording:**
+## Screenshots and screen recording
 
 | Shortcut                                | Use                                                                                      |
 | --------------------------------------- | ---------------------------------------------------------------------------------------- |
 | `Cmd+Shift+3` / `Cmd+Shift+4`           | Full screen / region screenshot to file                                                  |
 | `Cmd+Ctrl+Shift+3` / `Cmd+Ctrl+Shift+4` | Same but to clipboard, skip file write                                                   |
-| `Cmd+Shift+4` then `Space`              | Window screenshot (no shadow if `disable-shadow=true`, applied by `make defaults`)       |
+| `Cmd+Shift+4` then `Space`              | Window screenshot (no shadow if `disable-shadow=true`, applied by `make macos-defaults`)       |
 | `Cmd+Shift+5`                           | Screenshot + screen recording UI (region / window / full, mic select, timer)             |
 
 After capture, the floating thumbnail at bottom-right is draggable: drop it directly into Slack / Mail / a chat without saving to disk first.
 
-**Finder and Save / Open dialogs:**
+## Finder and Save / Open dialogs
 
 | Shortcut              | Use                                                                                |
 | --------------------- | ---------------------------------------------------------------------------------- |
@@ -38,7 +38,7 @@ After capture, the floating thumbnail at bottom-right is draggable: drop it dire
 
 Control-click a folder in Finder path bar → copy pathname. Finder Quick Actions: rotate image / video, Markup, trim audio / video, convert HEIC ↔ JPEG / PNG, create PDF, all without opening an app.
 
-**Get Info and metadata:**
+## Get Info and metadata
 
 | Shortcut                | Use                                                                                  |
 | ----------------------- | ------------------------------------------------------------------------------------ |
@@ -47,7 +47,7 @@ Control-click a folder in Finder path bar → copy pathname. Finder Quick Action
 | Tag in Finder           | Color-coded, searchable via sidebar and Spotlight                                    |
 | Stationery Pad checkbox | In Get Info; turns file into template, opening creates duplicate                     |
 
-**Drag-and-drop tricks:**
+## Drag-and-drop tricks
 
 | Action                                       | Result                                                       |
 | -------------------------------------------- | ------------------------------------------------------------ |
@@ -58,7 +58,7 @@ Control-click a folder in Finder path bar → copy pathname. Finder Quick Action
 | Drag file with `Option` held                 | Copy instead of move                                         |
 | Drag file with `Option+Cmd` held             | Create alias (symlink-like)                                  |
 
-**Window and app lifecycle:**
+## Window and app lifecycle
 
 | Shortcut                 | Use                                                                  |
 | ------------------------ | -------------------------------------------------------------------- |
@@ -75,7 +75,7 @@ Control-click a folder in Finder path bar → copy pathname. Finder Quick Action
 
 Prefer **Hide** over **Minimize**. Minimized windows often vanish mentally; hidden apps return via `Cmd+Tab`. Remember `Cmd+W` only closes a window, the app keeps running, use `Cmd+Q` to actually quit.
 
-**Mission Control and Spaces:**
+## Mission Control and Spaces
 
 | Shortcut                | Use                                                                |
 | ----------------------- | ------------------------------------------------------------------ |
@@ -87,7 +87,7 @@ Prefer **Hide** over **Minimize**. Minimized windows often vanish mentally; hidd
 | Three-finger swipe ←/→  | Switch Space                                                       |
 | Drag window → top edge  | Brings up Mission Control; drop on a Space thumbnail to move it    |
 
-**Spotlight:**
+## Spotlight
 
 Not only app search. Inline math, currency, unit conversion, time zones, weather, stocks, app actions.
 
@@ -102,7 +102,7 @@ focus
 timer 10 minutes
 ```
 
-**Text input:**
+## Text input
 
 | Shortcut                   | Use                                                              |
 | -------------------------- | ---------------------------------------------------------------- |
@@ -121,11 +121,11 @@ Text Replacements (System Settings → Keyboard → Text Replacements) sync via 
 ;sig    → Slack / Jira signature
 ```
 
-**Live Text:**
+## Live Text
 
 Hover over any image (Safari, Photos, Preview, screenshots, PDFs) → cursor turns into text selector → select / copy / lookup the text inside the image. Works on photos of receipts, code on whiteboards, error messages in screenshots. No OCR app needed.
 
-**Continuity (Apple multi-device):**
+## Continuity (Apple multi-device)
 
 | Feature             | What it does                                                                                |
 | ------------------- | ------------------------------------------------------------------------------------------- |
@@ -135,7 +135,7 @@ Hover over any image (Safari, Photos, Preview, screenshots, PDFs) → cursor tur
 | Continuity Camera   | Use iPhone as webcam, document scanner, or sketch input (File → Insert from iPhone)         |
 | Handoff             | Start in Safari / Mail / Notes on one device, pick up on another via Dock / `Cmd+Tab` icon  |
 
-**Menu bar:**
+## Menu bar
 
 | Trick                                                  | Use                                                  |
 | ------------------------------------------------------ | ---------------------------------------------------- |
@@ -148,9 +148,13 @@ Hover over any image (Safari, Photos, Preview, screenshots, PDFs) → cursor tur
 | `Option+click` green window button                     | Toggle zoom instead of full screen                   |
 | `Option+click` Notification Center (date / time)       | Toggle Do Not Disturb                                |
 
-**Hot Corners:** set in System Settings → Desktop & Dock → Hot Corners with a modifier (`Cmd`, `Ctrl`, `Option`, `Shift`) so the action only fires on intent. Example: bottom-right + `Ctrl` = Lock Screen.
+## Hot Corners
 
-**Quick Actions / Shortcuts:** build a Shortcut in the Shortcuts app, then surface it via Finder right-click, Share Sheet, Services, Dock, Control Center, or assign a keyboard shortcut. Useful custom ones:
+Set in System Settings → Desktop & Dock → Hot Corners with a modifier (`Cmd`, `Ctrl`, `Option`, `Shift`) so the action only fires on intent. Example: bottom-right + `Ctrl` = Lock Screen.
+
+## Quick Actions and Shortcuts
+
+Build a Shortcut in the Shortcuts app, then surface it via Finder right-click, Share Sheet, Services, Dock, Control Center, or assign a keyboard shortcut. Useful custom ones:
 
 - Copy POSIX file path of selected Finder item
 - Open folder in VSCode / Zed / Cursor
@@ -159,14 +163,16 @@ Hover over any image (Safari, Photos, Preview, screenshots, PDFs) → cursor tur
 - New terminal here
 - Compress selected files with date prefix
 
-**Preview app (built-in PDF / image powerhouse):**
+## Preview app
+
+Built-in PDF / image powerhouse:
 
 - Combine PDFs: open one in Preview → sidebar → drag other PDFs in
 - Sign documents: trackpad signature or camera capture, stored in keychain
 - Markup: crop, redact, annotate, add shapes / text (`Cmd+Shift+A` opens toolbar)
 - Convert format: File → Export → choose JPEG / PNG / TIFF / HEIC / PDF, no third-party tool
 
-**Shell helpers shipped with macOS:**
+## Shell helpers shipped with macOS
 
 | Command                                       | Use                                                                              |
 | --------------------------------------------- | -------------------------------------------------------------------------------- |
@@ -180,4 +186,6 @@ Hover over any image (Safari, Photos, Preview, screenshots, PDFs) → cursor tur
 | `pmset -g batt`                               | Battery state and history from CLI                                               |
 | `networksetup -listallhardwareports`          | All network interfaces and MAC addresses                                         |
 
-**Most valuable pattern: hold `Option` everywhere.** Changes menu items, window buttons, file drag behavior, Wi-Fi / Bluetooth / battery / volume menus, Apple menu (About → System Information), and many confirmation dialogs.
+## Hold Option everywhere
+
+Most valuable pattern: hold `Option` to change menu items, window buttons, file drag behavior, Wi-Fi / Bluetooth / battery / volume menus, the Apple menu (About → System Information), and many confirmation dialogs.

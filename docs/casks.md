@@ -1,14 +1,13 @@
 # Casks
 
-GUI applications, CLIs, and fonts installed via Homebrew Cask:
+Homebrew Cask inventory: GUI applications, CLIs, and fonts. Split into a base set installed by `make brew-install-base` and a work set installed by `make brew-install-work`. A subset is cross-platform via Linuxbrew; the rest install on Linux via vendor deb/rpm (see [`linux-packages.md`](linux-packages.md)).
 
-## Base Casks
+## Base casks
 
 | Cask                        | Description                      |
 | --------------------------- | -------------------------------- |
 | 1password                   | Password manager                 |
 | 1password-cli               | 1Password CLI                    |
-| arc                         | Web browser (Chromium)           |
 | balenaetcher                | USB flash tool                   |
 | brave-browser               | Web browser (Chromium)           |
 | claude-code                 | Anthropic Claude CLI             |
@@ -19,6 +18,7 @@ GUI applications, CLIs, and fonts installed via Homebrew Cask:
 | font-jetbrains-mono         | Primary monospace font           |
 | font-symbols-only-nerd-font | Nerd Font icons (symbols only)   |
 | ghostty                     | Terminal emulator                |
+| helium-browser              | Web browser (Chromium, privacy)  |
 | horos                       | Medical imaging viewer (DICOM)   |
 | keepingyouawake             | Prevent sleep                    |
 | keka                        | File archiver                    |
@@ -33,7 +33,7 @@ GUI applications, CLIs, and fonts installed via Homebrew Cask:
 | zed                         | Code editor                      |
 | zen                         | Web browser (Gecko)              |
 
-## Work Casks
+## Work casks
 
 | Cask             | Description                               |
 | ---------------- | ----------------------------------------- |
@@ -59,4 +59,4 @@ Homebrew 4.5+ added preliminary Linux cask support. A small subset of `Brewfile`
 | font-jetbrains-mono         | `font` artifact (cross-platform)                 |
 | font-symbols-only-nerd-font | `font` artifact (cross-platform)                 |
 
-Net: 6 of 34 casks are cross-platform via brew. The remaining 28 still need Flathub or distro packages on Linux (see [Flatpaks](flatpaks.md)).
+Net: 6 of 34 casks are cross-platform via brew. The remaining 28 either install via vendor deb/rpm on Linux (19) or have no Linux build (9). See [Linux packages](linux-packages.md) for both lists.
