@@ -50,7 +50,7 @@ Install via official installers or Homebrew Cask.
 ## VSCode setup
 
 - Enable settings sync with GitHub
-- Sign in to Copilot Chat (base `github.copilot` installs as a dependency; next-edit suggestions intentionally off via `github.copilot.nextEditSuggestions.enabled: false`)
+- Sign in to Copilot Chat (`github.copilot-chat` bundled in VSCode since 1.99, no Brewfile entry; inline completions via `github.copilot` install separately on demand, next-edit suggestions intentionally off via `github.copilot.nextEditSuggestions.enabled: false`)
 - Configure layout (View → Appearance / Customize Layout):
   - Quick input position: center
   - Panel alignment: justify

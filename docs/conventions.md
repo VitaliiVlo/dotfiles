@@ -31,7 +31,7 @@ Shared-behavior rules across every tool in this repo: theme, font, tab size, hid
 | Line highlight | `renderLineHighlight: "all"` | `current_line_highlight: "all"` | `cursorline: true` | — | — | — | — |
 | Semantic tokens | `semanticHighlighting.enabled: true` | `semantic_tokens: "combined"` | — | — | — | — | — |
 | Hover delay | `editor.hover.delay: 200` | `hover_popover_delay: 200` | — | — | — | — | — |
-| Option as Meta | `terminal.macOptionIsMeta: true` | `terminal.option_as_meta: true` | — | `macos-option-as-alt = true` | — | — | — |
+| Option as Meta | `terminal.integrated.macOptionIsMeta: true` | `terminal.option_as_meta: true` | — | `macos-option-as-alt = true` | — | — | — |
 | Git protocol | `github.gitProtocol: "ssh"` | — | — | — | — | — | — |
 | Git pager | — | — | — | — | — | `pager = delta` | — |
 | Git blame | `git.blame.editorDecoration.enabled` + `git.blame.statusBarItem.enabled` (author+date) | `inline_blame.enabled: true`, `show_commit_summary: false` | — | — | — | — | — |
@@ -169,7 +169,7 @@ Extension + binary pairs (both must be present):
 
 Reproducible across machines:
 
-- VSCode: `vscode` entries in `Brewfile` (managed by `brew bundle dump` / `brew bundle install`)
+- VSCode: `vscode` entries in `Brewfile` (managed by `brew bundle dump` / `brew bundle install`). Built-in extensions (e.g. `GitHub.copilot-chat` bundled since VSCode 1.99) are not enumerated by `code --list-extensions`, so they never appear in the Brewfile and must not be added by hand: `brew bundle dump` strips them on the next export.
 - Zed: `auto_install_extensions` in `.config/zed/settings.json` (auto-installed on launch)
 
 **Zed overrides from defaults:** `auto_signature_help: true` (Zed default is `false`, set to match VSCode `parameterHints.enabled`)

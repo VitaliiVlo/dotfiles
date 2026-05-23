@@ -147,6 +147,7 @@ sudo dnf install -y  ./obsidian-*.x86_64.rpm
 
 ```bash
 # deb
+sudo install -d -m 0755 /etc/apt/keyrings
 curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
   | sudo gpg --dearmor -o /etc/apt/keyrings/packages.microsoft.gpg
 echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" \
@@ -190,6 +191,7 @@ sudo dnf install -y zen-browser
 
 ```bash
 # deb
+sudo install -d -m 0755 /etc/apt/keyrings
 curl -fsSL https://deb.beekeeperstudio.io/beekeeper.key \
   | sudo gpg --dearmor -o /etc/apt/keyrings/beekeeper.gpg
 echo "deb [signed-by=/etc/apt/keyrings/beekeeper.gpg] https://deb.beekeeperstudio.io stable main" \
@@ -214,6 +216,7 @@ sudo dnf install -y  ./bruno-*.x86_64.rpm
 
 ```bash
 # deb
+sudo install -d -m 0755 /etc/apt/keyrings
 curl -fsSL https://dl.google.com/linux/linux_signing_key.pub \
   | sudo gpg --dearmor -o /etc/apt/keyrings/google-chrome.gpg
 echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] https://dl.google.com/linux/chrome/deb/ stable main" \
