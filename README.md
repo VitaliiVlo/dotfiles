@@ -117,7 +117,7 @@ The following files are automatically symlinked by running `make symlinks`:
 - `.config/yazi/yazi.toml` - Yazi file manager settings
 - `.config/atuin/config.toml` - Atuin shell history settings
 - `.config/bottom/bottom.toml` - Bottom (`btm`) system monitor settings
-- `.config/glow/glow.yml` - Glow Markdown renderer settings
+- `.config/glow/glow.yml` - Glow Markdown renderer settings (linked into `Library/Preferences/glow` on macOS)
 - `.config/tlrc/config.toml` - tlrc (tldr client) settings (linked into Library/Application Support/tlrc)
 - `.config/superfile/config.toml` - Superfile (`spf`) terminal file manager settings (linked into Library/Application Support/superfile)
 - `.config/vscode/settings.json` - VSCode configuration (linked into `Library/Application Support/Code/User`)
@@ -127,7 +127,7 @@ The following files are automatically symlinked by running `make symlinks`:
 - `.config/ccstatusline/settings.json` - Claude Code status line layout
 - `.config/codex/config.toml` - Codex CLI config (model, sandbox, plugins)
 - `.config/codex/AGENTS.md` - Codex user-level instructions
-- `.config/codex/rules/` - Codex permission rules (git, dev, shell, infra)
+- `.config/codex/rules/{git,dev,shell,infra}.rules` - Codex permission rules (linked per file; add new rule files to `scripts/symlinks.sh` and `scripts/validate.sh`)
 
 ### Not symlinked
 
@@ -193,7 +193,7 @@ make versions           # Show installed Go, Node, Python versions
 | awscli                  | AWS command-line interface                              |
 | bat                     | `cat` with syntax highlighting                          |
 | bottom                  | System monitor TUI (`btm`, modern `htop`)               |
-| corepack                | Node package-manager bootstrap (Node-shipped)           |
+| corepack                | Node package-manager bootstrap (yarn/pnpm enabler)      |
 | delve                   | Go debugger (binary: `dlv`)                             |
 | dua-cli                 | Interactive disk usage analyzer (alternative to gdu)    |
 | exiftool                | Read/write image/audio/video metadata                   |
@@ -266,7 +266,7 @@ For full audit, run `make validate` (delegates to `scripts/validate.sh`). Covers
 - `brew update && brew upgrade` — update Homebrew formulae and casks
 - `make brew-export` — refresh `Brewfile` from current install state (macOS only; Linuxbrew dump would wipe macOS-only casks). Add new work entries to `Brewfile.work` manually; see `docs/conventions.md` "Brewfile maintenance" for strip step semantics.
 - `make brew-cleanup` — prune old versions and cache
-- Linux GUI apps: `sudo apt-get upgrade` (Debian/Ubuntu) or `sudo dnf upgrade` (Fedora) — vendor apt/dnf repos ship updates; GitHub-release apps (Obsidian, LocalSend, etc.) auto-update in-app or require manual re-download
+- Linux GUI apps from vendor apt/dnf repos: `sudo apt-get upgrade` (Debian/Ubuntu) or `sudo dnf upgrade` (Fedora). In-app auto-update: Obsidian, VSCode, Brave, Google Chrome, Zen, Zed. Manual re-download from GitHub releases: balenaEtcher, Bruno, Headlamp, LocalSend, MongoDB Compass, Slack
 - VSCode / Zed / Ghostty — auto-update enabled, no action needed
 - Go: `brew upgrade go`. Node: `fnm install <version>`. Python: `uv python install <version>`.
 

@@ -53,7 +53,7 @@ Linux GUI apps install via vendor deb/rpm. Per-app commands in `docs/linux-packa
 - `.config/yazi/yazi.toml` - Terminal file manager settings
 - `.config/atuin/config.toml` - Atuin shell history (filter parity with `hist_ignore_space`)
 - `.config/bottom/bottom.toml` - Bottom (`btm`) system monitor (tree view + command column + battery, cache memory shown, unnormalized per-core CPU, byte/binary network units, table scroll position)
-- `.config/glow/glow.yml` - Glow Markdown renderer (auto theme, pager on, line numbers in TUI)
+- `.config/glow/glow.yml` - Glow Markdown renderer (auto theme, pager on, line numbers in TUI; non-XDG on macOS at `~/Library/Preferences/glow/`, XDG on Linux)
 - `.config/tlrc/config.toml` - tlrc (tldr client) — show platform title, short+long flags (non-XDG on macOS, XDG on Linux)
 - `.config/superfile/config.toml` - Superfile (`spf`) terminal file manager (Catppuccin Macchiato, bat preview with border, binary file sizes, zoxide integration; non-XDG on macOS, XDG on Linux)
 - `.config/vscode/settings.json` - VSCode settings (JSONC format with comments)
@@ -64,7 +64,7 @@ Linux GUI apps install via vendor deb/rpm. Per-app commands in `docs/linux-packa
 - `.config/ccstatusline/settings.json` - Claude Code status line layout (via ccstatusline)
 - `.config/codex/AGENTS.md` - Codex user-level instructions (symlinked to `~/.codex/AGENTS.md`)
 - `.config/codex/config.toml` - Codex CLI config (model, sandbox, profiles, plugins)
-- `.config/codex/rules/` - Codex permission rules: `git`, `dev`, `shell`, `infra` (symlinked to `~/.codex/rules/`)
+- `.config/codex/rules/{git,dev,shell,infra}.rules` - Codex permission rules (symlinked per file to `~/.codex/rules/`; new rule files require entries in both `scripts/symlinks.sh` and `scripts/validate.sh`)
 
 Templates (not symlinked, import or copy as needed):
 
