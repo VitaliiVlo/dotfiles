@@ -144,7 +144,7 @@ Used directly from the repo:
 Run `make macos-defaults` to configure (in order applied):
 
 - Folders (~/Projects, ~/Pictures/Screenshots)
-- System defaults (key repeat, natural scrolling, save to disk)
+- System defaults (key repeat via `ApplePressAndHoldEnabled=false` at OS-default rate/delay, natural scrolling, save to disk by default). Linux pins explicit 250ms delay / 30ms interval; macOS intentionally inherits OS-default rate to avoid surprising existing users.
 - Screenshots (save to ~/Pictures/Screenshots, no shadow, PNG, floating thumbnail enabled)
 - Finder (list view, path bar, show extensions, folders first, search current folder, suppress DS_Store on network/USB volumes)
 - Dock (autohide, no recents, scale minimize effect, minimized windows in own Dock slot, fixed Spaces order, Cmd-gated hot corners: TL Mission Control / TR Notification Center / BL Desktop / BR Quick Note)
@@ -259,15 +259,17 @@ After `make setup`, verify everything wired up:
 - `git config --list --show-origin | head -5` — settings come from `~/.config/git/config`
 - `ls -l ~/.config/ghostty/config ~/.zshrc ~/.config/git/config` — symlinks point at this repo
 
-For full audit, run `make validate` (delegates to `scripts/validate.sh`). Covers TOML/JSON/YAML/JSONC parse, `brew bundle list` (parse) + non-fatal `brew bundle check` (install state), `ghostty +validate-config`, `shellcheck`, and symlink resolution. Skips macOS-native symlinks on Linux.
+For full audit, run `make validate` (delegates to `scripts/validate.sh`). Covers TOML/JSON/YAML/JSONC parse, `brew bundle list` (parse) + non-fatal `brew bundle check` (install state), `ghostty +validate-config`, `shellcheck`, `shfmt`, `zsh -n` on `.zshrc`/`.zprofile`, `prefix_rule(` sanity grep on `.config/codex/rules/*.rules`, and symlink resolution. Skips macOS-native symlinks on Linux.
 
 ## Updating
 
 - `brew update && brew upgrade` — update Homebrew formulae and casks
 - `make brew-export` — refresh `Brewfile` from current install state (macOS only; Linuxbrew dump would wipe macOS-only casks). Add new work entries to `Brewfile.work` manually; see `docs/conventions.md` "Brewfile maintenance" for strip step semantics.
 - `make brew-cleanup` — prune old versions and cache
-- Linux GUI apps from vendor apt/dnf repos: `sudo apt-get upgrade` (Debian/Ubuntu) or `sudo dnf upgrade` (Fedora). In-app auto-update: Obsidian, VSCode, Brave, Google Chrome, Zen, Zed. Manual re-download from GitHub releases: balenaEtcher, Bruno, Headlamp, LocalSend, MongoDB Compass, Slack
-- VSCode / Zed / Ghostty — auto-update enabled, no action needed
+- macOS GUI apps: cask auto-update via `brew upgrade` (VSCode, Brave, Helium, Zen, Ghostty, Zed have their own in-app updaters too; cask still authoritative)
+- Linux GUI apps via vendor apt/dnf repo (covered by `sudo apt-get upgrade` / `sudo dnf upgrade`): 1Password, Brave, Cloudflare WARP, Firefox, Ghostty (Ubuntu universe or Fedora Copr), Google Chrome, Helium, Tailscale, VSCode, Zen (Fedora Copr only)
+- Linux GUI apps via in-app updater: Obsidian, Zed
+- Linux GUI apps via manual GitHub release re-download: balenaEtcher, Bruno, Headlamp, LocalSend, MongoDB Compass, Slack, Zen (Debian community deb)
 - Go: `brew upgrade go`. Node: `fnm install <version>`. Python: `uv python install <version>`.
 
 ## Casks

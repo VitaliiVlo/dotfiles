@@ -15,7 +15,7 @@ make symlinks           # Symlink configs to home directory
 make macos-defaults     # Configure macOS defaults: folders, system, screenshots, Finder, Dock (no-op on Linux)
 make linux-defaults     # Configure Linux/GNOME defaults: folders, input, Nautilus, desktop (no-op on macOS / non-GNOME)
 make versions           # Show installed Go, Node, Python versions
-make validate           # Full audit: parse configs, check brew, shellcheck, verify symlinks
+make validate           # Full audit: parse configs, brew bundle, ghostty, shellcheck, shfmt, zsh -n, codex rules, symlinks
 make brew-install       # Install all packages (base + work)
 make brew-install-base  # Install base packages only
 make brew-install-work  # Install work packages only
