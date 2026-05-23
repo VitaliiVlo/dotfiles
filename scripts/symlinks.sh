@@ -67,4 +67,4 @@ case "$(uname -s)" in
         ;;
 esac
 
-echo "✅ Symbolic links created successfully!"
+echo "Symbolic links created."

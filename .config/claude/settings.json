@@ -39,7 +39,6 @@
       "Bash(go doc:*)",
       "Bash(pytest:*)",
       "Bash(ruff check:*)",
-      "Bash(pyright:*)",
       "Bash(uv sync:*)",
       "Bash(uv lock:*)",
       "Bash(uv pip show:*)",

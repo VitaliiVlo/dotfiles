@@ -34,7 +34,7 @@ brew-install: brew-install-base brew-install-work ## Install all packages from B
 brew-install-base: ## Install base packages (shell, fonts, daily-driver apps)
 	brew bundle install --file=Brewfile
 
-brew-install-work: ## Install work packages (work GUIs: API, K8s, DB, runtime, comms, VPN)
+brew-install-work: ## Install work packages (work GUIs: API, K8s, DB, runtime, comms, VPN, browser)
 	brew bundle install --file=Brewfile.work
 
 brew-cleanup: ## Clean up old versions and cache

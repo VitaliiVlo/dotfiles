@@ -67,4 +67,4 @@ heading "→ Configuring power…"
 set_if_exists org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type "'nothing'"
 
 echo
-echo "✅ Linux (GNOME) defaults applied."
+echo "Linux (GNOME) defaults applied."

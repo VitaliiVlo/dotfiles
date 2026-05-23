@@ -37,7 +37,7 @@ make flatpaks-export         # Export installed user flatpaks to flatpaks, then 
 - `docs/consistency.md` - Cross-config consistency tables (shared behavior across all tools: theme, font, telemetry, git pager, etc.). Read when adding a new tool or auditing drift.
 - `Makefile` - Task runner targets (`make help` for list)
 - `Brewfile` - Base packages: shell essentials, fonts, daily-driver apps, VSCode extensions
-- `Brewfile.work` - Work packages: work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN (curated manually)
+- `Brewfile.work` - Work packages: work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN, browser (curated manually)
 - `flatpaks` - Base Flathub app IDs for Linux, bare one-per-line (no comments — `make flatpaks-export` would wipe them; see "Flatpaks maintenance" in `docs/consistency.md`). Paired with `Brewfile` casks where a Flathub equivalent exists; see `docs/flatpaks.md` for cross-ref table.
 - `flatpaks.work` - Work Flathub app IDs for Linux (paired with `Brewfile.work` casks; curated manually, same bare-line format as `flatpaks`)
 - `.zshrc` / `.zprofile` - Zsh config. `.zprofile` sets `BREW_PREFIX`, XDG base-dir vars, `GOPATH=$XDG_DATA_HOME/go` (Go doesn't honor XDG natively), and `VISUAL`/`EDITOR`. `.zshrc` re-detects `BREW_PREFIX` defensively for non-login shells, keeps `HISTFILE` under `$XDG_STATE_HOME/zsh/history`, loads starship prompt, fnm, uv, fzf with bat preview, eza aliases, syntax-highlighting, autosuggestions.
@@ -96,7 +96,7 @@ When removing a tool, sweep the same list in reverse.
 
 When adding or editing config files, follow this style across all of them:
 
-- **Drop top-of-file banners** — filename already states the file's purpose (no `# .zshrc - Interactive shell config` headers). Exception: location/operational notes for tools that ignore XDG and require non-obvious symlink targets (e.g. macOS `Library/Preferences/...`, `Library/Application Support/...`) are allowed since the symlink destination is not derivable from the filename.
+- **Drop top-of-file banners** — filename already states the file's purpose (no `# .zshrc - Interactive shell config` headers). Two exceptions: (1) location/operational notes for tools that ignore XDG and require non-obvious symlink targets (e.g. macOS `Library/Preferences/...`, `Library/Application Support/...`) are allowed since the symlink destination is not derivable from the filename; (2) a single-line upstream-docs URL pointer (e.g. `# https://ghostty.org/docs/config/reference` in `.config/ghostty/config`, `// https://zed.dev/docs/configuring-zed` in `.config/zed/settings.json`) is allowed when it helps locate the canonical config reference quickly.
 - **Keep group dividers** — short single-line headers (`# Theme`, `# Cursor`, `# Git`) make long configs scannable. Use the same divider style as surrounding files (e.g. `// Name` in JSONC, `# Name` in TOML/conf, `# Name` shell).
 - **Keep non-obvious why-comments** — workarounds, ordering constraints, parity with another tool, hidden invariants. Lead with the reason, not the restatement.
 - **Drop tautology** — `# Enable completion` above `compinit`, `# Aliases` above an alias block where every line is `alias x=...` is fluff.

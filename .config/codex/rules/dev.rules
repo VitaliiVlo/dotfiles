@@ -4,7 +4,7 @@ prefix_rule(pattern=["go", "mod", ["tidy", "download"]], decision="allow")
 prefix_rule(pattern=["golangci-lint"], decision="allow")
 
 # Python
-prefix_rule(pattern=[["pytest", "pyright"]], decision="allow")
+prefix_rule(pattern=["pytest"], decision="allow")
 prefix_rule(pattern=["ruff", "check"], decision="allow")
 prefix_rule(pattern=["uv", ["sync", "lock"]], decision="allow")
 prefix_rule(pattern=["uv", "pip", "show"], decision="allow")

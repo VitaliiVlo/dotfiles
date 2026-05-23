@@ -122,7 +122,7 @@ The following files are automatically symlinked by running `make symlinks`:
 **Not symlinked (used directly from repo):**
 
 - `Brewfile` - Base Brewfile (shell, fonts, daily-driver apps, VSCode extensions)
-- `Brewfile.work` - Work Brewfile (work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN; curated manually)
+- `Brewfile.work` - Work Brewfile (work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN, browser; curated manually)
 - `flatpaks` - Base Flathub app IDs for Linux (paired with `Brewfile` casks where an equivalent exists)
 - `flatpaks.work` - Work Flathub app IDs for Linux (paired with `Brewfile.work` casks; curated manually)
 - `scripts/flatpaks-install.sh` - Installs `flatpaks` / `flatpaks.work` at user scope (Linux only, no-op on macOS)
