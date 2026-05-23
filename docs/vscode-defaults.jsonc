@@ -220,7 +220,7 @@
 	//  - PKief.material-icon-theme: Material Design Icons for Visual Studio Code
 	//  - vscode.media-preview: Provides VS Code's built-in previews for images, audio, and video
 	//  - vscode.merge-conflict: Highlighting and commands for inline merge conflicts.
-	//  - vscode.mermaid-chat-features: Adds Mermaid diagram support to built-in chats.
+	//  - vscode.mermaid-markdown-features: Adds Mermaid diagram support to built-in chats, Markdown previews, and notebooks.
 	//  - vscode.microsoft-authentication: Microsoft authentication provider
 	//  - vscode.npm: Extension to add task support for npm scripts.
 	//  - christian-kohler.path-intellisense: Visual Studio Code plugin that autocompletes filenames
@@ -242,14 +242,15 @@
 	// Defines a default formatter which takes precedence over all other formatter settings. Must be the identifier of an extension contributing a formatter.
 	//  - null: None
 	//  - tamasfe.even-better-toml: Fully-featured TOML support
+	//  - vscode.html-language-features: Provides rich language support for HTML and Handlebar files
 	//  - vscode.json-language-features: Provides rich language support for JSON files.
 	//  - yzhang.markdown-all-in-one: All you need to write Markdown (keyboard shortcuts, table of contents, auto preview and more)
 	//  - charliermarsh.ruff: A Visual Studio Code extension with support for the Ruff linter and formatter for Python.
+	//  - redhat.vscode-yaml: YAML Language Support by Red Hat, with built-in Kubernetes syntax support
 	//  - aaron-bond.better-comments: Improve your code commenting by annotating with alert, informational, TODOs, and more!
 	//  - GitHub.copilot-chat: AI chat features powered by Copilot
 	//  - vscode.css-language-features: Provides rich language support for CSS, LESS and SCSS files.
 	//  - golang.go: Rich Go language support for Visual Studio Code
-	//  - vscode.html-language-features: Provides rich language support for HTML and Handlebar files
 	//  - vscode.markdown-language-features: Provides rich language support for Markdown.
 	//  - vscode.markdown-math: Adds math support to Markdown in notebooks.
 	//  - vscode.php-language-features: Provides rich language support for PHP files.
@@ -261,7 +262,6 @@
 	//  - vscode.typescript-language-features: Provides rich language support for JavaScript and TypeScript.
 	//  - ms-azuretools.vscode-containers: Makes it easy to create, manage, and debug containerized applications.
 	//  - ms-python.vscode-pylance: A performant, feature-rich language server for Python in VS Code
-	//  - redhat.vscode-yaml: YAML Language Support by Red Hat, with built-in Kubernetes syntax support
 	//  - alefragnani.Bookmarks: Mark lines and jump to them
 	//  - Catppuccin.catppuccin-vsc: 🦌 Soothing pastel theme for VSCode
 	//  - Catppuccin.catppuccin-vsc-icons: 🦊 Soothing pastel icon theme for VSCode
@@ -293,7 +293,7 @@
 	//  - PKief.material-icon-theme: Material Design Icons for Visual Studio Code
 	//  - vscode.media-preview: Provides VS Code's built-in previews for images, audio, and video
 	//  - vscode.merge-conflict: Highlighting and commands for inline merge conflicts.
-	//  - vscode.mermaid-chat-features: Adds Mermaid diagram support to built-in chats.
+	//  - vscode.mermaid-markdown-features: Adds Mermaid diagram support to built-in chats, Markdown previews, and notebooks.
 	//  - vscode.microsoft-authentication: Microsoft authentication provider
 	//  - vscode.npm: Extension to add task support for npm scripts.
 	//  - christian-kohler.path-intellisense: Visual Studio Code plugin that autocompletes filenames
@@ -675,7 +675,7 @@
 	"editor.peekWidgetDefaultFocus": "tree",
 	// Controls whether suggestions should automatically show up while typing. This can be controlled for typing in comments, strings, and other code. Quick suggestion can be configured to show as ghost text or with the suggest widget. Also be aware of the `editor.suggestOnTriggerCharacters`-setting which controls if suggestions are triggered by special characters.
 	"editor.quickSuggestions": {
-		"other": "on",
+		"other": "offWhenInlineCompletions",
 		"comments": "off",
 		"strings": "off"
 	},
@@ -2002,6 +2002,8 @@
 	},
 	// Show notebook editor rich content results for closed notebooks. Please refresh your search results after changing this setting.
 	"search.experimental.closedNotebookRichContentResults": false,
+	// When enabled, the legacy `findFiles` extension API honors the user's `search.useIgnoreFiles` setting instead of always ignoring `.gitignore`. Extensions that explicitly pass `null` as the `exclude` argument still get unfiltered results. Telemetry is emitted regardless of this setting to help decide future defaults.
+	"search.experimental.useIgnoreFilesInFindFiles": false,
 	// Controls whether to follow symlinks while searching.
 	"search.followSymlinks": true,
 	// Controls whether the Search view should read or modify the shared find clipboard on macOS.
@@ -2687,6 +2689,11 @@
 	"markdown.preview.fontFamily": "-apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif",
 	// Controls the font size in pixels used in the Markdown preview.
 	"markdown.preview.fontSize": 14,
+	// Controls how YAML frontmatter (delimited by `---`) at the start of a Markdown file is rendered in the preview.
+	//  - hide: Do not render frontmatter.
+	//  - codeBlock: Render frontmatter as a code block.
+	//  - table: Render frontmatter as a table of keys and values.
+	"markdown.preview.frontMatter": "table",
 	// Controls the line height used in the Markdown preview. This number is relative to the font size.
 	"markdown.preview.lineHeight": 1.6,
 	// Convert URL-like text to links in the Markdown preview.
@@ -2822,16 +2829,6 @@
 	// Inline Chat
 	// Select the default language model to use for inline chat from the available providers. Model names may include the provider in parentheses, for example 'Claude Haiku 4.5 (copilot)'.
 	//  - : Use the vendor's default model
-	//  - Auto (copilot): Auto selects the best model for your request based on capacity and performance.
-	//  - Claude Haiku 4.5 (copilot): Fastest and most compact Claude model. Ideal for quick responses and simple tasks.
-	//  - GPT-4.1 (copilot): GPT-4.1 has a planned deprecation date of 2026-06-01.
-	//  - GPT-4o (copilot): Optimized GPT-4 model with faster responses and multimodal capabilities.
-	//  - GPT-5 mini (copilot): Lightweight GPT model for quick responses and simple tasks with low latency.
-	//  - Raptor mini (Preview) (copilot)
-	//  - Claude Haiku 4.5 (copilotcli): Fastest and most compact Claude model. Ideal for quick responses and simple tasks.
-	//  - Claude Haiku 4.5 (claude-code): Fastest and most compact Claude model. Ideal for quick responses and simple tasks.
-	//  - GPT-4.1 (copilotcli): Enhanced GPT-4 model with improved instruction following and coding performance.
-	//  - GPT-5 mini (copilotcli): Lightweight GPT model for quick responses and simple tasks with low latency.
 	"inlineChat.defaultModel": "",
 	// Output
 	// Enable/disable the ability of smart scrolling in the output view. Smart scrolling allows you to lock scrolling automatically when you click in the output view and unlocks when you click in the last line.
@@ -3090,8 +3087,12 @@
 	"chat.tools.terminal.enforceTimeoutFromModel": true,
 	// Configures the idle poll interval in milliseconds used by the run in terminal tool to detect when commands have finished executing. Lower values make command detection faster but may cause false positives on slow systems. This primarily affects terminals without shell integration where idle detection is used instead of shell integration events.
 	"chat.tools.terminal.idlePollInterval": 1000,
+	// Number of milliseconds the run in terminal tool will wait for new output from a synchronous command before moving it to a background terminal and returning what was collected so far. The process is not killed — the tool returns the terminal ID so the model can poll, send input, or kill it. Set to `0` to disable.
+	"chat.tools.terminal.idleSilenceTimeoutMs": 60000,
 	// Whether to ignore the built-in default auto-approve rules used by the run in terminal tool as defined in `chat.tools.terminal.autoApprove`. When this setting is enabled, the run in terminal tool will ignore any rule that comes from the default set but still follow rules defined in the user, remote and workspace settings. Use this setting at your own risk; the default auto-approve rules are designed to protect you against running dangerous commands.
 	"chat.tools.terminal.ignoreDefaultAutoApproveRules": false,
+	// When enabled, repeated get terminal output tool calls return only output added since the previous poll for the same terminal execution, or a short unchanged-output message when there is no new output.
+	"chat.tools.terminal.outputDeltas": false,
 	// Where to show the output from the run in terminal tool.
 	//  - terminal: Reveal the terminal in the panel or editor in addition to chat.
 	//  - chat: Reveal the terminal output within chat only.
@@ -4607,8 +4608,8 @@
 	"terminal.integrated.unicodeVersion": "11",
 	// Controls whether or not WSL distros are shown in the terminal dropdown
 	"terminal.integrated.useWslProfiles": true,
-	// Whether to use the experimental conpty.dll (v1.25.260303002) shipped with VS Code, instead of the one bundled with Windows.
-	"terminal.integrated.windowsUseConptyDll": false,
+	// Whether to use the conpty.dll (v1.25.260303002) shipped with VS Code, instead of the one bundled with Windows.
+	"terminal.integrated.windowsUseConptyDll": true,
 	// A string containing all characters to be considered word separators when double-clicking to select word and in the fallback 'word' link detection. Since this is used for link detection, including characters such as `:` that are used when detecting links will cause the line and column part of links like `file:10:5` to be ignored.
 	"terminal.integrated.wordSeparators": " ()[]{}',\"`─‘’“”|",
 	// Controls whether code cells in the interactive window are collapsed by default.
@@ -4642,14 +4643,15 @@
 	// Defines a default notebook formatter which takes precedence over all other formatter settings. Must be the identifier of an extension contributing a formatter.
 	//  - null: None
 	//  - tamasfe.even-better-toml: Fully-featured TOML support
+	//  - vscode.html-language-features: Provides rich language support for HTML and Handlebar files
 	//  - vscode.json-language-features: Provides rich language support for JSON files.
 	//  - yzhang.markdown-all-in-one: All you need to write Markdown (keyboard shortcuts, table of contents, auto preview and more)
 	//  - charliermarsh.ruff: A Visual Studio Code extension with support for the Ruff linter and formatter for Python.
+	//  - redhat.vscode-yaml: YAML Language Support by Red Hat, with built-in Kubernetes syntax support
 	//  - aaron-bond.better-comments: Improve your code commenting by annotating with alert, informational, TODOs, and more!
 	//  - GitHub.copilot-chat: AI chat features powered by Copilot
 	//  - vscode.css-language-features: Provides rich language support for CSS, LESS and SCSS files.
 	//  - golang.go: Rich Go language support for Visual Studio Code
-	//  - vscode.html-language-features: Provides rich language support for HTML and Handlebar files
 	//  - vscode.markdown-language-features: Provides rich language support for Markdown.
 	//  - vscode.markdown-math: Adds math support to Markdown in notebooks.
 	//  - vscode.php-language-features: Provides rich language support for PHP files.
@@ -4661,7 +4663,6 @@
 	//  - vscode.typescript-language-features: Provides rich language support for JavaScript and TypeScript.
 	//  - ms-azuretools.vscode-containers: Makes it easy to create, manage, and debug containerized applications.
 	//  - ms-python.vscode-pylance: A performant, feature-rich language server for Python in VS Code
-	//  - redhat.vscode-yaml: YAML Language Support by Red Hat, with built-in Kubernetes syntax support
 	//  - alefragnani.Bookmarks: Mark lines and jump to them
 	//  - Catppuccin.catppuccin-vsc: 🦌 Soothing pastel theme for VSCode
 	//  - Catppuccin.catppuccin-vsc-icons: 🦊 Soothing pastel icon theme for VSCode
@@ -4693,7 +4694,7 @@
 	//  - PKief.material-icon-theme: Material Design Icons for Visual Studio Code
 	//  - vscode.media-preview: Provides VS Code's built-in previews for images, audio, and video
 	//  - vscode.merge-conflict: Highlighting and commands for inline merge conflicts.
-	//  - vscode.mermaid-chat-features: Adds Mermaid diagram support to built-in chats.
+	//  - vscode.mermaid-markdown-features: Adds Mermaid diagram support to built-in chats, Markdown previews, and notebooks.
 	//  - vscode.microsoft-authentication: Microsoft authentication provider
 	//  - vscode.npm: Extension to add task support for npm scripts.
 	//  - christian-kohler.path-intellisense: Visual Studio Code plugin that autocompletes filenames
@@ -5468,16 +5469,6 @@
 	"chat.experimentalSessionsWindowOverride": false,
 	// Select the default language model to use for the Explore subagent from the available providers.
 	//  - : Use the vendor's default model
-	//  - Auto (copilot): Auto selects the best model for your request based on capacity and performance.
-	//  - Claude Haiku 4.5 (copilot): Fastest and most compact Claude model. Ideal for quick responses and simple tasks.
-	//  - GPT-4.1 (copilot): GPT-4.1 has a planned deprecation date of 2026-06-01.
-	//  - GPT-4o (copilot): Optimized GPT-4 model with faster responses and multimodal capabilities.
-	//  - GPT-5 mini (copilot): Lightweight GPT model for quick responses and simple tasks with low latency.
-	//  - Raptor mini (Preview) (copilot)
-	//  - Claude Haiku 4.5 (copilotcli): Fastest and most compact Claude model. Ideal for quick responses and simple tasks.
-	//  - Claude Haiku 4.5 (claude-code): Fastest and most compact Claude model. Ideal for quick responses and simple tasks.
-	//  - GPT-4.1 (copilotcli): Enhanced GPT-4 model with improved instruction following and coding performance.
-	//  - GPT-5 mini (copilotcli): Lightweight GPT model for quick responses and simple tasks with low latency.
 	"chat.exploreAgent.defaultModel": "",
 	// Enable using tools contributed by third-party extensions.
 	"chat.extensionTools.enabled": true,
@@ -5583,16 +5574,6 @@
 	"chat.persistentProgress.enabled": false,
 	// Select the default language model to use for the Plan agent from the available providers.
 	//  - : Use the vendor's default model
-	//  - Auto (copilot): Auto selects the best model for your request based on capacity and performance.
-	//  - Claude Haiku 4.5 (copilot): Fastest and most compact Claude model. Ideal for quick responses and simple tasks.
-	//  - GPT-4.1 (copilot): GPT-4.1 has a planned deprecation date of 2026-06-01.
-	//  - GPT-4o (copilot): Optimized GPT-4 model with faster responses and multimodal capabilities.
-	//  - GPT-5 mini (copilot): Lightweight GPT model for quick responses and simple tasks with low latency.
-	//  - Raptor mini (Preview) (copilot)
-	//  - Claude Haiku 4.5 (copilotcli): Fastest and most compact Claude model. Ideal for quick responses and simple tasks.
-	//  - Claude Haiku 4.5 (claude-code): Fastest and most compact Claude model. Ideal for quick responses and simple tasks.
-	//  - GPT-4.1 (copilotcli): Enhanced GPT-4 model with improved instruction following and coding performance.
-	//  - GPT-5 mini (copilotcli): Lightweight GPT model for quick responses and simple tasks with low latency.
 	"chat.planAgent.defaultModel": "",
 	// When enabled, the plan review widget mounts an editor inline, as opposed to in a separate editor tab.
 	"chat.planReview.inlineEditor.enabled": true,
@@ -5623,7 +5604,7 @@
 	"chat.restoreLastPanelSession": false,
 	// Controls whether a screenshot of the selected element will be added to the chat.
 	"chat.sendElementsToChat.attachImages": true,
-	// Enable session sync to GitHub.com. When enabled, Copilot session data is synced to your GitHub account for cross-device access and richer insights. Requires local session tracking to also be enabled.
+	// Enable session sync to GitHub.com. When enabled, Copilot session data is synced to your GitHub account for cross-device access and richer insights. Requires `github.copilot.chat.localIndex.enabled` to also be enabled.
 	"chat.sessionSync.enabled": false,
 	// Repository patterns to exclude from session sync. Use exact `owner/repo` names or glob patterns like `my-org/*`. Sessions from matching repositories will only be stored locally.
 	"chat.sessionSync.excludeRepositories": [],
@@ -5659,12 +5640,10 @@
 	//
 	// Note: This setting only controls tool approval and does not prevent the agent from asking questions. To automatically answer agent questions, use the [`chat.autoReply`](command:workbench.action.openSettings?%5B%22chat.autoReply%22%5D) setting.
 	"chat.tools.global.autoApprove": false,
-	// Controls whether the rename tool is available for renaming code symbols across the workspace.
-	"chat.tools.renameTool.enabled": true,
 	// When enabled, terminal tool confirmations show an LLM-generated risk level (Safe / Caution / Review carefully) and a short explanation.
 	"chat.tools.riskAssessment.enabled": true,
 	// The language model id used to generate tool risk assessments. Should be a small, fast model.
-	"chat.tools.riskAssessment.model": "copilot-fast",
+	"chat.tools.riskAssessment.model": "copilot-utility-small",
 	// When enabled, terminal tool calls are always displayed in a collapsible container with a simplified view.
 	"chat.tools.terminal.simpleCollapsible": true,
 	// Controls whether to show the todo list widget above the chat input. When enabled, the widget displays todo items created by the agent and updates as progress is made.
@@ -5679,8 +5658,6 @@
 		"https://code.visualstudio.com": true,
 		"https://github.com/microsoft/vscode/wiki/*": true
 	},
-	// Controls whether the usages tool is available for finding references, definitions, and implementations of code symbols.
-	"chat.tools.usagesTool.enabled": true,
 	// Controls whether the input of the chat should be restored when an undo request is made. The input will be filled with the text of the request that was restored.
 	"chat.undoRequests.restoreInput": true,
 	// Replaces the command center search box with a unified chat and search widget.
@@ -5706,6 +5683,12 @@
 	"chat.useHooks": true,
 	// Controls whether instructions from nested `AGENTS.md` files found in the workspace are listed in all chat requests. The language model can load these skills on-demand if the `read` tool is available.
 	"chat.useNestedAgentsMdFiles": false,
+	// Override the language model used by built-in utility flows (titles, summaries, fallback responses, etc.). Leave empty to use the default model.
+	//  - : Use the built-in default utility model
+	"chat.utilityModel": "",
+	// Override the language model used by built-in small/fast utility flows (commit messages, intent detection, inline-chat progress, etc.). A fast and inexpensive model is recommended. Leave empty to use the default model.
+	//  - : Use the built-in default utility model
+	"chat.utilitySmallModel": "",
 	// Show a progress badge on the chat view when an agent session is in progress that is opened in that view.
 	"chat.viewProgressBadge.enabled": false,
 	// Show chat agent sessions when chat is empty or to the side when chat view is wide enough.
@@ -6033,6 +6016,451 @@
 	// JS/TS Chat Features
 	// These skills provide helpful prompts and features to enhance your experience when using Copilot to work with JavaScript and TypeScript.
 	"jsts-chat-features.skills.enabled": false,
+	// GitHub Copilot Chat
+	// A list of absolute folder paths outside of the workspace that Copilot Chat is allowed to read from without requiring confirmation. Edit operations remain restricted to the workspace.
+	"github.copilot.chat.additionalReadAccessPaths": [],
+	// Automatically fix diagnostics for edited files.
+	"github.copilot.chat.agent.autoFix": false,
+	// Enable background todo agent that automatically maintains a todo list during agent sessions.
+	//
+	// **Note**: This is an advanced experimental setting.
+	"github.copilot.chat.agent.backgroundTodoAgent.enabled": false,
+	// When enabled, Copilot will include the name of the current active editor in the context for agent mode.
+	"github.copilot.chat.agent.currentEditorContext.enabled": true,
+	// When enabled, large tool results are written to disk instead of being included directly in the context, helping manage context window usage.
+	"github.copilot.chat.agent.largeToolResultsToDisk.enabled": true,
+	// The size threshold in bytes above which tool results are written to disk. Only applies when largeToolResultsToDisk.enabled is true.
+	"github.copilot.chat.agent.largeToolResultsToDisk.thresholdBytes": 8192,
+	// Show model details (model name and request multiplier) on agent chat responses when using Copilot CLI or Claude agent in VS Code. Requires VS Code reload to update already loaded sessions.
+	"github.copilot.chat.agent.modelDetails.enabled": true,
+	// Omit summarized file contents from file attachments in agent mode, to encourage the agent to properly read and explore.
+	"github.copilot.chat.agent.omitFileAttachmentContents": false,
+	// Temperature setting for agent mode requests.
+	"github.copilot.chat.agent.temperature": 0,
+	// This setting has been merged into `github.copilot.chat.agentDebugLog.fileLogging.enabled`. Please use this setting instead.
+	// Deprecated: use `github.copilot.chat.agentDebugLog.fileLogging.enabled` instead.
+	"github.copilot.chat.agentDebugLog.enabled": false,
+	// Enable agent debug logging: write chat debug events (tool calls, LLM requests, token usage, errors) to JSONL files for the debug panel and troubleshoot skill. Requires window reload to take effect.
+	"github.copilot.chat.agentDebugLog.fileLogging.enabled": false,
+	// How often (in milliseconds) buffered debug log entries are flushed to disk. Lower values provide more up-to-date logs at the cost of more frequent disk writes.
+	"github.copilot.chat.agentDebugLog.fileLogging.flushIntervalMs": 4000,
+	// Maximum number of chat debug session log directories to retain on disk. Each chat session produces one directory. Older session logs are automatically deleted when this limit is exceeded.
+	"github.copilot.chat.agentDebugLog.fileLogging.maxRetainedSessionLogs": 50,
+	// Maximum size in megabytes for a single chat debug session log file. When the log exceeds this size, older entries are truncated to retain the most recent data. Defaults to 100 MB.
+	"github.copilot.chat.agentDebugLog.fileLogging.maxSessionLogSizeMB": 100,
+	// Mode for agent history summarization.
+	"github.copilot.chat.agentHistorySummarizationMode": "",
+	// Enables an experimental alternate prompt for Gemini Model F instead of the default prompt.
+	"github.copilot.chat.alternateGeminiModelFPrompt.enabled": false,
+	// Enables an experimental alternate prompt for GPT models instead of the default prompt.
+	"github.copilot.chat.alternateGptPrompt.enabled": false,
+	// Select the context editing mode for Anthropic models. Automatically manages conversation context as it grows, helping optimize costs and stay within context window limits.
+	//
+	// - `off`: Context editing is disabled.
+	// - `clear-thinking`: Clears thinking blocks while preserving tool uses.
+	// - `clear-tooluse`: Clears tool uses while preserving thinking blocks.
+	// - `clear-both`: Clears both thinking blocks and tool uses.
+	//
+	// **Note**: This is an experimental feature. Context editing may cause additional cache rewrites. Enable with caution.
+	"github.copilot.chat.anthropic.contextEditing.mode": "off",
+	// Use the extended (1 hour) prompt cache TTL on tools and system blocks for the Anthropic Messages API. Applied to Claude Opus 4.5/4.6/4.7 and Sonnet 4.5/4.6 variants; other models keep the default 5 minute TTL even when this setting is enabled.
+	//
+	// **Note**: This is an experimental feature. Only the main agent conversation is eligible — inline chat, terminal chat, notebook chat, and subagent requests are excluded.
+	"github.copilot.chat.anthropic.promptCaching.extendedTtl": false,
+	// Also extend the 1 hour prompt cache TTL to message-level breakpoints. Requires `chat.anthropic.promptCaching.extendedTtl` to be enabled; has no effect on its own.
+	//
+	// **Note**: This is an experimental feature.
+	"github.copilot.chat.anthropic.promptCaching.extendedTtlMessages": false,
+	// List of domains to restrict web search results to (e.g., `["example.com", "docs.example.com"]`). Domains should not include the HTTP/HTTPS scheme. Subdomains are automatically included. Cannot be used together with `github.copilot.chat.anthropic.tools.websearch.blockedDomains`; configuring both will cause web search requests to fail.
+	"github.copilot.chat.anthropic.tools.websearch.allowedDomains": [],
+	// List of domains to exclude from web search results (e.g., `["untrustedsource.com"]`). Domains should not include the HTTP/HTTPS scheme. Subdomains are automatically excluded. Cannot be used together with `github.copilot.chat.anthropic.tools.websearch.allowedDomains`; configuring both will cause web search requests to fail.
+	"github.copilot.chat.anthropic.tools.websearch.blockedDomains": [],
+	// Enable Anthropic's native web search tool for BYOK Claude models. When enabled, allows Claude to search the web for current information.
+	//
+	// **Note**: This is an experimental feature only available for BYOK Anthropic Claude models.
+	"github.copilot.chat.anthropic.tools.websearch.enabled": false,
+	// Maximum number of web searches allowed per request. Valid range is 1 to 20. Prevents excessive API calls within a single interaction. If Claude exceeds this limit, the response returns an error.
+	"github.copilot.chat.anthropic.tools.websearch.maxUses": 5,
+	// User location for personalizing web search results based on geographic context. All fields (city, region, country, timezone) are optional. Example: `{"city": "San Francisco", "region": "California", "country": "US", "timezone": "America/Los_Angeles"}`
+	"github.copilot.chat.anthropic.tools.websearch.userLocation": null,
+	// Use the Messages API instead of the Chat Completions API when supported.
+	"github.copilot.chat.anthropic.useMessagesApi": true,
+	// Additional tools to enable for the Ask agent, on top of built-in read-only tools. Use fully-qualified tool names (e.g., `github/issue_read`, `mcp_server/tool_name`).
+	"github.copilot.chat.askAgent.additionalTools": [],
+	// Override the language model used by the Ask agent. Leave empty to use the default model.
+	"github.copilot.chat.askAgent.model": "",
+	// Enable the Copilot CLI. When disabled, the Copilot CLI will not be available in 'Continue In' context menus.
+	"github.copilot.chat.backgroundAgent.enabled": true,
+	// Enables the updated system prompt tuned for the Claude Opus 4.7 model.
+	"github.copilot.chat.claude47OpusPrompt.enabled": false,
+	// Allow auto permission mode, which uses a model classifier to approve or deny tool operations automatically. [Learn more](https://aka.ms/vscode-claude-auto-mode).
+	"github.copilot.chat.claudeAgent.allowAutoPermissions": false,
+	// Allow bypass permissions mode. Recommended only for sandboxes with no internet access.
+	"github.copilot.chat.claudeAgent.allowDangerouslySkipPermissions": false,
+	// Enable Claude Agent sessions in VS Code. Start and resume agentic coding sessions powered by Anthropic's Claude Agent SDK directly in the editor. Uses your existing Copilot subscription.
+	"github.copilot.chat.claudeAgent.enabled": true,
+	// Enable AI-generated branch names in Copilot CLI.
+	"github.copilot.chat.cli.aiGenerateBranchNames.enabled": true,
+	// Enable automatic commit for Copilot CLI. When enabled, changes made by Copilot CLI will be automatically committed to the repository at the end of each turn.
+	"github.copilot.chat.cli.autoCommit.enabled": true,
+	// Enable the Auto model option in Copilot CLI, which automatically selects the best model for each request. Requires VS Code reload.
+	"github.copilot.chat.cli.autoModel.enabled": false,
+	// Enable branch support for Copilot CLI.
+	"github.copilot.chat.cli.branchSupport.enabled": false,
+	// Enable forking sessions in Copilot CLI.
+	"github.copilot.chat.cli.forkSessions.enabled": true,
+	// Enable the isolation mode option for Copilot CLI. When enabled, users can choose between Worktree and Workspace modes.
+	"github.copilot.chat.cli.isolationOption.enabled": true,
+	// Enable lazy loading of session items in Copilot CLI. Requires VS Code reload.
+	"github.copilot.chat.cli.lazyLoadSessionItem.enabled": true,
+	// Enable Model Context Protocol (MCP) server for Copilot CLI.
+	"github.copilot.chat.cli.mcp.enabled": true,
+	// Enable the /plan command in Copilot CLI to create implementation plans before coding.
+	"github.copilot.chat.cli.planCommand.enabled": true,
+	// Enable Plan Mode exit handling in Copilot CLI.
+	"github.copilot.chat.cli.planExitMode.enabled": true,
+	// Enable the /remote command for Copilot CLI sessions, allowing you to view and steer from GitHub.com and the GitHub mobile app.
+	"github.copilot.chat.cli.remote.enabled": true,
+	// Enable the new session controller API for Copilot CLI. Requires VS Code reload.
+	"github.copilot.chat.cli.sessionController.enabled": false,
+	// Enable the new session controller API for Sessions App. Requires VS Code reload.
+	"github.copilot.chat.cli.sessionControllerForSessionsApp.enabled": false,
+	// Show sessions created by other applications.
+	"github.copilot.chat.cli.showExternalSessions": true,
+	// Enable advanced clickable file links in Copilot CLI terminals. Resolves relative paths against session state directories. Requires VS Code reload.
+	"github.copilot.chat.cli.terminalLinks.enabled": true,
+	// Enable thinking effort for Language Models in Copilot CLI.
+	"github.copilot.chat.cli.thinkingEffort.enabled": true,
+	// Enable the Cloud Agent. When disabled, the Cloud Agent will not be available in 'Continue In' context menus.
+	"github.copilot.chat.cloudAgent.enabled": true,
+	// Use instructions files instead. See https://aka.ms/vscode-ghcp-custom-instructions for more information.
+	// A set of instructions that will be added to Copilot requests that generate code.
+	// Instructions can come from:
+	// - a file in the workspace: `{ "file": "fileName" }`
+	// - text in natural language: `{ "text": "Use underscore for field names." }`
+	//
+	// Note: Keep your instructions short and precise. Poor instructions can degrade Copilot's quality and performance.
+	"github.copilot.chat.codeGeneration.instructions": [],
+	// Controls whether code instructions from `.github/copilot-instructions.md` are added to Copilot requests.
+	//
+	// Note: Keep your instructions short and precise. Poor instructions can degrade Copilot's quality and performance. [Learn more](https://aka.ms/github-copilot-custom-instructions) about customizing Copilot.
+	"github.copilot.chat.codeGeneration.useInstructionFiles": true,
+	// Enable code search capabilities in agent mode.
+	"github.copilot.chat.codesearch.agent.enabled": true,
+	// Whether to enable agentic codesearch when using `#codebase`.
+	"github.copilot.chat.codesearch.enabled": false,
+	// A set of instructions that will be added to Copilot requests that generate commit messages.
+	// Instructions can come from:
+	// - a file in the workspace: `{ "file": "fileName" }`
+	// - text in natural language: `{ "text": "Use conventional commit message format." }`
+	//
+	// Note: Keep your instructions short and precise. Poor instructions can degrade Copilot's quality and performance.
+	"github.copilot.chat.commitMessageGeneration.instructions": [],
+	// Sets the fetcher used for the inline completions.
+	"github.copilot.chat.completionsFetcher": "",
+	// Whether the `copilot-debug` command is enabled in the terminal.
+	"github.copilot.chat.copilotDebugCommand.enabled": true,
+	// When enabled, custom instructions and mode instructions will be appended to the system message instead of a user message.
+	"github.copilot.chat.customInstructionsInSystemMessage": true,
+	// Path to a YAML file that overrides the system prompt and/or tool descriptions sent to the model.
+	//
+	// **Note**: This is an advanced debugging setting.
+	"github.copilot.chat.debug.promptOverrideFile": null,
+	// YAML string that overrides the system prompt and/or tool descriptions sent to the model. When both this setting and `github.copilot.chat.debug.promptOverrideFile` are configured, this setting takes precedence.
+	//
+	// **Note**: This is an advanced debugging setting.
+	"github.copilot.chat.debug.promptOverrideString": null,
+	// Maximum number of entries to keep in the request logger for debugging purposes.
+	"github.copilot.chat.debug.requestLogger.maxEntries": 100,
+	// A list of commands for which the "Debug Command" quick fix action should be shown in the debug terminal.
+	"github.copilot.chat.debugTerminalCommandPatterns": [],
+	// Enable edit recording for analysis.
+	"github.copilot.chat.editRecording.enabled": false,
+	// Update tool descriptions to promote `multi_replace_string_in_file` as the primary multi-edit tool.
+	"github.copilot.chat.edits.batchReplaceStringDescriptions": false,
+	// Enable the modern `multi_replace_string_in_file` edit tool when generating edits with Gemini 3 models.
+	"github.copilot.chat.edits.gemini3MultiReplaceString": false,
+	// Enable remembering user preferences in agent mode.
+	"github.copilot.chat.enableUserPreferences": false,
+	// Enable the Execution Subagent tool in Copilot Chat. The Execution Subagent is designed to run terminal commands to accomplish an execution-based task.
+	"github.copilot.chat.executionSubagent.enabled": false,
+	// The model to use for the Execution Subagent tool in Copilot Chat. When useAgenticProxy is enabled, defaults to 'exec-subagent-router-a'. Otherwise defaults to the main agent model.
+	"github.copilot.chat.executionSubagent.model": "",
+	// Maximum number of tool calls the Execution Subagent can make during execution.
+	"github.copilot.chat.executionSubagent.toolCallLimit": 10,
+	// Use the agentic proxy endpoint for the execution subagent.
+	"github.copilot.chat.executionSubagent.useAgenticProxy": false,
+	// Enable the Explore (Code Research) subagent.
+	"github.copilot.chat.exploreAgent.enabled": true,
+	// Override the language model used by the Explore subagent. Defaults to a fast, small model. Leave empty to use the built-in fallback list.
+	"github.copilot.chat.exploreAgent.model": "",
+	// Enable feedback collection on configuration changes.
+	"github.copilot.chat.feedback.onChange": false,
+	// Freeze the bundled `<instructions>`, `<skills>`, and `<agents>` listing in the system prompt at the first turn of a conversation and reuse it on every subsequent turn. Prevents per-turn churn (e.g. the active mode swapping which subagent entry is listed, or async experimentation flipping a skill in or out) from invalidating the prompt cache. When the listing changes mid-conversation, the updated set is appended to the latest user message so the model still sees instructions, skills, or agents that became available or were removed.
+	//
+	// **Note**: This is an experimental feature.
+	"github.copilot.chat.freezeCustomizationsIndex": true,
+	// Enable the Get Changed Files tool in Copilot Chat. When enabled, the agent can retrieve git diffs of current changes via a dedicated tool.
+	"github.copilot.chat.getChangedFilesTool.enabled": false,
+	// Select the channel for the GitHub MCP Server. When set to Insiders, enables access to experimental features that may change or be removed based on community feedback. [Learn more](https://aka.ms/vscode-gh-mcp-channel).
+	//  - stable: Use the stable version of the GitHub MCP Server.
+	//  - insiders: Connect to the Insiders version of the GitHub MCP Server with experimental features.
+	"github.copilot.chat.githubMcpServer.channel": "stable",
+	// Enable built-in support for the GitHub MCP Server.
+	"github.copilot.chat.githubMcpServer.enabled": false,
+	// Enable lockdown mode for the GitHub MCP Server. When enabled, hides public issue details created by users without push access. [Learn more](https://aka.ms/vscode-gh-mcp-lockdown).
+	"github.copilot.chat.githubMcpServer.lockdown": false,
+	// Enable read-only mode for the GitHub MCP Server. When enabled, only read tools are available. [Learn more](https://aka.ms/vscode-gh-mcp-readonly).
+	"github.copilot.chat.githubMcpServer.readonly": false,
+	// Specify toolsets to use from the GitHub MCP Server. [Learn more](https://aka.ms/vscode-gh-mcp-toolsets).
+	"github.copilot.chat.githubMcpServer.toolsets": [
+		"default"
+	],
+	// Enables economical search and edit instructions for gpt-5.5 models.
+	"github.copilot.chat.gpt55EconomicalSearchAndEdit.enabled": false,
+	// Enables the Get Changed Files tool for gpt-5.5 models.
+	"github.copilot.chat.gpt55GetChangedFilesTool.enabled": true,
+	// Enables additional gpt-5.4 large prompt sections for gpt-5.5 models.
+	"github.copilot.chat.gpt55LargePromptSections.enabled": false,
+	// Enables the Read File tool for gpt-5.5 models.
+	"github.copilot.chat.gpt55ReadFileTool.enabled": true,
+	// Enable GPT-5 alternative patch format.
+	"github.copilot.chat.gpt5AlternativePatch": false,
+	// Enables the use of image upload URLs in chat requests instead of raw base64 strings.
+	"github.copilot.chat.imageUpload.enabled": true,
+	// Override the language model used when starting implementation from the Plan agent's handoff. Use the format `Model Name (vendor)` (e.g., `GPT-5 (copilot)`). Leave empty to use the default model.
+	"github.copilot.chat.implementAgent.model": "",
+	// Controls whether thinking/reasoning is enabled for inline chat requests. When disabled, reasoning summaries are suppressed for faster responses.
+	"github.copilot.chat.inlineChat.enableThinking": false,
+	// Controls the reasoning effort level for inline chat requests. Lower values result in faster responses with fewer reasoning tokens. Supported values depend on the model.
+	"github.copilot.chat.inlineChat.reasoningEffort": "low",
+	// Enable chat session context provider for next edit suggestions.
+	"github.copilot.chat.inlineEdits.chatSessionContextProvider.enabled": false,
+	// Enable diagnostics context provider for next edit suggestions.
+	"github.copilot.chat.inlineEdits.diagnosticsContextProvider.enabled": false,
+	// Maximum tokens for current file in next cursor prediction.
+	"github.copilot.chat.inlineEdits.nextCursorPrediction.currentFileMaxTokens": 3000,
+	// Display predicted cursor line for next edit suggestions.
+	"github.copilot.chat.inlineEdits.nextCursorPrediction.displayLine": true,
+	// Enable rename symbol suggestions in inline edits.
+	"github.copilot.chat.inlineEdits.renameSymbolSuggestions": true,
+	// Trigger inline edits after editor has been idle for this many seconds.
+	"github.copilot.chat.inlineEdits.triggerOnEditorChangeAfterSeconds": 10,
+	// Advanced model configuration for the next edit suggestions xtab provider.
+	//
+	// **Note**: This is an advanced setting.
+	"github.copilot.chat.inlineEdits.xtabProvider.modelConfiguration": null,
+	// Whether to enable the install extension skill for Copilot.
+	"github.copilot.chat.installExtensionSkill.enabled": false,
+	// Token limit for short context instant apply.
+	"github.copilot.chat.instantApply.shortContextLimit": 8000,
+	// Model name for short context instant apply.
+	"github.copilot.chat.instantApply.shortContextModelName": "gpt-4o-instant-apply-full-ft-v66-short",
+	// Enables the TypeScript language context provider for /fix commands
+	"github.copilot.chat.languageContext.fix.typescript.enabled": false,
+	// Enables the TypeScript language context provider for inline chats (both generate and edit)
+	"github.copilot.chat.languageContext.inline.typescript.enabled": false,
+	// The cache population timeout for the TypeScript language context provider in milliseconds. The default is 500 milliseconds.
+	"github.copilot.chat.languageContext.typescript.cacheTimeout": 500,
+	// Enables the TypeScript language context provider for inline suggestions
+	"github.copilot.chat.languageContext.typescript.enabled": true,
+	// Controls whether to include documentation comments in the generated code snippets.
+	"github.copilot.chat.languageContext.typescript.includeDocumentation": false,
+	// Controls which kind of items are included in the TypeScript language context provider.
+	"github.copilot.chat.languageContext.typescript.items": "double",
+	// Specify a locale that Copilot should respond in, e.g. `en` or `fr`. By default, Copilot will respond using VS Code's configured display language locale.
+	//  - auto: Use VS Code's configured display language
+	//  - en: English
+	//  - fr: français
+	//  - it: italiano
+	//  - de: Deutsch
+	//  - es: español
+	//  - ru: русский
+	//  - zh-CN: 中文(简体)
+	//  - zh-TW: 中文(繁體)
+	//  - ja: 日本語
+	//  - ko: 한국어
+	//  - cs: čeština
+	//  - pt-br: português
+	//  - tr: Türkçe
+	//  - pl: polski
+	"github.copilot.chat.localeOverride": "auto",
+	// Enable local session tracking. When enabled, session data is tracked locally for /chronicle commands.
+	"github.copilot.chat.localIndex.enabled": false,
+	// Enable local workspace recording for analysis.
+	"github.copilot.chat.localWorkspaceRecording.enabled": false,
+	// Sets the fetcher used for the next edit suggestions.
+	"github.copilot.chat.nesFetcher": "",
+	// Whether to use the [Context7](command:github.copilot.mcp.viewContext7) tools to scaffold project for new workspace creation.
+	"github.copilot.chat.newWorkspace.useContext7": false,
+	// Whether to enable new agentic workspace creation.
+	"github.copilot.chat.newWorkspaceCreation.enabled": true,
+	// Alternative document format for notebooks.
+	"github.copilot.chat.notebook.alternativeFormat": "xml",
+	// Enable alternative format for Next Edit Suggestions in notebooks.
+	"github.copilot.chat.notebook.alternativeNESFormat.enabled": false,
+	// Controls whether to use an enhanced approach for generating next edit suggestions in notebook cells.
+	"github.copilot.chat.notebook.enhancedNextEditSuggestions.enabled": false,
+	// Controls whether the currently executing cell is revealed into the viewport upon execution from Copilot.
+	"github.copilot.chat.notebook.followCellExecution.enabled": false,
+	// Enable the notebook summary experiment.
+	"github.copilot.chat.notebook.summaryExperimentEnabled": false,
+	// Enable filtering variables by cell document symbols.
+	"github.copilot.chat.notebook.variableFilteringEnabled": false,
+	// Omit base agent instructions from prompts.
+	"github.copilot.chat.omitBaseAgentInstructions": false,
+	// When enabled, Copilot will load custom agents defined by your GitHub Organization.
+	"github.copilot.chat.organizationCustomAgents.enabled": true,
+	// When enabled, Copilot will load custom instructions defined by your GitHub Organization.
+	"github.copilot.chat.organizationInstructions.enabled": true,
+	// Capture input/output messages, system instructions, and tool definitions in OTel telemetry. **Contains potentially sensitive data.** Env var `COPILOT_OTEL_CAPTURE_CONTENT` takes precedence. Requires window reload.
+	"github.copilot.chat.otel.captureContent": false,
+	// Enable SQLite DB span exporter. Persists OTel spans to a local SQLite database. Automatically enables OTel when set to true. Requires window reload.
+	"github.copilot.chat.otel.dbSpanExporter.enabled": false,
+	// Enable OpenTelemetry trace/metric/log emission for Copilot Chat operations. Env var `COPILOT_OTEL_ENABLED` takes precedence. Requires window reload.
+	"github.copilot.chat.otel.enabled": false,
+	// OTel exporter type for Copilot Chat telemetry. Requires window reload.
+	"github.copilot.chat.otel.exporterType": "otlp-http",
+	// Maximum size **in characters** for free-form OTel content attributes (prompts, responses, tool arguments/results, hook input/output). `0` (the default) disables truncation so backends without per-attribute size limits receive full JSON payloads. Set to a positive value when your OTel backend caps attribute size — consult your backend's documentation for its per-attribute limit. Truncated values are suffixed with `...[truncated, original N chars]`. Env var `COPILOT_OTEL_MAX_ATTRIBUTE_SIZE_CHARS` takes precedence. Requires window reload.
+	"github.copilot.chat.otel.maxAttributeSizeChars": 0,
+	// OTLP collector endpoint URL for Copilot Chat OTel data. Env var `OTEL_EXPORTER_OTLP_ENDPOINT` takes precedence. Requires window reload.
+	"github.copilot.chat.otel.otlpEndpoint": "http://localhost:4318",
+	// File path for file-based OTel exporter output (JSON-lines). When set, overrides exporter type to `file`. Requires window reload.
+	"github.copilot.chat.otel.outfile": "",
+	// Additional tools to enable for the Plan agent, on top of built-in tools. Use fully-qualified tool names (e.g., `github/issue_read`, `mcp_server/tool_name`).
+	"github.copilot.chat.planAgent.additionalTools": [],
+	// Add project labels in chat requests.
+	"github.copilot.chat.projectLabels.chat": false,
+	// Use the expanded format for project labels in prompts.
+	"github.copilot.chat.projectLabels.expanded": false,
+	// Add project labels in inline edit requests.
+	"github.copilot.chat.projectLabels.inline": false,
+	// Whether to enable the project setup info skill for Copilot.
+	"github.copilot.chat.projectSetupInfoSkill.enabled": false,
+	// Enable prompt file context provider.
+	"github.copilot.chat.promptFileContextProvider.enabled": true,
+	// A set of instructions that will be added to Copilot requests that generate pull request titles and descriptions.
+	// Instructions can come from:
+	// - a file in the workspace: `{ "file": "fileName" }`
+	// - text in natural language: `{ "text": "Always include a list of key changes." }`
+	//
+	// Note: Keep your instructions short and precise. Poor instructions can degrade Copilot's quality and performance.
+	"github.copilot.chat.pullRequestDescriptionGeneration.instructions": [],
+	// Automatically switch to the Auto model and retry when you hit a per-model rate limit.
+	"github.copilot.chat.rateLimitAutoSwitchToAuto": false,
+	// Overrides the reasoning/thinking effort sent to model APIs. The configured value must match a reasoning-effort value supported by the selected model or endpoint (for example, `low`, `medium`, `high`, or other model-specific values). Used by evals.
+	//
+	// **Note**: This is an advanced debugging setting.
+	"github.copilot.chat.reasoningEffortOverride": null,
+	// Enables prompt cache key being set for the Responses API.
+	"github.copilot.chat.responsesApi.promptCacheKey.enabled": false,
+	// Enables context management for the Responses API. Requires `github.copilot.chat.useResponsesApi`.
+	"github.copilot.chat.responsesApiContextManagement.enabled": false,
+	// Sets the reasoning summary style used for the Responses API. Requires `github.copilot.chat.useResponsesApi`.
+	"github.copilot.chat.responsesApiReasoningSummary": "detailed",
+	// Enable intent detection for code review.
+	"github.copilot.chat.review.intent": false,
+	// Enables the code review agent.
+	"github.copilot.chat.reviewAgent.enabled": true,
+	// Enables code review on current selection.
+	"github.copilot.chat.reviewSelection.enabled": true,
+	// A set of instructions that will be added to Copilot requests that provide code review for the current selection.
+	// Instructions can come from:
+	// - a file in the workspace: `{ "file": "fileName" }`
+	// - text in natural language: `{ "text": "Use underscore for field names." }`
+	//
+	// Note: Keep your instructions short and precise. Poor instructions can degrade Copilot's effectiveness.
+	"github.copilot.chat.reviewSelection.instructions": [],
+	// Whether to prompt the user to select a specific symbol scope if the user uses `/explain` and the active editor has no selection.
+	"github.copilot.chat.scopeSelection": false,
+	// Enable the search subagent tool for iterative code exploration in the workspace.
+	"github.copilot.chat.searchSubagent.enabled": false,
+	// Model to use for the search subagent. When useAgenticProxy is enabled, defaults to 'vscode-agentic-search-router-a'. Otherwise defaults to the main agent model.
+	"github.copilot.chat.searchSubagent.model": "",
+	// Enable the thoroughness parameter on the search subagent tool. When enabled, the caller can pass 'normal' or 'deep' to adjust the number of allowed tool-call turns (1× or 2× the base toolCallLimit respectively).
+	"github.copilot.chat.searchSubagent.thoroughnessEnabled": false,
+	// Maximum number of tool calls the search subagent can make during exploration.
+	"github.copilot.chat.searchSubagent.toolCallLimit": 4,
+	// Use the agentic proxy for the search subagent tool.
+	"github.copilot.chat.searchSubagent.useAgenticProxy": false,
+	// Enables the `/setupTests` intent and prompting in `/tests` generation.
+	"github.copilot.chat.setupTests.enabled": true,
+	// Enable the skill tool in Copilot Chat. When enabled, skills are invoked via a dedicated skill tool instead of readFile.
+	"github.copilot.chat.skillTool.enabled": false,
+	// Whether to auto-compact agent conversation history once the context window is filled.
+	"github.copilot.chat.summarizeAgentConversationHistory.enabled": true,
+	// Threshold for compacting agent conversation history.
+	"github.copilot.chat.summarizeAgentConversationHistoryThreshold": 0,
+	// Allow agent to switch to the Plan agent for research, exploration, and planning tasks.
+	"github.copilot.chat.switchAgent.enabled": false,
+	// Controls where chat queries from the terminal should be opened.
+	//  - chatView: Open the chat view.
+	//  - quickChat: Open quick chat.
+	//  - terminal: Open terminal inline chat
+	"github.copilot.chat.terminalChatLocation": "chatView",
+	// Use instructions files instead. See https://aka.ms/vscode-ghcp-custom-instructions for more information.
+	// A set of instructions that will be added to Copilot requests that generate tests.
+	// Instructions can come from:
+	// - a file in the workspace: `{ "file": "fileName" }`
+	// - text in natural language: `{ "text": "Use underscore for field names." }`
+	//
+	// Note: Keep your instructions short and precise. Poor instructions can degrade Copilot's quality and performance.
+	"github.copilot.chat.testGeneration.instructions": [],
+	// Group default tools in prompts.
+	"github.copilot.chat.tools.defaultToolsGrouped": false,
+	// Enable the view image tool, which allows the agent to view image files such as png, jpg, jpeg, gif, and webp.
+	"github.copilot.chat.tools.viewImage.enabled": true,
+	// Enables the updated prompt for gpt-5.3-codex model.
+	"github.copilot.chat.updated53CodexPrompt.enabled": true,
+	// Use relevant GitHub projects as starter projects when using `/new`
+	"github.copilot.chat.useProjectTemplates": true,
+	// Use Responses API for truncation.
+	"github.copilot.chat.useResponsesApiTruncation": false,
+	// This setting defines the tool count over which virtual tools should be used. Virtual tools group similar sets of tools together and they allow the model to activate them on-demand. Certain tool groups will optimistically be pre-activated. We are actively developing this feature and you experience degraded tool calling once the threshold is hit.
+	//
+	// May be set to `0` to disable virtual tools.
+	"github.copilot.chat.virtualTools.threshold": 128,
+	// Enable external ingest for semantic codebase search in this workspace. This setting can be used to enable/disable external ingest, but your Copilot Enterprise or Copilot subscription policies ultimately control availability. [Learn more about external ingest policies](https://aka.ms/vscode-external-ingest-policy).
+	"github.copilot.chat.workspace.codeSearchExternalIngest.enabled": true,
+	// Enable code search in workspace context.
+	"github.copilot.chat.workspace.enableCodeSearch": true,
+	// Maximum size of the local workspace index.
+	"github.copilot.chat.workspace.maxLocalIndexSize": 100000,
+	// Preferred embeddings model for semantic search.
+	"github.copilot.chat.workspace.preferredEmbeddingsModel": "",
+	// Override endpoint for Azure DevOps code search prototype.
+	"github.copilot.chat.workspace.prototypeAdoCodeSearchEndpointOverride": "",
+	// Controls if Copilot commands are shown as Code Actions when available
+	"github.copilot.editor.enableCodeActions": true,
+	// Enable or disable auto triggering of Copilot completions for specified [languages](https://code.visualstudio.com/docs/languages/identifiers). You can still trigger suggestions manually using `Alt + \`
+	"github.copilot.enable": {
+		"*": true,
+		"plaintext": false,
+		"markdown": false,
+		"scminput": false
+	},
+	// Whether to allow whitespace-only changes be proposed by next edit suggestions (NES).
+	"github.copilot.nextEditSuggestions.allowWhitespaceOnlyChanges": true,
+	// Controls how eagerly next edit suggestions are shown. Higher values show more suggestions with less delay.
+	//  - auto: Automatically determine the eagerness level.
+	//  - low: Show fewer suggestions with longer delays.
+	//  - medium: Balanced suggestion frequency and delay.
+	//  - high: Show more suggestions with minimal delay.
+	"github.copilot.nextEditSuggestions.eagerness": "auto",
+	// Whether to enable next edit suggestions (NES).
+	//
+	// NES can propose a next edit based on your recent changes. [Learn more](https://aka.ms/vscode-nes) about next edit suggestions.
+	"github.copilot.nextEditSuggestions.enabled": true,
+	// Whether to allow next edit suggestions (NES) to modify code farther away from the cursor position.
+	"github.copilot.nextEditSuggestions.extendedRange": false,
+	// Whether to offer fixes for diagnostics via next edit suggestions (NES).
+	"github.copilot.nextEditSuggestions.fixes": true,
+	// Preferred model for next edit suggestions.
+	"github.copilot.nextEditSuggestions.preferredModel": "none",
+	// Controls whether Copilot generates suggestions for renaming
+	"github.copilot.renameSuggestions.triggerAutomatically": true,
+	// The currently selected completion model ID. To select from a list of available models, use the __"Change Completions Model"__ command or open the model picker (from the Copilot menu in the VS Code title bar, select __"Configure Code Completions"__ then __"Change Completions Model"__. The value must be a valid model ID. An empty value indicates that the default model will be used.
+	"github.copilot.selectedCompletionModel": "",
 	// Emmet
 	// An array of languages where Emmet abbreviations should not be expanded.
 	"emmet.excludeLanguages": [
@@ -6387,445 +6815,6 @@
 	//
 	// > **Note:** This should _not_ be set to a GitHub.com URI. If your account exists on GitHub.com or is a GitHub Enterprise Managed User, you do not need any additional configuration and can simply log in to GitHub.
 	"github-enterprise.uri": "",
-	// GitHub Copilot Chat
-	// A list of absolute folder paths outside of the workspace that Copilot Chat is allowed to read from without requiring confirmation. Edit operations remain restricted to the workspace.
-	"github.copilot.chat.additionalReadAccessPaths": [],
-	// Automatically fix diagnostics for edited files.
-	"github.copilot.chat.agent.autoFix": false,
-	// Enable background todo agent that automatically maintains a todo list during agent sessions.
-	//
-	// **Note**: This is an advanced experimental setting.
-	"github.copilot.chat.agent.backgroundTodoAgent.enabled": false,
-	// When enabled, Copilot will include the name of the current active editor in the context for agent mode.
-	"github.copilot.chat.agent.currentEditorContext.enabled": true,
-	// When enabled, large tool results are written to disk instead of being included directly in the context, helping manage context window usage.
-	"github.copilot.chat.agent.largeToolResultsToDisk.enabled": true,
-	// The size threshold in bytes above which tool results are written to disk. Only applies when largeToolResultsToDisk.enabled is true.
-	"github.copilot.chat.agent.largeToolResultsToDisk.thresholdBytes": 8192,
-	// Show model details (model name and request multiplier) on agent chat responses when using Copilot CLI or Claude agent in VS Code. Requires VS Code reload to update already loaded sessions.
-	"github.copilot.chat.agent.modelDetails.enabled": true,
-	// Omit summarized file contents from file attachments in agent mode, to encourage the agent to properly read and explore.
-	"github.copilot.chat.agent.omitFileAttachmentContents": false,
-	// Temperature setting for agent mode requests.
-	"github.copilot.chat.agent.temperature": 0,
-	// This setting has been merged into `github.copilot.chat.agentDebugLog.fileLogging.enabled`. Please use this setting instead.
-	// Deprecated: use `github.copilot.chat.agentDebugLog.fileLogging.enabled` instead.
-	"github.copilot.chat.agentDebugLog.enabled": false,
-	// Enable agent debug logging: write chat debug events (tool calls, LLM requests, token usage, errors) to JSONL files for the debug panel and troubleshoot skill. Requires window reload to take effect.
-	"github.copilot.chat.agentDebugLog.fileLogging.enabled": false,
-	// How often (in milliseconds) buffered debug log entries are flushed to disk. Lower values provide more up-to-date logs at the cost of more frequent disk writes.
-	"github.copilot.chat.agentDebugLog.fileLogging.flushIntervalMs": 4000,
-	// Maximum number of chat debug session log directories to retain on disk. Each chat session produces one directory. Older session logs are automatically deleted when this limit is exceeded.
-	"github.copilot.chat.agentDebugLog.fileLogging.maxRetainedSessionLogs": 50,
-	// Maximum size in megabytes for a single chat debug session log file. When the log exceeds this size, older entries are truncated to retain the most recent data. Defaults to 100 MB.
-	"github.copilot.chat.agentDebugLog.fileLogging.maxSessionLogSizeMB": 100,
-	// Mode for agent history summarization.
-	"github.copilot.chat.agentHistorySummarizationMode": "",
-	// Enables an experimental alternate prompt for Gemini Model F instead of the default prompt.
-	"github.copilot.chat.alternateGeminiModelFPrompt.enabled": false,
-	// Enables an experimental alternate prompt for GPT models instead of the default prompt.
-	"github.copilot.chat.alternateGptPrompt.enabled": false,
-	// Select the context editing mode for Anthropic models. Automatically manages conversation context as it grows, helping optimize costs and stay within context window limits.
-	//
-	// - `off`: Context editing is disabled.
-	// - `clear-thinking`: Clears thinking blocks while preserving tool uses.
-	// - `clear-tooluse`: Clears tool uses while preserving thinking blocks.
-	// - `clear-both`: Clears both thinking blocks and tool uses.
-	//
-	// **Note**: This is an experimental feature. Context editing may cause additional cache rewrites. Enable with caution.
-	"github.copilot.chat.anthropic.contextEditing.mode": "off",
-	// List of domains to restrict web search results to (e.g., `["example.com", "docs.example.com"]`). Domains should not include the HTTP/HTTPS scheme. Subdomains are automatically included. Cannot be used together with `github.copilot.chat.anthropic.tools.websearch.blockedDomains`; configuring both will cause web search requests to fail.
-	"github.copilot.chat.anthropic.tools.websearch.allowedDomains": [],
-	// List of domains to exclude from web search results (e.g., `["untrustedsource.com"]`). Domains should not include the HTTP/HTTPS scheme. Subdomains are automatically excluded. Cannot be used together with `github.copilot.chat.anthropic.tools.websearch.allowedDomains`; configuring both will cause web search requests to fail.
-	"github.copilot.chat.anthropic.tools.websearch.blockedDomains": [],
-	// Enable Anthropic's native web search tool for BYOK Claude models. When enabled, allows Claude to search the web for current information.
-	//
-	// **Note**: This is an experimental feature only available for BYOK Anthropic Claude models.
-	"github.copilot.chat.anthropic.tools.websearch.enabled": false,
-	// Maximum number of web searches allowed per request. Valid range is 1 to 20. Prevents excessive API calls within a single interaction. If Claude exceeds this limit, the response returns an error.
-	"github.copilot.chat.anthropic.tools.websearch.maxUses": 5,
-	// User location for personalizing web search results based on geographic context. All fields (city, region, country, timezone) are optional. Example: `{"city": "San Francisco", "region": "California", "country": "US", "timezone": "America/Los_Angeles"}`
-	"github.copilot.chat.anthropic.tools.websearch.userLocation": null,
-	// Use the Messages API instead of the Chat Completions API when supported.
-	"github.copilot.chat.anthropic.useMessagesApi": true,
-	// Additional tools to enable for the Ask agent, on top of built-in read-only tools. Use fully-qualified tool names (e.g., `github/issue_read`, `mcp_server/tool_name`).
-	"github.copilot.chat.askAgent.additionalTools": [],
-	// Override the language model used by the Ask agent. Leave empty to use the default model.
-	"github.copilot.chat.askAgent.model": "",
-	// Enable the Copilot CLI. When disabled, the Copilot CLI will not be available in 'Continue In' context menus.
-	"github.copilot.chat.backgroundAgent.enabled": true,
-	// Enables the updated system prompt tuned for the Claude Opus 4.7 model.
-	"github.copilot.chat.claude47OpusPrompt.enabled": false,
-	// Allow bypass permissions mode. Recommended only for sandboxes with no internet access.
-	"github.copilot.chat.claudeAgent.allowDangerouslySkipPermissions": false,
-	// Enable Claude Agent sessions in VS Code. Start and resume agentic coding sessions powered by Anthropic's Claude Agent SDK directly in the editor. Uses your existing Copilot subscription.
-	"github.copilot.chat.claudeAgent.enabled": true,
-	// Enable AI-generated branch names in Copilot CLI.
-	"github.copilot.chat.cli.aiGenerateBranchNames.enabled": true,
-	// Enable automatic commit for Copilot CLI. When enabled, changes made by Copilot CLI will be automatically committed to the repository at the end of each turn.
-	"github.copilot.chat.cli.autoCommit.enabled": true,
-	// Enable the Auto model option in Copilot CLI, which automatically selects the best model for each request. Requires VS Code reload.
-	"github.copilot.chat.cli.autoModel.enabled": false,
-	// Enable branch support for Copilot CLI.
-	"github.copilot.chat.cli.branchSupport.enabled": false,
-	// Enable forking sessions in Copilot CLI.
-	"github.copilot.chat.cli.forkSessions.enabled": false,
-	// Enable the isolation mode option for Copilot CLI. When enabled, users can choose between Worktree and Workspace modes.
-	"github.copilot.chat.cli.isolationOption.enabled": true,
-	// Enable lazy loading of session items in Copilot CLI. Requires VS Code reload.
-	"github.copilot.chat.cli.lazyLoadSessionItem.enabled": true,
-	// Enable Model Context Protocol (MCP) server for Copilot CLI.
-	"github.copilot.chat.cli.mcp.enabled": true,
-	// Enable the /plan command in Copilot CLI to create implementation plans before coding.
-	"github.copilot.chat.cli.planCommand.enabled": true,
-	// Enable Plan Mode exit handling in Copilot CLI.
-	"github.copilot.chat.cli.planExitMode.enabled": true,
-	// Enable the /remote command for Copilot CLI sessions, allowing you to view and steer from GitHub.com and the GitHub mobile app.
-	"github.copilot.chat.cli.remote.enabled": true,
-	// Enable the new session controller API for Copilot CLI. Requires VS Code reload.
-	"github.copilot.chat.cli.sessionController.enabled": false,
-	// Enable the new session controller API for Sessions App. Requires VS Code reload.
-	"github.copilot.chat.cli.sessionControllerForSessionsApp.enabled": false,
-	// Show sessions created by other applications.
-	"github.copilot.chat.cli.showExternalSessions": true,
-	// Enable advanced clickable file links in Copilot CLI terminals. Resolves relative paths against session state directories. Requires VS Code reload.
-	"github.copilot.chat.cli.terminalLinks.enabled": true,
-	// Enable thinking effort for Language Models in Copilot CLI.
-	"github.copilot.chat.cli.thinkingEffort.enabled": true,
-	// Enable the Cloud Agent. When disabled, the Cloud Agent will not be available in 'Continue In' context menus.
-	"github.copilot.chat.cloudAgent.enabled": true,
-	// Use instructions files instead. See https://aka.ms/vscode-ghcp-custom-instructions for more information.
-	// A set of instructions that will be added to Copilot requests that generate code.
-	// Instructions can come from:
-	// - a file in the workspace: `{ "file": "fileName" }`
-	// - text in natural language: `{ "text": "Use underscore for field names." }`
-	//
-	// Note: Keep your instructions short and precise. Poor instructions can degrade Copilot's quality and performance.
-	"github.copilot.chat.codeGeneration.instructions": [],
-	// Controls whether code instructions from `.github/copilot-instructions.md` are added to Copilot requests.
-	//
-	// Note: Keep your instructions short and precise. Poor instructions can degrade Copilot's quality and performance. [Learn more](https://aka.ms/github-copilot-custom-instructions) about customizing Copilot.
-	"github.copilot.chat.codeGeneration.useInstructionFiles": true,
-	// Enable code search capabilities in agent mode.
-	"github.copilot.chat.codesearch.agent.enabled": true,
-	// Whether to enable agentic codesearch when using `#codebase`.
-	"github.copilot.chat.codesearch.enabled": false,
-	// A set of instructions that will be added to Copilot requests that generate commit messages.
-	// Instructions can come from:
-	// - a file in the workspace: `{ "file": "fileName" }`
-	// - text in natural language: `{ "text": "Use conventional commit message format." }`
-	//
-	// Note: Keep your instructions short and precise. Poor instructions can degrade Copilot's quality and performance.
-	"github.copilot.chat.commitMessageGeneration.instructions": [],
-	// Sets the fetcher used for the inline completions.
-	"github.copilot.chat.completionsFetcher": "",
-	// Whether the `copilot-debug` command is enabled in the terminal.
-	"github.copilot.chat.copilotDebugCommand.enabled": true,
-	// When enabled, custom instructions and mode instructions will be appended to the system message instead of a user message.
-	"github.copilot.chat.customInstructionsInSystemMessage": true,
-	// Path to a YAML file that overrides the system prompt and/or tool descriptions sent to the model.
-	//
-	// **Note**: This is an advanced debugging setting.
-	"github.copilot.chat.debug.promptOverrideFile": null,
-	// YAML string that overrides the system prompt and/or tool descriptions sent to the model. When both this setting and `github.copilot.chat.debug.promptOverrideFile` are configured, this setting takes precedence.
-	//
-	// **Note**: This is an advanced debugging setting.
-	"github.copilot.chat.debug.promptOverrideString": null,
-	// Maximum number of entries to keep in the request logger for debugging purposes.
-	"github.copilot.chat.debug.requestLogger.maxEntries": 100,
-	// A list of commands for which the "Debug Command" quick fix action should be shown in the debug terminal.
-	"github.copilot.chat.debugTerminalCommandPatterns": [],
-	// Enable edit recording for analysis.
-	"github.copilot.chat.editRecording.enabled": false,
-	// Update tool descriptions to promote `multi_replace_string_in_file` as the primary multi-edit tool.
-	"github.copilot.chat.edits.batchReplaceStringDescriptions": false,
-	// Enable the modern `multi_replace_string_in_file` edit tool when generating edits with Gemini 3 models.
-	"github.copilot.chat.edits.gemini3MultiReplaceString": false,
-	// Enable remembering user preferences in agent mode.
-	"github.copilot.chat.enableUserPreferences": false,
-	// Enable the Execution Subagent tool in Copilot Chat. The Execution Subagent is designed to run terminal commands to accomplish an execution-based task.
-	"github.copilot.chat.executionSubagent.enabled": false,
-	// The model to use for the Execution Subagent tool in Copilot Chat. When useAgenticProxy is enabled, defaults to 'exec-subagent-router-a'. Otherwise defaults to the main agent model.
-	"github.copilot.chat.executionSubagent.model": "",
-	// Maximum number of tool calls the Execution Subagent can make during execution.
-	"github.copilot.chat.executionSubagent.toolCallLimit": 10,
-	// Use the agentic proxy endpoint for the execution subagent.
-	"github.copilot.chat.executionSubagent.useAgenticProxy": false,
-	// Enable the Explore (Code Research) subagent.
-	"github.copilot.chat.exploreAgent.enabled": true,
-	// Override the language model used by the Explore subagent. Defaults to a fast, small model. Leave empty to use the built-in fallback list.
-	"github.copilot.chat.exploreAgent.model": "",
-	// Enable feedback collection on configuration changes.
-	"github.copilot.chat.feedback.onChange": false,
-	// Enable the Get Changed Files tool in Copilot Chat. When enabled, the agent can retrieve git diffs of current changes via a dedicated tool.
-	"github.copilot.chat.getChangedFilesTool.enabled": false,
-	// Select the channel for the GitHub MCP Server. When set to Insiders, enables access to experimental features that may change or be removed based on community feedback. [Learn more](https://aka.ms/vscode-gh-mcp-channel).
-	//  - stable: Use the stable version of the GitHub MCP Server.
-	//  - insiders: Connect to the Insiders version of the GitHub MCP Server with experimental features.
-	"github.copilot.chat.githubMcpServer.channel": "stable",
-	// Enable built-in support for the GitHub MCP Server.
-	"github.copilot.chat.githubMcpServer.enabled": false,
-	// Enable lockdown mode for the GitHub MCP Server. When enabled, hides public issue details created by users without push access. [Learn more](https://aka.ms/vscode-gh-mcp-lockdown).
-	"github.copilot.chat.githubMcpServer.lockdown": false,
-	// Enable read-only mode for the GitHub MCP Server. When enabled, only read tools are available. [Learn more](https://aka.ms/vscode-gh-mcp-readonly).
-	"github.copilot.chat.githubMcpServer.readonly": false,
-	// Specify toolsets to use from the GitHub MCP Server. [Learn more](https://aka.ms/vscode-gh-mcp-toolsets).
-	"github.copilot.chat.githubMcpServer.toolsets": [
-		"default"
-	],
-	// Enables the concise prompt experiment for gpt-5.4 model.
-	"github.copilot.chat.gpt54ConcisePrompt.enabled": false,
-	// Enables the large prompt experiment for gpt-5.4 model.
-	"github.copilot.chat.gpt54LargePrompt.enabled": false,
-	// Enables economical search and edit instructions for gpt-5.5 models.
-	"github.copilot.chat.gpt55EconomicalSearchAndEdit.enabled": false,
-	// Enables the Get Changed Files tool for gpt-5.5 models.
-	"github.copilot.chat.gpt55GetChangedFilesTool.enabled": true,
-	// Enables additional gpt-5.4 large prompt sections for gpt-5.5 models.
-	"github.copilot.chat.gpt55LargePromptSections.enabled": false,
-	// Enables the Read File tool for gpt-5.5 models.
-	"github.copilot.chat.gpt55ReadFileTool.enabled": true,
-	// Enable GPT-5 alternative patch format.
-	"github.copilot.chat.gpt5AlternativePatch": false,
-	// Enables the use of image upload URLs in chat requests instead of raw base64 strings.
-	"github.copilot.chat.imageUpload.enabled": true,
-	// Override the language model used when starting implementation from the Plan agent's handoff. Use the format `Model Name (vendor)` (e.g., `GPT-5 (copilot)`). Leave empty to use the default model.
-	"github.copilot.chat.implementAgent.model": "",
-	// Controls whether thinking/reasoning is enabled for inline chat requests. When disabled, reasoning summaries are suppressed for faster responses.
-	"github.copilot.chat.inlineChat.enableThinking": false,
-	// Controls the reasoning effort level for inline chat requests. Lower values result in faster responses with fewer reasoning tokens. Supported values depend on the model.
-	"github.copilot.chat.inlineChat.reasoningEffort": "low",
-	// Enable chat session context provider for next edit suggestions.
-	"github.copilot.chat.inlineEdits.chatSessionContextProvider.enabled": false,
-	// Enable diagnostics context provider for next edit suggestions.
-	"github.copilot.chat.inlineEdits.diagnosticsContextProvider.enabled": false,
-	// Maximum tokens for current file in next cursor prediction.
-	"github.copilot.chat.inlineEdits.nextCursorPrediction.currentFileMaxTokens": 3000,
-	// Display predicted cursor line for next edit suggestions.
-	"github.copilot.chat.inlineEdits.nextCursorPrediction.displayLine": true,
-	// Enable rename symbol suggestions in inline edits.
-	"github.copilot.chat.inlineEdits.renameSymbolSuggestions": true,
-	// Trigger inline edits after editor has been idle for this many seconds.
-	"github.copilot.chat.inlineEdits.triggerOnEditorChangeAfterSeconds": 10,
-	// Advanced model configuration for the next edit suggestions xtab provider.
-	//
-	// **Note**: This is an advanced setting.
-	"github.copilot.chat.inlineEdits.xtabProvider.modelConfiguration": null,
-	// Whether to enable the install extension skill for Copilot.
-	"github.copilot.chat.installExtensionSkill.enabled": false,
-	// Token limit for short context instant apply.
-	"github.copilot.chat.instantApply.shortContextLimit": 8000,
-	// Model name for short context instant apply.
-	"github.copilot.chat.instantApply.shortContextModelName": "gpt-4o-instant-apply-full-ft-v66-short",
-	// Enables the TypeScript language context provider for /fix commands
-	"github.copilot.chat.languageContext.fix.typescript.enabled": false,
-	// Enables the TypeScript language context provider for inline chats (both generate and edit)
-	"github.copilot.chat.languageContext.inline.typescript.enabled": false,
-	// The cache population timeout for the TypeScript language context provider in milliseconds. The default is 500 milliseconds.
-	"github.copilot.chat.languageContext.typescript.cacheTimeout": 500,
-	// Enables the TypeScript language context provider for inline suggestions
-	"github.copilot.chat.languageContext.typescript.enabled": true,
-	// Controls whether to include documentation comments in the generated code snippets.
-	"github.copilot.chat.languageContext.typescript.includeDocumentation": false,
-	// Controls which kind of items are included in the TypeScript language context provider.
-	"github.copilot.chat.languageContext.typescript.items": "double",
-	// Specify a locale that Copilot should respond in, e.g. `en` or `fr`. By default, Copilot will respond using VS Code's configured display language locale.
-	//  - auto: Use VS Code's configured display language
-	//  - en: English
-	//  - fr: français
-	//  - it: italiano
-	//  - de: Deutsch
-	//  - es: español
-	//  - ru: русский
-	//  - zh-CN: 中文(简体)
-	//  - zh-TW: 中文(繁體)
-	//  - ja: 日本語
-	//  - ko: 한국어
-	//  - cs: čeština
-	//  - pt-br: português
-	//  - tr: Türkçe
-	//  - pl: polski
-	"github.copilot.chat.localeOverride": "auto",
-	// Enable local session tracking. When enabled, session data is tracked locally for /chronicle commands.
-	"github.copilot.chat.localIndex.enabled": false,
-	// Enable local workspace recording for analysis.
-	"github.copilot.chat.localWorkspaceRecording.enabled": false,
-	// Sets the fetcher used for the next edit suggestions.
-	"github.copilot.chat.nesFetcher": "",
-	// Whether to use the [Context7](command:github.copilot.mcp.viewContext7) tools to scaffold project for new workspace creation.
-	"github.copilot.chat.newWorkspace.useContext7": false,
-	// Whether to enable new agentic workspace creation.
-	"github.copilot.chat.newWorkspaceCreation.enabled": true,
-	// Alternative document format for notebooks.
-	"github.copilot.chat.notebook.alternativeFormat": "xml",
-	// Enable alternative format for Next Edit Suggestions in notebooks.
-	"github.copilot.chat.notebook.alternativeNESFormat.enabled": false,
-	// Controls whether to use an enhanced approach for generating next edit suggestions in notebook cells.
-	"github.copilot.chat.notebook.enhancedNextEditSuggestions.enabled": false,
-	// Controls whether the currently executing cell is revealed into the viewport upon execution from Copilot.
-	"github.copilot.chat.notebook.followCellExecution.enabled": false,
-	// Enable the notebook summary experiment.
-	"github.copilot.chat.notebook.summaryExperimentEnabled": false,
-	// Enable filtering variables by cell document symbols.
-	"github.copilot.chat.notebook.variableFilteringEnabled": false,
-	// Omit base agent instructions from prompts.
-	"github.copilot.chat.omitBaseAgentInstructions": false,
-	// When enabled, Copilot will load custom agents defined by your GitHub Organization.
-	"github.copilot.chat.organizationCustomAgents.enabled": true,
-	// When enabled, Copilot will load custom instructions defined by your GitHub Organization.
-	"github.copilot.chat.organizationInstructions.enabled": true,
-	// Capture input/output messages, system instructions, and tool definitions in OTel telemetry. **Contains potentially sensitive data.** Env var `COPILOT_OTEL_CAPTURE_CONTENT` takes precedence. Requires window reload.
-	"github.copilot.chat.otel.captureContent": false,
-	// Enable SQLite DB span exporter. Persists OTel spans to a local SQLite database. Automatically enables OTel when set to true. Requires window reload.
-	"github.copilot.chat.otel.dbSpanExporter.enabled": false,
-	// Enable OpenTelemetry trace/metric/log emission for Copilot Chat operations. Env var `COPILOT_OTEL_ENABLED` takes precedence. Requires window reload.
-	"github.copilot.chat.otel.enabled": false,
-	// OTel exporter type for Copilot Chat telemetry. Requires window reload.
-	"github.copilot.chat.otel.exporterType": "otlp-http",
-	// Maximum size **in characters** for free-form OTel content attributes (prompts, responses, tool arguments/results, hook input/output). `0` (the default) disables truncation so backends without per-attribute size limits receive full JSON payloads. Set to a positive value when your OTel backend caps attribute size — consult your backend's documentation for its per-attribute limit. Truncated values are suffixed with `...[truncated, original N chars]`. Env var `COPILOT_OTEL_MAX_ATTRIBUTE_SIZE_CHARS` takes precedence. Requires window reload.
-	"github.copilot.chat.otel.maxAttributeSizeChars": 0,
-	// OTLP collector endpoint URL for Copilot Chat OTel data. Env var `OTEL_EXPORTER_OTLP_ENDPOINT` takes precedence. Requires window reload.
-	"github.copilot.chat.otel.otlpEndpoint": "http://localhost:4318",
-	// File path for file-based OTel exporter output (JSON-lines). When set, overrides exporter type to `file`. Requires window reload.
-	"github.copilot.chat.otel.outfile": "",
-	// Additional tools to enable for the Plan agent, on top of built-in tools. Use fully-qualified tool names (e.g., `github/issue_read`, `mcp_server/tool_name`).
-	"github.copilot.chat.planAgent.additionalTools": [],
-	// Add project labels in chat requests.
-	"github.copilot.chat.projectLabels.chat": false,
-	// Use the expanded format for project labels in prompts.
-	"github.copilot.chat.projectLabels.expanded": false,
-	// Add project labels in inline edit requests.
-	"github.copilot.chat.projectLabels.inline": false,
-	// Whether to enable the project setup info skill for Copilot.
-	"github.copilot.chat.projectSetupInfoSkill.enabled": false,
-	// Enable prompt file context provider.
-	"github.copilot.chat.promptFileContextProvider.enabled": true,
-	// A set of instructions that will be added to Copilot requests that generate pull request titles and descriptions.
-	// Instructions can come from:
-	// - a file in the workspace: `{ "file": "fileName" }`
-	// - text in natural language: `{ "text": "Always include a list of key changes." }`
-	//
-	// Note: Keep your instructions short and precise. Poor instructions can degrade Copilot's quality and performance.
-	"github.copilot.chat.pullRequestDescriptionGeneration.instructions": [],
-	// Automatically switch to the Auto model and retry when you hit a per-model rate limit.
-	"github.copilot.chat.rateLimitAutoSwitchToAuto": false,
-	// Overrides the reasoning/thinking effort sent to model APIs. The configured value must match a reasoning-effort value supported by the selected model or endpoint (for example, `low`, `medium`, `high`, or other model-specific values). Used by evals.
-	//
-	// **Note**: This is an advanced debugging setting.
-	"github.copilot.chat.reasoningEffortOverride": null,
-	// Enables prompt cache key being set for the Responses API.
-	"github.copilot.chat.responsesApi.promptCacheKey.enabled": false,
-	// Enable tool search for OpenAI Responses API models. When enabled, tools are dynamically discovered and loaded on-demand using embeddings-based search, reducing context window usage when many tools are available.
-	"github.copilot.chat.responsesApi.toolSearchTool.enabled": false,
-	// Enables context management for the Responses API. Requires `github.copilot.chat.useResponsesApi`.
-	"github.copilot.chat.responsesApiContextManagement.enabled": false,
-	// Sets the reasoning summary style used for the Responses API. Requires `github.copilot.chat.useResponsesApi`.
-	"github.copilot.chat.responsesApiReasoningSummary": "detailed",
-	// Enable intent detection for code review.
-	"github.copilot.chat.review.intent": false,
-	// Enables the code review agent.
-	"github.copilot.chat.reviewAgent.enabled": true,
-	// Enables code review on current selection.
-	"github.copilot.chat.reviewSelection.enabled": true,
-	// A set of instructions that will be added to Copilot requests that provide code review for the current selection.
-	// Instructions can come from:
-	// - a file in the workspace: `{ "file": "fileName" }`
-	// - text in natural language: `{ "text": "Use underscore for field names." }`
-	//
-	// Note: Keep your instructions short and precise. Poor instructions can degrade Copilot's effectiveness.
-	"github.copilot.chat.reviewSelection.instructions": [],
-	// Whether to prompt the user to select a specific symbol scope if the user uses `/explain` and the active editor has no selection.
-	"github.copilot.chat.scopeSelection": false,
-	// Enable the search subagent tool for iterative code exploration in the workspace.
-	"github.copilot.chat.searchSubagent.enabled": false,
-	// Model to use for the search subagent. When useAgenticProxy is enabled, defaults to 'vscode-agentic-search-router-a'. Otherwise defaults to the main agent model.
-	"github.copilot.chat.searchSubagent.model": "",
-	// Enable the thoroughness parameter on the search subagent tool. When enabled, the caller can pass 'normal' or 'deep' to adjust the number of allowed tool-call turns (1× or 2× the base toolCallLimit respectively).
-	"github.copilot.chat.searchSubagent.thoroughnessEnabled": false,
-	// Maximum number of tool calls the search subagent can make during exploration.
-	"github.copilot.chat.searchSubagent.toolCallLimit": 4,
-	// Use the agentic proxy for the search subagent tool.
-	"github.copilot.chat.searchSubagent.useAgenticProxy": false,
-	// Enables the `/setupTests` intent and prompting in `/tests` generation.
-	"github.copilot.chat.setupTests.enabled": true,
-	// Enable the skill tool in Copilot Chat. When enabled, skills are invoked via a dedicated skill tool instead of readFile.
-	"github.copilot.chat.skillTool.enabled": false,
-	// Whether to auto-compact agent conversation history once the context window is filled.
-	"github.copilot.chat.summarizeAgentConversationHistory.enabled": true,
-	// Threshold for compacting agent conversation history.
-	"github.copilot.chat.summarizeAgentConversationHistoryThreshold": 0,
-	// Allow agent to switch to the Plan agent for research, exploration, and planning tasks.
-	"github.copilot.chat.switchAgent.enabled": false,
-	// Controls where chat queries from the terminal should be opened.
-	//  - chatView: Open the chat view.
-	//  - quickChat: Open quick chat.
-	//  - terminal: Open terminal inline chat
-	"github.copilot.chat.terminalChatLocation": "chatView",
-	// Use instructions files instead. See https://aka.ms/vscode-ghcp-custom-instructions for more information.
-	// A set of instructions that will be added to Copilot requests that generate tests.
-	// Instructions can come from:
-	// - a file in the workspace: `{ "file": "fileName" }`
-	// - text in natural language: `{ "text": "Use underscore for field names." }`
-	//
-	// Note: Keep your instructions short and precise. Poor instructions can degrade Copilot's quality and performance.
-	"github.copilot.chat.testGeneration.instructions": [],
-	// Group default tools in prompts.
-	"github.copilot.chat.tools.defaultToolsGrouped": false,
-	// Enable the memory tool to let the agent save and recall notes during a conversation. Memories are stored locally in VS Code storage — user-scoped memories persist across workspaces and sessions, while session-scoped memories are cleared when the conversation ends.
-	"github.copilot.chat.tools.memory.enabled": true,
-	// Enable the view image tool, which allows the agent to view image files such as png, jpg, jpeg, gif, and webp.
-	"github.copilot.chat.tools.viewImage.enabled": true,
-	// Enables the updated prompt for gpt-5.3-codex model.
-	"github.copilot.chat.updated53CodexPrompt.enabled": true,
-	// Use relevant GitHub projects as starter projects when using `/new`
-	"github.copilot.chat.useProjectTemplates": true,
-	// Use Responses API for truncation.
-	"github.copilot.chat.useResponsesApiTruncation": false,
-	// This setting defines the tool count over which virtual tools should be used. Virtual tools group similar sets of tools together and they allow the model to activate them on-demand. Certain tool groups will optimistically be pre-activated. We are actively developing this feature and you experience degraded tool calling once the threshold is hit.
-	//
-	// May be set to `0` to disable virtual tools.
-	"github.copilot.chat.virtualTools.threshold": 128,
-	// Enable external ingest for semantic codebase search.
-	"github.copilot.chat.workspace.codeSearchExternalIngest.enabled": false,
-	// Enable code search in workspace context.
-	"github.copilot.chat.workspace.enableCodeSearch": true,
-	// Maximum size of the local workspace index.
-	"github.copilot.chat.workspace.maxLocalIndexSize": 100000,
-	// Preferred embeddings model for semantic search.
-	"github.copilot.chat.workspace.preferredEmbeddingsModel": "",
-	// Override endpoint for Azure DevOps code search prototype.
-	"github.copilot.chat.workspace.prototypeAdoCodeSearchEndpointOverride": "",
-	// Controls if Copilot commands are shown as Code Actions when available
-	"github.copilot.editor.enableCodeActions": true,
-	// Enable or disable auto triggering of Copilot completions for specified [languages](https://code.visualstudio.com/docs/languages/identifiers). You can still trigger suggestions manually using `Alt + \`
-	"github.copilot.enable": {
-		"*": true,
-		"plaintext": false,
-		"markdown": false,
-		"scminput": false
-	},
-	// Whether to allow whitespace-only changes be proposed by next edit suggestions (NES).
-	"github.copilot.nextEditSuggestions.allowWhitespaceOnlyChanges": true,
-	// Controls how eagerly next edit suggestions are shown. Higher values show more suggestions with less delay.
-	//  - auto: Automatically determine the eagerness level.
-	//  - low: Show fewer suggestions with longer delays.
-	//  - medium: Balanced suggestion frequency and delay.
-	//  - high: Show more suggestions with minimal delay.
-	"github.copilot.nextEditSuggestions.eagerness": "auto",
-	// Whether to enable next edit suggestions (NES).
-	//
-	// NES can propose a next edit based on your recent changes. [Learn more](https://aka.ms/vscode-nes) about next edit suggestions.
-	"github.copilot.nextEditSuggestions.enabled": true,
-	// Whether to allow next edit suggestions (NES) to modify code farther away from the cursor position.
-	"github.copilot.nextEditSuggestions.extendedRange": false,
-	// Whether to offer fixes for diagnostics via next edit suggestions (NES).
-	"github.copilot.nextEditSuggestions.fixes": true,
-	// Preferred model for next edit suggestions.
-	"github.copilot.nextEditSuggestions.preferredModel": "none",
-	// Controls whether Copilot generates suggestions for renaming
-	"github.copilot.renameSuggestions.triggerAutomatically": true,
-	// The currently selected completion model ID. To select from a list of available models, use the __"Change Completions Model"__ command or open the model picker (from the Copilot menu in the VS Code title bar, select __"Configure Code Completions"__ then __"Change Completions Model"__. The value must be a valid model ID. An empty value indicates that the default model will be used.
-	"github.copilot.selectedCompletionModel": "",
 	// Grunt
 	// Controls enablement of Grunt task detection. Grunt task detection can cause files in any open workspace to be executed.
 	"grunt.autoDetect": "off",
@@ -6862,9 +6851,31 @@
 	//  - Beside: Open the diff view next to the current editor group.
 	//  - Below: Open the diff view below the current editor group.
 	"merge-conflict.diffViewPosition": "Current",
-	// Mermaid Chat Features
-	// Enable a tool for Mermaid diagram rendering in chat responses.
-	"mermaid-chat.enabled": true,
+	// Mermaid
+	// Controls showing UI controls on Mermaid diagrams.
+	//  - never: Never show controls.
+	//  - onHoverOrFocus: Show zoom controls when hovering over or focusing a diagram.
+	//  - always: Always show zoom controls.
+	"markdown-mermaid.controls.show": "onHoverOrFocus",
+	// Default Mermaid theme for dark mode.
+	"markdown-mermaid.darkModeTheme": "dark",
+	// Default languages in Markdown.
+	"markdown-mermaid.languages": [
+		"mermaid"
+	],
+	// Default Mermaid theme for light mode.
+	"markdown-mermaid.lightModeTheme": "default",
+	// Maximum height for diagrams. Must be a CSS value with units such as `80vh` or `400px`. Leave empty to try to automatically size diagrams based on their content.
+	"markdown-mermaid.maxHeight": "",
+	// The maximum allowed size of the user's text diagram.
+	"markdown-mermaid.maxTextSize": 50000,
+	// Controls when mouse-based navigation is enabled on Mermaid diagrams.
+	//  - always: Always enable mouse navigation on Mermaid diagrams.
+	//  - alt: Only enable mouse navigation when holding down Alt (Option on macOS). Gestures such as pinch-to-zoom will still work without Alt.
+	//  - never: Disable mouse navigation.
+	"markdown-mermaid.mouseNavigation.enabled": "alt",
+	// Allow diagrams to be resized vertically by dragging the bottom edge.
+	"markdown-mermaid.resizable": true,
 	// Microsoft Sovereign Cloud
 	// The custom configuration for the Sovereign Cloud to use with the Microsoft Sovereign Cloud authentication provider. This along with setting `microsoft-sovereign-cloud.environment` to `custom` is required to use this feature.
 	"microsoft-sovereign-cloud.customEnvironment": {},
@@ -6982,8 +6993,8 @@
 	"js/ts.tsc.autoDetect": "on",
 	// Specifies the folder path to the tsserver and `lib*.d.ts` files under a TypeScript install to use for IntelliSense, for example: `./node_modules/typescript/lib`.
 	//
-	// - When specified as a user setting, the TypeScript version from `typescript.tsdk` automatically replaces the built-in TypeScript version.
-	// - When specified as a workspace setting, `typescript.tsdk` allows you to switch to use that workspace version of TypeScript for IntelliSense with the `TypeScript: Select TypeScript version` command.
+	// - When specified as a user setting, the TypeScript version from `js/ts.tsdk.path` automatically replaces the built-in TypeScript version.
+	// - When specified as a workspace setting, `js/ts.tsdk.path` allows you to switch to use that workspace version of TypeScript for IntelliSense with the `TypeScript: Select TypeScript version` command.
 	//
 	// See the [TypeScript documentation](https://code.visualstudio.com/docs/typescript/typescript-compiling#_using-newer-typescript-versions) for more detail about managing TypeScript versions.
 	"js/ts.tsdk.path": "",
@@ -7014,8 +7025,8 @@
 	// This setting is deprecated. Use `js/ts.tsdk.path` instead.
 	// Specifies the folder path to the tsserver and `lib*.d.ts` files under a TypeScript install to use for IntelliSense, for example: `./node_modules/typescript/lib`.
 	//
-	// - When specified as a user setting, the TypeScript version from `typescript.tsdk` automatically replaces the built-in TypeScript version.
-	// - When specified as a workspace setting, `typescript.tsdk` allows you to switch to use that workspace version of TypeScript for IntelliSense with the `TypeScript: Select TypeScript version` command.
+	// - When specified as a user setting, the TypeScript version from `js/ts.tsdk.path` automatically replaces the built-in TypeScript version.
+	// - When specified as a workspace setting, `js/ts.tsdk.path` allows you to switch to use that workspace version of TypeScript for IntelliSense with the `TypeScript: Select TypeScript version` command.
 	//
 	// See the [TypeScript documentation](https://code.visualstudio.com/docs/typescript/typescript-compiling#_using-newer-typescript-versions) for more detail about managing TypeScript versions.
 	"typescript.tsdk": "",
@@ -7923,31 +7934,6 @@
 	"markdown-checkboxes.label": false,
 	// Adds the label after the checkbox. Only applies when `markdown-checkboxes.label` is set to `true`.
 	"markdown-checkboxes.labelAfter": false,
-	// Markdown Preview Mermaid Support
-	// Enables/disables showing UI controls on mermaid diagrams.
-	//  - never: Never show controls
-	//  - onHoverOrFocus: Show zoom controls when hovering over or focusing on a diagram
-	//  - always: Always show zoom controls
-	"markdown-mermaid.controls.show": "onHoverOrFocus",
-	// Default Mermaid theme for dark mode.
-	"markdown-mermaid.darkModeTheme": "dark",
-	// Default languages in markdown.
-	"markdown-mermaid.languages": [
-		"mermaid"
-	],
-	// Default Mermaid theme for light mode.
-	"markdown-mermaid.lightModeTheme": "default",
-	// Maximum height for diagrams. Can be a number (pixels) or a CSS value like `80vh` or `400px`. Leave empty to try to automatically size diagrams based on their content.
-	"markdown-mermaid.maxHeight": "",
-	// The maximum allowed size of the users text diagram.
-	"markdown-mermaid.maxTextSize": 50000,
-	// Controls when mouse-based navigation (panning and zooming) is enabled on mermaid diagrams.
-	//  - always: Always enable mouse navigation on mermaid diagrams
-	//  - alt: Only enable mouse navigation when holding down `alt` (`option` on mac). Gestures such as pinch-to-zoom will still work without `alt`.
-	//  - never: Disable mouse navigation
-	"markdown-mermaid.mouseNavigation.enabled": "alt",
-	// Allow diagrams to be resized vertically by dragging the bottom edge.
-	"markdown-mermaid.resizable": true,
 	// Markdown Preview Github Styling
 	// Color theme mode for the styling of the Markdown preview.
 	//  - auto: Automatically match the editor color theme.
@@ -9540,7 +9526,7 @@
 	"remote.SSH.preconnect": "",
 	// A range of **local** ports preferred to utilize for the SSH tunnel connection. If no free port is found in range, an error will be thrown. Valid ranges of the form `number-number` such as `4000-5000`; it's expected the first number will be lower than the next.
 	"remote.SSH.preferredLocalPortRange": "",
-	// The grace time in **seconds** to wait before terminating the remote server when the client disconnects. Leave empty to use VS Code defaults. _Currently supports only linux remotes._
+	// The grace time in **seconds** to wait before terminating the remote server when the client disconnects. Leave empty to use VS Code defaults. The remote VS Code server must be restarted for this setting to take effect.  _Currently supports only linux remotes._
 	"remote.SSH.reconnectionGraceTime": null,
 	// A map of the remote hostname to the platform for that remote. The hostname may include a star '*' to wildcard match. Valid values: `linux`, `macOS`, `windows`. Note - this setting will soon be required when `remote.SSH.useLocalServer` is disabled, so it is currently being autopopulated for successful connections, but is not currently used.
 	"remote.SSH.remotePlatform": {},
