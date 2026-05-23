@@ -36,7 +36,7 @@ Install via official installers or Homebrew Cask.
 | Maps                  | **Google Maps**, Waze, Organic Maps, Mapy.com                                        |
 | Diagrams              | **Excalidraw**, tldraw                                                               |
 | Diagram as Code       | **Mermaid**, D2                                                                      |
-| Notes                 | **Apple Notes**, Bear, Obsidian                                                      |
+| Notes                 | **Apple Notes**, Bear, Obsidian, Joplin, Logseq                                      |
 | Todo                  | **Apple Reminders**, Things 3                                                        |
 | Calendar              | **Apple Calendar**, Fantastical                                                      |
 | Mail                  | **Apple Mail**, Mimestream                                                           |
