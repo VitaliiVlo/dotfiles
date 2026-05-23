@@ -15,7 +15,7 @@ make symlinks           # Symlink configs to home directory
 make macos-defaults     # Configure macOS defaults: folders, system, screenshots, Finder, Dock (no-op on Linux)
 make linux-defaults     # Configure Linux/GNOME defaults: folders, input, Nautilus, desktop (no-op on macOS / non-GNOME)
 make versions           # Show installed Go, Node, Python versions
-make validate           # Full audit: parse configs, brew bundle, ghostty, shellcheck, shfmt, zsh -n, codex rules, symlinks
+make validate           # Full audit: parse configs, brew bundle, ghostty, shellcheck, shfmt, zsh -n, codex rules, git config, CLI flag configs, symlinks
 make brew-install       # Install all packages (base + work)
 make brew-install-base  # Install base packages only
 make brew-install-work  # Install work packages only
@@ -231,7 +231,9 @@ Run `make validate` (delegates to `scripts/validate.sh`). Covers:
 7. `shellcheck` + `shfmt` on every script in `scripts/`
 8. `zsh -n` on `.zshrc` and `.zprofile` (syntax-only; needs `zsh`)
 9. Sanity grep on `.config/codex/rules/*.rules` (every non-comment, non-blank line must start with `prefix_rule(`)
-10. Verify every documented symlink under `$HOME` resolves (skips macOS-native paths on Linux)
+10. `git config --file=.config/git/config --list` (INI parse; needs `git`)
+11. Sanity grep on `.config/bat/config` and `.config/ripgrep/ripgreprc` (every non-comment, non-blank line must start with `--`; bat/rg silently ignore unknown flags so this catches the only bug class)
+12. Verify every documented symlink under `$HOME` resolves (skips macOS-native paths on Linux)
 
 When adding a new tool, extend the matching block in `scripts/validate.sh`.
 

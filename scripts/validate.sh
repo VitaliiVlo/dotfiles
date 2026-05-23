@@ -175,6 +175,30 @@ for f in .config/codex/rules/*.rules; do
     fi
 done
 
+# 7e. Git config: `git config --list` parses the INI and errors on syntax bugs.
+heading "git config"
+if command -v git >/dev/null 2>&1; then
+    f=.config/git/config
+    if git config --file="$f" --list >/dev/null 2>&1; then
+        ok "$f"
+    else
+        bad "$f"
+    fi
+else
+    echo "SKIP (git not installed)"
+fi
+
+# 7f. CLI flag configs (bat, ripgrep) — bat/rg silently ignore unknown flags, so
+# the only catchable bug is a non-comment line that doesn't start with `--`.
+heading "CLI flag configs"
+for f in .config/bat/config .config/ripgrep/ripgreprc; do
+    if grep -Ev '^\s*(#|$)' "$f" | grep -qvE '^--'; then
+        bad "$f (line not starting with --)"
+    else
+        ok "$f"
+    fi
+done
+
 # 8. Verify documented symlinks resolve
 heading "Symlinks"
 common_paths=(

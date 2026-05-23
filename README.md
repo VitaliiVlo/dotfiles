@@ -97,6 +97,13 @@ Run `make help` to list all available targets.
 - **Install GUI apps via vendor deb/rpm.** Per-app commands (apt/dnf repos, signed keys, GitHub release downloads) live in [`docs/linux-packages.md`](docs/linux-packages.md). Vendor packages respect `~/.config/<tool>/`, so the repo's symlinks resolve without Flatpak-sandbox quirks.
 - **GNOME-only defaults:** `make linux-defaults` skips silently outside GNOME (`XDG_CURRENT_DESKTOP` check). Other DEs configure their own way.
 
+### Personalization (post-clone)
+
+These files ship with the maintainer's identity baked in. Override locally after the first symlink pass; they will be overwritten on every `make symlinks`, so prefer machine-specific includes:
+
+- `.config/git/config` `[user]` (`email`, `name`) — override via `git config --global --file ~/.config/git/config.local user.email ...` and add `[include] path = ~/.config/git/config.local` to a local fork, or just edit `.config/git/config` and keep the change out of upstream.
+- `.zprofile` `GOPRIVATE` — defaults to the maintainer's GitHub namespace. Re-export in `~/.zprofile.local` (sourced manually) or edit in place.
+
 ## Configuration files
 
 ### Symlinked
@@ -259,17 +266,18 @@ After `make setup`, verify everything wired up:
 - `git config --list --show-origin | head -5` — settings come from `~/.config/git/config`
 - `ls -l ~/.config/ghostty/config ~/.zshrc ~/.config/git/config` — symlinks point at this repo
 
-For full audit, run `make validate` (delegates to `scripts/validate.sh`). Covers TOML/JSON/YAML/JSONC parse, `brew bundle list` (parse) + non-fatal `brew bundle check` (install state), `ghostty +validate-config`, `shellcheck`, `shfmt`, `zsh -n` on `.zshrc`/`.zprofile`, `prefix_rule(` sanity grep on `.config/codex/rules/*.rules`, and symlink resolution. Skips macOS-native symlinks on Linux.
+For full audit, run `make validate` (delegates to `scripts/validate.sh`). Covers TOML/JSON/YAML/JSONC parse, `brew bundle list` (parse) + non-fatal `brew bundle check` (install state), `ghostty +validate-config`, `shellcheck`, `shfmt`, `zsh -n` on `.zshrc`/`.zprofile`, `prefix_rule(` sanity grep on `.config/codex/rules/*.rules`, `git config --list` on `.config/git/config`, `--`-prefix sanity grep on `.config/bat/config` and `.config/ripgrep/ripgreprc`, and symlink resolution. Skips macOS-native symlinks on Linux.
 
 ## Updating
 
 - `brew update && brew upgrade` — update Homebrew formulae and casks
 - `make brew-export` — refresh `Brewfile` from current install state (macOS only; Linuxbrew dump would wipe macOS-only casks). Add new work entries to `Brewfile.work` manually; see `docs/conventions.md` "Brewfile maintenance" for strip step semantics.
 - `make brew-cleanup` — prune old versions and cache
-- macOS GUI apps: cask auto-update via `brew upgrade` (VSCode, Brave, Helium, Zen, Ghostty, Zed have their own in-app updaters too; cask still authoritative)
-- Linux GUI apps via vendor apt/dnf repo (covered by `sudo apt-get upgrade` / `sudo dnf upgrade`): 1Password, Brave, Cloudflare WARP, Firefox, Ghostty (Ubuntu universe or Fedora Copr), Google Chrome, Helium, Tailscale, VSCode, Zen (Fedora Copr only)
+- macOS GUI apps: cask auto-update via `brew upgrade` (VSCode, Brave, Helium, Zen, Ghostty, Zed, Claude Code, Codex have their own in-app updaters too; cask still authoritative)
+- Linux GUI apps via vendor apt/dnf repo (covered by `sudo apt-get upgrade` / `sudo dnf upgrade`): 1Password, Beekeeper Studio (deb only), Brave, Cloudflare WARP, Firefox, Ghostty (Ubuntu universe or Fedora Copr), Google Chrome, Helium, Tailscale, VSCode, Zen (Fedora Copr only)
 - Linux GUI apps via in-app updater: Obsidian, Zed
-- Linux GUI apps via manual GitHub release re-download: balenaEtcher, Bruno, Headlamp, LocalSend, MongoDB Compass, Slack, Zen (Debian community deb)
+- Linux GUI apps via manual GitHub release re-download: balenaEtcher, Beekeeper Studio (rpm only), Bruno, Headlamp, LocalSend, Zen (Debian community deb)
+- Linux GUI apps via manual vendor download re-download: MongoDB Compass (`mongodb.com/try/download/compass`), Slack (`slack.com/downloads/linux`)
 - Go: `brew upgrade go`. Node: `fnm install <version>`. Python: `uv python install <version>`.
 
 ## Casks

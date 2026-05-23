@@ -26,7 +26,7 @@ versions: ## Show installed Go, Node, Python versions
 	@printf '\n%s\n' "--- Python ---"
 	@uv python list --only-installed
 
-validate: ## Run full audit: parse configs, brew bundle, ghostty, shellcheck, shfmt, zsh -n, codex rules, symlinks
+validate: ## Run full audit: parse configs, brew bundle, ghostty, shellcheck, shfmt, zsh -n, codex rules, git config, CLI flag configs, symlinks
 	./scripts/validate.sh
 
 brew-install: brew-install-base brew-install-work ## Install all packages from Brewfiles
