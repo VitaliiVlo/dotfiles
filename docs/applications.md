@@ -33,17 +33,19 @@ Install via official installers or Homebrew Cask.
 | Browser (Chromium)    | **Brave**, Helium + **uBlock Origin Lite**                                           |
 | Browser (WebKit)      | **Safari**, Orion + **wBlock**                                                       |
 | Search Engine         | **DuckDuckGo**, Kagi, Brave Search                                                   |
+| Maps                  | **Google Maps**, Waze, Organic Maps, Mapy.com                                        |
 | Diagrams              | **Excalidraw**, tldraw                                                               |
 | Diagram as Code       | **Mermaid**, D2                                                                      |
 | Notes                 | **Apple Notes**, Bear, Obsidian                                                      |
 | Todo                  | **Apple Reminders**, Things 3                                                        |
 | Calendar              | **Apple Calendar**, Fantastical                                                      |
 | Mail                  | **Apple Mail**, Mimestream                                                           |
+| Photos                | **Apple Photos**, Google Photos                                                      |
 | Password Manager      | **Apple Passwords**, 1Password, Bitwarden                                            |
 | Office                | **Apple iWork** (Pages, Numbers, Keynote), Google Workspace, Microsoft 365           |
 | macOS Utilities       | **Rectangle**, Maccy, Keka, KeepingYouAwake, Thaw, MiddleClick, LinearMouse, balenaEtcher |
 | Networking            | **Tailscale**, Cloudflare WARP, LocalSend                                            |
-| Linux Distros         | **Fedora Workstation**, Bluefin, elementary OS, Fedora Silverblue, Pop!_OS           |
+| Linux Distros         | **Fedora Workstation**, Bluefin, elementary OS, Fedora Silverblue, Pop!_OS, Ubuntu, Zorin OS |
 
 ## VSCode setup
 

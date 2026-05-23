@@ -65,7 +65,7 @@ Run `make help` to list all available targets.
 
 ### Linux
 
-> Targets GNOME-based distros listed in [Applications](docs/applications.md): elementary OS, Fedora Workstation, Pop!_OS. Immutable variants (Bluefin, Fedora Silverblue) work too, but extra packages must be layered via `rpm-ostree` (or installed inside Distrobox/Toolbox) instead of `dnf`. KDE / Sway sessions skip the `gsettings` defaults block but everything else applies. Linuxbrew prefix defaults to `/home/linuxbrew/.linuxbrew` in `.zshrc` / `.zprofile` (override via `BREW_PREFIX` env).
+> Targets GNOME-based distros listed in [Applications](docs/applications.md): Fedora Workstation, elementary OS, Pop!_OS, Ubuntu, Zorin OS. Immutable variants (Bluefin, Fedora Silverblue) work too, but extra packages must be layered via `rpm-ostree` (or installed inside Distrobox/Toolbox) instead of `dnf`. KDE / Sway sessions skip the `gsettings` defaults block but everything else applies. Linuxbrew prefix defaults to `/home/linuxbrew/.linuxbrew` in `.zshrc` / `.zprofile` (override via `BREW_PREFIX` env).
 
 - **Install build prerequisites:**
   ```bash
