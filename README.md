@@ -86,6 +86,7 @@ Run `make help` to list all available targets.
   # Pipe pubkey to clipboard: wl-copy < ~/.ssh/id_ed25519.pub  (Wayland)
   #                          xclip -selection clipboard < ~/.ssh/id_ed25519.pub  (X11)
   ```
+- **Install VSCode and Zed via vendor deb/rpm, not Flatpak.** Both are on Flathub but their Flatpaks remap `XDG_CONFIG_HOME` to `~/.var/app/<id>/config/`, so the repo's `~/.config/Code/User/settings.json` and `~/.config/zed/settings.json` symlinks would be ignored. VSCode: Microsoft apt/dnf repo (<https://code.visualstudio.com/docs/setup/linux>). Zed: `curl -f https://zed.dev/install.sh | sh`.
 - **GNOME-only defaults:** `make linux-defaults` skips silently outside GNOME (`XDG_CURRENT_DESKTOP` check). Other DEs configure their own way.
 
 ## Configuration Files
