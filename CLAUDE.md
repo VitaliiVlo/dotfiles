@@ -124,7 +124,7 @@ When adding or editing config files, follow this style across all of them:
 
 **scripts/macos-defaults.sh:**
 
-- Non-interactive: applies all categories unconditionally (Folders, System defaults, Screenshots, Finder, Dock)
+- Non-interactive: applies all categories unconditionally (Folders, System defaults, Screenshots, Finder + DS_Store suppression on network/USB, Dock)
 - Restarts affected processes (Finder, Dock, SystemUIServer)
 - Safe to re-run: idempotent `mkdir -p` and `defaults write` commands
 - Guards `uname -s == Darwin`; exits 0 on Linux so the shared `make setup` chain stays safe to invoke cross-OS

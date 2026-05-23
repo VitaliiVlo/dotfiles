@@ -136,7 +136,7 @@ Run `make defaults` to configure (in order applied):
 - Folders (~/Projects, ~/Pictures/Screenshots)
 - System defaults (key repeat, natural scrolling, save to disk)
 - Screenshots (save to ~/Pictures/Screenshots, no shadow, PNG, floating thumbnail enabled)
-- Finder (list view, path bar, show extensions, folders first, search current folder)
+- Finder (list view, path bar, show extensions, folders first, search current folder, suppress DS_Store on network/USB volumes)
 - Dock (autohide, no recents, scale minimize effect, minimized windows in own Dock slot, fixed Spaces order, Cmd-gated hot corners: TL Mission Control / TR Notification Center / BL Desktop / BR Quick Note)
 
 No-op on Linux (script guards `uname -s == Darwin`).
