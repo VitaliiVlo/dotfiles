@@ -34,7 +34,7 @@ alias lzg='lazygit'
 if command -v bat &>/dev/null; then alias cat='bat'; fi
 
 # fd has no config file; defined outside the conditional so fzf can reuse it
-_FD_OPTS="--hidden --follow --strip-cwd-prefix --exclude .git --exclude node_modules --exclude .venv --exclude venv --exclude __pycache__ --exclude .pytest_cache --exclude .terraform --exclude vendor --exclude dist --exclude build --exclude coverage"
+_FD_OPTS="--hidden --follow --exclude .git --exclude node_modules --exclude .venv --exclude venv --exclude __pycache__ --exclude .pytest_cache --exclude .terraform --exclude vendor --exclude dist --exclude build --exclude coverage"
 if command -v fd &>/dev/null; then
   alias fd="fd $_FD_OPTS"
 fi
