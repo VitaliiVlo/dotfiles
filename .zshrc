@@ -57,7 +57,9 @@ if [[ -d "$ZSH_COMP_PATH" ]]; then
   FPATH="$ZSH_COMP_PATH:$FPATH"
 fi
 autoload -Uz compinit
-compinit
+ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
+mkdir -p "$(dirname "$ZSH_COMPDUMP")"
+compinit -d "$ZSH_COMPDUMP"
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' menu select
 
