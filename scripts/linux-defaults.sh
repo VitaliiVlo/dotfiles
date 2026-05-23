@@ -28,7 +28,8 @@ set_if_exists() {
 
 heading "→ Creating folders…"
 mkdir -p "$HOME/Projects"
-mkdir -p "$HOME/Screenshots"
+# XDG user-dir convention; GNOME Screenshot UI defaults to this path.
+mkdir -p "$HOME/Pictures/Screenshots"
 
 heading "→ Configuring input…"
 # Natural scrolling (touchpad + mouse)
@@ -38,11 +39,6 @@ set_if_exists org.gnome.desktop.peripherals.mouse natural-scroll true
 set_if_exists org.gnome.desktop.peripherals.keyboard repeat true
 set_if_exists org.gnome.desktop.peripherals.keyboard delay 'uint32 250'
 set_if_exists org.gnome.desktop.peripherals.keyboard repeat-interval 'uint32 30'
-
-heading "→ Configuring screenshots…"
-# GNOME Screenshot UI saves to XDG Pictures/Screenshots by default; no per-user gsetting.
-# User XDG dirs override via ~/.config/user-dirs.dirs (out of scope here).
-# ~/Screenshots already created in Folders section above.
 
 heading "→ Configuring Files (Nautilus)…"
 # List view default
@@ -60,7 +56,7 @@ heading "→ Configuring desktop…"
 set_if_exists org.gnome.shell.extensions.dash-to-dock click-action "'minimize'"
 # Show battery percentage
 set_if_exists org.gnome.desktop.interface show-battery-percentage true
-# Clock shows seconds + weekday
+# Show weekday on clock, hide seconds
 set_if_exists org.gnome.desktop.interface clock-show-seconds false
 set_if_exists org.gnome.desktop.interface clock-show-weekday true
 # Color scheme follows dark preference by default (Catppuccin Macchiato)

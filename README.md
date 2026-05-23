@@ -132,9 +132,9 @@ The following files are automatically symlinked by running `make symlinks`:
 
 Run `make defaults` to configure (in order applied):
 
-- Folders (~/Projects, ~/Screenshots)
+- Folders (~/Projects, ~/Pictures/Screenshots)
 - System defaults (key repeat, natural scrolling, save to disk)
-- Screenshots (save to ~/Screenshots, no shadow, PNG, floating thumbnail enabled)
+- Screenshots (save to ~/Pictures/Screenshots, no shadow, PNG, floating thumbnail enabled)
 - Finder (list view, path bar, show extensions, folders first, search current folder)
 - Dock (autohide, no recents, scale minimize effect, minimized windows in own Dock slot, fixed Spaces order, Cmd-gated hot corners: TL Mission Control / TR Notification Center / BL Desktop / BR Quick Note)
 
@@ -144,7 +144,7 @@ No-op on Linux (script guards `uname -s == Darwin`).
 
 Run `make linux-defaults` to configure (GNOME via `gsettings`):
 
-- Folders (~/Projects, ~/Screenshots)
+- Folders (~/Projects, ~/Pictures/Screenshots)
 - Input (touchpad + mouse natural scroll, keyboard repeat enabled with 250ms delay / 30ms interval)
 - Files / Nautilus (list view, hidden files, folders-first, search current folder only)
 - Desktop (dash-to-dock click=minimize when extension present, battery %, clock weekday, `prefer-dark` color scheme)

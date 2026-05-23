@@ -135,7 +135,7 @@ When adding or editing config files, follow this style across all of them:
 - Safe to re-run: idempotent `mkdir -p` plus `gsettings set` only when the schema/key exists (`set_if_exists` helper guards against missing GNOME components like `dash-to-dock`)
 - Guards in order: `uname -s == Linux` → `command -v gsettings` → `XDG_CURRENT_DESKTOP` contains `GNOME`. Non-GNOME DEs (KDE, Sway, headless SSH) skip with a message
 - No process restart needed (GNOME applies `gsettings` changes live)
-- Screenshot folder: created at `~/Screenshots`, but GNOME Screenshot UI follows XDG `Pictures/Screenshots` by default; remap via `~/.config/user-dirs.dirs` (out of scope here)
+- Screenshot folder: created at `~/Pictures/Screenshots` (XDG user-dir convention; matches GNOME Screenshot UI default and `make defaults` on macOS)
 
 **scripts/flatpaks-install.sh:**
 

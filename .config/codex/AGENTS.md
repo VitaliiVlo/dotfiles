@@ -65,6 +65,8 @@ When writing text aimed at people (PR descriptions, commit message bodies, issue
 
 Does not apply to code, code comments, or these rules files. The rules files themselves avoid em-dashes; if you see one in a rules file, treat it as a bug to fix on the next edit pass, not as license to mirror.
 
+Scope note: the em-dash and assistant-tic rules constrain prose the assistant drafts. When editing pre-existing repo docs whose author voice already uses em-dashes (e.g. structural cell markers in tables, established README/AGENTS.md prose), match the file's existing punctuation. Do not strip em-dashes as a side effect of unrelated edits.
+
 ## Sensitive Data
 
 Forbidden: do not search, read, edit, print, summarize, transmit, or commit secrets or private credentials.

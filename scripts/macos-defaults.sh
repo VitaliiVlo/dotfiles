@@ -11,7 +11,7 @@ heading() { printf "\n\033[1;34m%s\033[0m\n" "$*"; }
 
 heading "→ Creating folders…"
 mkdir -p "$HOME/Projects"
-mkdir -p "$HOME/Screenshots"
+mkdir -p "$HOME/Pictures/Screenshots"
 
 heading "→ Configuring system defaults…"
 # Input
@@ -23,8 +23,8 @@ defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode  -bool   false
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool   false
 
 heading "→ Setting screenshot location…"
-# Location
-defaults write com.apple.screencapture location       "$HOME/Screenshots"
+# Location (XDG-style ~/Pictures/Screenshots, matches GNOME's default user-dir)
+defaults write com.apple.screencapture location       "$HOME/Pictures/Screenshots"
 # Capture options
 defaults write com.apple.screencapture disable-shadow -bool   true
 defaults write com.apple.screencapture show-thumbnail -bool   true

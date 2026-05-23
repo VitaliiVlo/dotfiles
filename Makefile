@@ -56,6 +56,7 @@ flatpaks-install-work: ## Install work flatpaks (Linux only; no-op on macOS)
 
 flatpaks-export: ## Export installed user flatpaks to flatpaks, then strip flatpaks.work entries; add new work entries to flatpaks.work manually
 	@if [ "$$(uname -s)" != "Linux" ]; then echo "flatpaks-export: Linux only, skipping."; exit 0; fi; \
-	flatpak list --user --app --columns=application > flatpaks && \
+	flatpak list --user --app --columns=application \
+	  | awk 'NR==1 && $$0=="Application" {next} {print}' > flatpaks && \
 	grep -vE '^\s*(#|$$)' flatpaks.work | grep -vxFf - flatpaks > flatpaks.tmp && mv flatpaks.tmp flatpaks && \
 	echo "Stripped flatpaks.work entries from flatpaks"
