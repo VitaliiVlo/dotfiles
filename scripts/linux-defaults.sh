@@ -2,6 +2,14 @@
 
 set -euo pipefail
 
+heading() { printf "\n\033[1;34m%s\033[0m\n" "$*"; }
+set_if_exists() {
+    local schema="$1" key="$2" value="$3"
+    if gsettings list-keys "$schema" 2>/dev/null | grep -qx "$key"; then
+        gsettings set "$schema" "$key" "$value"
+    fi
+}
+
 if [[ "$(uname -s)" != "Linux" ]]; then
     echo "linux-defaults: Linux only (current: $(uname -s)), skipping."
     exit 0
@@ -17,14 +25,6 @@ if [[ -z "${XDG_CURRENT_DESKTOP:-}" ]] || [[ "${XDG_CURRENT_DESKTOP^^}" != *"GNO
     echo "linux-defaults: not a GNOME session (XDG_CURRENT_DESKTOP=${XDG_CURRENT_DESKTOP:-unset}), skipping." >&2
     exit 0
 fi
-
-heading() { printf "\n\033[1;34m%s\033[0m\n" "$*"; }
-set_if_exists() {
-    local schema="$1" key="$2" value="$3"
-    if gsettings list-keys "$schema" 2>/dev/null | grep -qx "$key"; then
-        gsettings set "$schema" "$key" "$value"
-    fi
-}
 
 heading "→ Creating folders…"
 mkdir -p "$HOME/Projects"

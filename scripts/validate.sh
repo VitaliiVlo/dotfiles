@@ -214,6 +214,8 @@ common_paths=(
     "$HOME/.config/bat/config"
     "$HOME/.config/atuin/config.toml"
     "$HOME/.config/bottom/bottom.toml"
+    "$HOME/.config/glow/glow.yml"
+    "$HOME/.config/superfile/config.toml"
     "$HOME/.config/yazi/yazi.toml"
     "$HOME/.config/lazygit/config.yml"
     "$HOME/.config/gh/config.yml"
@@ -231,13 +233,9 @@ common_paths=(
 )
 macos_paths=(
     "$HOME/Library/Application Support/Code/User/settings.json"
-    "$HOME/Library/Preferences/glow/glow.yml"
     "$HOME/Library/Application Support/tlrc/config.toml"
-    "$HOME/Library/Application Support/superfile/config.toml"
 )
 linux_paths=(
-    "$HOME/.config/glow/glow.yml"
-    "$HOME/.config/superfile/config.toml"
     "$HOME/.config/tlrc/config.toml"
     "$HOME/.config/Code/User/settings.json"
 )

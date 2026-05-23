@@ -148,7 +148,7 @@ Consistent with editors showing line numbers:
 - bat: `--theme-dark="Catppuccin Macchiato"` + `--theme-light="Catppuccin Latte"` (auto-detects via macOS appearance)
 - glow: `style: "auto"` (auto-detects)
 - Codex: `tui.theme = "catppuccin-macchiato"` (TUI only, no light/system mode)
-- Superfile: `theme = "catppuccin-macchiato"` (TUI only, no light/system mode; built-in theme file at `Library/Application Support/superfile/theme/catppuccin-macchiato.toml`)
+- Superfile: `theme = "catppuccin-macchiato"` (TUI only, no light/system mode; built-in theme file at `~/.config/superfile/theme/catppuccin-macchiato.toml` on both OSes; spf honors `$XDG_CONFIG_HOME` exported by `.zprofile` via `adrg/xdg`)
 
 ## Inline diagnostics
 
@@ -258,6 +258,8 @@ Zed delegates git workflow (rebase, autostash, prune, SSH) to `.config/git/confi
 
 `.config/git/config` authoritative settings: `init.defaultBranch = main`, `merge.conflictstyle = zdiff3`, `rerere.enabled = true`, `rerere.autoupdate = true`, `push.autoSetupRemote = true`, `diff.algorithm = histogram`, `diff.colorMoved = default`, `diff.renames = true`, `diff.mnemonicPrefix = true`, `log.date = relative`, `branch.sort = -committerdate`. Delta config: `dark = true`, `line-numbers = true`, `side-by-side = true`, `hyperlinks = true`, `navigate = true`. `[filter "lfs"]` block pre-configured for git-lfs — no need to run `git lfs install`.
 
+**VSCode `git.blame.*` is split** into `git.blame.editorDecoration.enabled` (inline editor decoration) and `git.blame.statusBarItem.enabled` (status bar item), each with its own `template`. Do not use the legacy flat `git.blame.enabled` key — it is silently ignored.
+
 `.config/git/config` section order: Identity (`user`, `url`) → Core (`core`, `init`, `interactive`) → Pager (`delta`) → Display (`diff`, `merge`, `log`, `branch`) → Workflow (`fetch`, `pull`, `rebase`, `push`, `rerere`) → Filters (`filter "lfs"`) → Aliases (`alias`, last). Add new sections under the matching group.
 
 ## VISUAL / EDITOR env vars
@@ -281,8 +283,6 @@ Do not attempt to rename the Codex side to `caveman` — Codex will treat it as 
 
 **Third-party marketplace state fields:** Codex CLI writes `last_updated` and `last_revision` into the `[marketplaces.<name>]` block on every `codex plugin marketplace update`. They are intentionally **not** committed in `.config/codex/config.toml` because each refresh produces a noisy diff. Only `source_type` and `source` are tracked; the timestamp + revision fields repopulate locally after the first update.
 
-**VSCode `git.blame.*` is split** into `git.blame.editorDecoration.enabled` (inline editor decoration) and `git.blame.statusBarItem.enabled` (status bar item), each with its own `template`. Do not use the legacy flat `git.blame.enabled` key — it is silently ignored.
-
 ## Brewfile maintenance
 
 - `Brewfile` is **the dump target**: `make brew-export` overwrites it via `brew bundle dump --force`, then strips any line that also appears in `Brewfile.work`. Net effect: base stays curated, work entries stay separate. **macOS only**: the target self-skips on Linux because Linuxbrew install state covers only the Linux-installable cask subset (see `casks.md`), so a Linux dump would wipe the macOS-only cask entries from `Brewfile` (work casks live in `Brewfile.work`, which `brew bundle dump --file=Brewfile` never touches).
@@ -293,3 +293,5 @@ Do not attempt to rename the Codex side to `caveman` — Codex will treat it as 
 ## Linux GUI apps
 
 Vendor `.deb` / `.rpm` packages install separately from the Brewfile. Per-app install commands live in [`linux-packages.md`](linux-packages.md). Flatpak is intentionally not used: vendor packages respect `~/.config/<tool>/`, integrate with `apt` / `dnf` for updates, and avoid the `XDG_CONFIG_HOME` remap that would break the repo's symlinks. Casks without a Linux build (`horos`, `orbstack`, macOS-system tools) are listed in `linux-packages.md` under "Casks with no Linux build".
+
+**Tailscale name divergence:** the macOS cask is `tailscale-app` (the GUI bundle). On Linux the upstream installer ships `tailscale` (CLI + `tailscaled` daemon only; no GUI tray, see `linux-packages.md`). The two are intentionally different packages; do not rename the cask to match the Linux package or vice versa.

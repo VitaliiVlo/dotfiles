@@ -124,9 +124,9 @@ The following files are automatically symlinked by running `make symlinks`:
 - `.config/yazi/yazi.toml` - Yazi file manager settings
 - `.config/atuin/config.toml` - Atuin shell history settings
 - `.config/bottom/bottom.toml` - Bottom (`btm`) system monitor settings
-- `.config/glow/glow.yml` - Glow Markdown renderer settings (linked into `Library/Preferences/glow` on macOS)
-- `.config/tlrc/config.toml` - tlrc (tldr client) settings (linked into Library/Application Support/tlrc)
-- `.config/superfile/config.toml` - Superfile (`spf`) terminal file manager settings (linked into Library/Application Support/superfile)
+- `.config/glow/glow.yml` - Glow Markdown renderer settings (XDG path on both OSes; glow honors `$XDG_CONFIG_HOME` exported by `.zprofile`)
+- `.config/tlrc/config.toml` - tlrc (tldr client) settings (linked into Library/Application Support/tlrc on macOS; tlrc ignores `$XDG_CONFIG_HOME` on Darwin)
+- `.config/superfile/config.toml` - Superfile (`spf`) terminal file manager settings (XDG path on both OSes; spf reads `xdg.ConfigHome` via adrg/xdg, honors `$XDG_CONFIG_HOME`)
 - `.config/vscode/settings.json` - VSCode configuration (linked into `Library/Application Support/Code/User`)
 - `.config/zed/settings.json` - Zed editor settings
 - `.config/claude/settings.json` - Claude Code permissions

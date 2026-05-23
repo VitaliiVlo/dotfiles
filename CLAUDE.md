@@ -32,7 +32,7 @@ Linux GUI apps install via vendor deb/rpm. Per-app commands in `docs/linux-packa
 - `scripts/symlinks.sh` - Creates symlinks (uses `set -euo pipefail`; defines `symlink` helper; branches on `uname -s` for glow/superfile/tlrc/vscode)
 - `scripts/macos-defaults.sh` - macOS defaults via `defaults write` (non-interactive, idempotent; guards `uname -s == Darwin`, no-op on Linux)
 - `scripts/linux-defaults.sh` - Linux/GNOME defaults via `gsettings` (non-interactive, idempotent; guards `uname -s == Linux`, requires `gsettings` + `XDG_CURRENT_DESKTOP=*GNOME*`, no-op on macOS / KDE / headless)
-- `scripts/validate.sh` - Full audit runner (parses every TOML/JSON/YAML/JSONC, brew bundle check, ghostty validate, shellcheck, shfmt, `zsh -n` on `.zshrc`/`.zprofile`, codex/rules sanity grep, symlink verification). Backs `make validate`. Skips macOS-native symlinks on Linux.
+- `scripts/validate.sh` - Full audit runner (parses every TOML/JSON/YAML/JSONC, `brew bundle list --all` for Brewfile parse plus non-fatal `brew bundle check` for install state, ghostty validate, shellcheck, shfmt, `zsh -n` on `.zshrc`/`.zprofile`, codex/rules sanity grep, symlink verification). Backs `make validate`. Skips macOS-native symlinks on Linux.
 - `docs/applications.md` - Curated GUI app picks per category, VSCode setup, search-engine bangs
 - `docs/casks.md` - Homebrew Cask inventory split into base, work, and Linux-installable subsets
 - `docs/conventions.md` - Cross-config consistency tables (shared behavior across all tools: theme, font, telemetry, git pager, etc.). Read when adding a new tool or auditing drift.
@@ -41,7 +41,7 @@ Linux GUI apps install via vendor deb/rpm. Per-app commands in `docs/linux-packa
 - `Brewfile` - Base packages: shell essentials, fonts, daily-driver apps, VSCode extensions
 - `Brewfile.work` - Work packages: work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN, browser (curated manually)
 - `docs/linux-packages.md` - Native deb/rpm install commands for each cask on Linux (vendor apt/dnf repos, signed keys, GitHub release downloads)
-- `.zshrc` / `.zprofile` - Zsh config. `.zprofile` sets `BREW_PREFIX`, XDG base-dir vars, `GOPATH=$XDG_DATA_HOME/go` (Go doesn't honor XDG natively), and `VISUAL`/`EDITOR`. `.zshrc` re-detects `BREW_PREFIX` defensively for non-login shells, keeps `HISTFILE` under `$XDG_STATE_HOME/zsh/history`, loads starship prompt, fnm, uv, fzf with bat preview, eza aliases, syntax-highlighting, autosuggestions.
+- `.zshrc` / `.zprofile` - Zsh config. `.zprofile` sets `BREW_PREFIX`, XDG base-dir vars, `GOPATH=$XDG_DATA_HOME/go` (Go doesn't honor XDG natively), and `VISUAL`/`EDITOR`. `.zshrc` re-detects `BREW_PREFIX` only (defensively, for non-login interactive shells where `.zprofile` was not sourced); other env vars use `${XDG_STATE_HOME:-...}` style fallbacks where they matter. `.zshrc` keeps `HISTFILE` under `$XDG_STATE_HOME/zsh/history` and loads starship prompt, fnm, uv, fzf with bat preview, eza aliases, syntax-highlighting, autosuggestions. Ghostty and Terminal.app open login shells, so `.zprofile` runs in practice; non-login interactive shells (e.g. `zsh -i` inside scripts) lose `RIPGREP_CONFIG_PATH` / `VISUAL` / `EDITOR` / `GOPATH` unless `.zprofile` is sourced manually.
 - `.config/git/config` / `.config/git/ignore` - Git settings (delta pager, rebase workflow, SSH for GitHub, zdiff3 conflicts, rerere, git-lfs filters) — XDG path
 - `.config/ripgrep/ripgreprc` - Ripgrep defaults (smart-case, hidden files, follow symlinks); resolved via `RIPGREP_CONFIG_PATH`
 - `.config/ghostty/config` - Terminal emulator
@@ -53,9 +53,9 @@ Linux GUI apps install via vendor deb/rpm. Per-app commands in `docs/linux-packa
 - `.config/yazi/yazi.toml` - Terminal file manager settings
 - `.config/atuin/config.toml` - Atuin shell history (filter parity with `hist_ignore_space`)
 - `.config/bottom/bottom.toml` - Bottom (`btm`) system monitor (tree view + command column + battery, cache memory shown, unnormalized per-core CPU, byte/binary network units, table scroll position)
-- `.config/glow/glow.yml` - Glow Markdown renderer (auto theme, pager on, line numbers in TUI; non-XDG on macOS at `~/Library/Preferences/glow/`, XDG on Linux)
-- `.config/tlrc/config.toml` - tlrc (tldr client) — show platform title, short+long flags (non-XDG on macOS, XDG on Linux)
-- `.config/superfile/config.toml` - Superfile (`spf`) terminal file manager (Catppuccin Macchiato, bat preview with border, binary file sizes, zoxide integration; non-XDG on macOS, XDG on Linux)
+- `.config/glow/glow.yml` - Glow Markdown renderer (auto theme, pager on, line numbers in TUI; XDG on both OSes because glow honors `$XDG_CONFIG_HOME` explicitly in `main.go`)
+- `.config/tlrc/config.toml` - tlrc (tldr client) — show platform title, short+long flags (non-XDG on macOS, XDG on Linux; tlrc uses Rust `dirs::config_dir()` and ignores `$XDG_CONFIG_HOME` on Darwin)
+- `.config/superfile/config.toml` - Superfile (`spf`) terminal file manager (Catppuccin Macchiato, bat preview with border, binary file sizes, zoxide integration; XDG on both OSes because spf reads `xdg.ConfigHome` from `adrg/xdg`, which honors the env var set in `.zprofile`)
 - `.config/vscode/settings.json` - VSCode settings (JSONC format with comments)
 - `docs/vscode-defaults.jsonc` - VSCode defaults snapshot for offline comparison (regenerate via `Preferences: Open Default Settings (JSON)` when stale)
 - `.config/zed/settings.json` - Zed editor (Catppuccin Macchiato/Latte, JetBrains Mono, same UX as VSCode, auto_install_extensions)
@@ -110,17 +110,17 @@ When adding or editing config files, follow this style across all of them:
 
 - Uses `symlink <repo-relative-src> <abs-dest>` helper (force symlink via `ln -sf`, auto-creates parent dirs). Overwrites existing symlinks.
 - `DOTFILES_DIR` resolves to repo root via `cd "$(dirname "$0")/.." && pwd` (script lives one level deep in `scripts/`)
-- Repo holds all source-of-truth configs under `.config/<tool>/`. Most tools are XDG-compliant on both OSes (single link target). Four tools (glow, superfile, tlrc, vscode) read from non-XDG paths on macOS and XDG on Linux; the script branches on `uname -s` (`case Darwin|Linux`):
+- Repo holds all source-of-truth configs under `.config/<tool>/`. Most tools are XDG-compliant on both OSes (single link target). Two tools (tlrc, vscode) read from non-XDG paths on macOS and XDG on Linux; the script branches on `uname -s` (`case Darwin|Linux`):
 
   | Tool | macOS | Linux |
   |---|---|---|
-  | glow | `~/Library/Preferences/glow/glow.yml` | `~/.config/glow/glow.yml` |
-  | superfile | `~/Library/Application Support/superfile/config.toml` | `~/.config/superfile/config.toml` |
   | tlrc | `~/Library/Application Support/tlrc/config.toml` | `~/.config/tlrc/config.toml` |
   | VSCode | `~/Library/Application Support/Code/User/settings.json` | `~/.config/Code/User/settings.json` (capital `C`, not `vscode/`) |
 
+  Why these two and not glow / superfile: `.zprofile` exports `XDG_CONFIG_HOME=$HOME/.config`, and both glow (`charmbracelet/glow` main.go line 439, explicit `os.Getenv("XDG_CONFIG_HOME")` check) and superfile (`yorukot/superfile` via `adrg/xdg`, which honors the env var on darwin too) read from `$XDG_CONFIG_HOME/<tool>/` when the variable is set. tlrc uses the Rust `dirs::config_dir()` helper which ignores `$XDG_CONFIG_HOME` on macOS; override via `TLRC_CONFIG=PATH` env var only. VSCode is an Electron app with a hardcoded `app.getPath('userData')` path; override only via `code --user-data-dir=PATH`. If a host has stale Library copies of glow/superfile from older repo revisions, delete them after `make symlinks` so the active config matches.
+
   Unknown OS prints a warning and skips this block. Claude/Codex use `~/.claude` and `~/.codex` on both OSes (non-XDG always); no branching needed there.
-- Symlinks grouped by category (in this order): Shell → Shell tools (history/pager/system monitor/terminal/search/prompt) → Git/file tools → Editors → AI agents → platform-native paths. Within each group, tools are alphabetized. Add new symlinks under the matching group in alpha order. For tools with split macOS/Linux paths, add to both branches of the `case` block.
+- Symlinks grouped by category (in this order): Shell → Shell tools (history/pager/system monitor/terminal/search/prompt/file manager) → Git/file tools → Editors → AI agents → platform-native paths. Within each group, tools are alphabetized. Add new symlinks under the matching group in alpha order. For tools with split macOS/Linux paths, add to both branches of the `case` block.
 
 ### scripts/macos-defaults.sh
 
@@ -208,7 +208,7 @@ ghostty +show-config                        # Should round-trip current config, 
 bat --list-themes | grep -i catppuccin     # Should show "Catppuccin Macchiato"
 delta --list-syntax-themes | grep -i catppuccin  # Should show Catppuccin themes
 btm --version                               # Should show version
-glow --version                              # macOS: config at ~/Library/Preferences/glow/glow.yml; Linux: ~/.config/glow/glow.yml
+glow --version                              # config at ~/.config/glow/glow.yml on both OSes (glow honors $XDG_CONFIG_HOME)
 atuin doctor                                # Should show config + DB ok
 tldr --config-path                          # macOS: ~/Library/Application Support/tlrc/config.toml; Linux: ~/.config/tlrc/config.toml
 tldr --info                                 # Should show cache age + language

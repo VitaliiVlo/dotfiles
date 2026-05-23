@@ -18,12 +18,15 @@ symlink ".zprofile" "$HOME/.zprofile"
 symlink ".zshrc"    "$HOME/.zshrc"
 
 # Shell tools (history, pager, system monitor, terminal, search, prompt)
-symlink ".config/atuin/config.toml"   "$HOME/.config/atuin/config.toml"
-symlink ".config/bat/config"          "$HOME/.config/bat/config"
-symlink ".config/bottom/bottom.toml"  "$HOME/.config/bottom/bottom.toml"
-symlink ".config/ghostty/config"      "$HOME/.config/ghostty/config"
-symlink ".config/ripgrep/ripgreprc"   "$HOME/.config/ripgrep/ripgreprc"
-symlink ".config/starship.toml"       "$HOME/.config/starship.toml"
+# glow + superfile honor $XDG_CONFIG_HOME (exported in .zprofile), so .config/ works on macOS too.
+symlink ".config/atuin/config.toml"     "$HOME/.config/atuin/config.toml"
+symlink ".config/bat/config"            "$HOME/.config/bat/config"
+symlink ".config/bottom/bottom.toml"    "$HOME/.config/bottom/bottom.toml"
+symlink ".config/ghostty/config"        "$HOME/.config/ghostty/config"
+symlink ".config/glow/glow.yml"         "$HOME/.config/glow/glow.yml"
+symlink ".config/ripgrep/ripgreprc"     "$HOME/.config/ripgrep/ripgreprc"
+symlink ".config/starship.toml"         "$HOME/.config/starship.toml"
+symlink ".config/superfile/config.toml" "$HOME/.config/superfile/config.toml"
 
 # Git/file tools
 symlink ".config/gh/config.yml"       "$HOME/.config/gh/config.yml"
@@ -47,23 +50,20 @@ symlink ".config/codex/rules/git.rules"      "$HOME/.codex/rules/git.rules"
 symlink ".config/codex/rules/infra.rules"    "$HOME/.codex/rules/infra.rules"
 symlink ".config/codex/rules/shell.rules"    "$HOME/.codex/rules/shell.rules"
 
-# Platform-native paths: glow, superfile, tlrc, vscode read from
-# ~/Library/* on macOS but XDG ~/.config/* on Linux.
+# Platform-native paths: tlrc + vscode ignore $XDG_CONFIG_HOME on macOS
+# (Rust dirs crate and Electron userData respectively), so they need the
+# Library path on macOS but XDG ~/.config/* on Linux.
 case "$(uname -s)" in
     Darwin)
-        symlink ".config/glow/glow.yml"        "$HOME/Library/Preferences/glow/glow.yml"
-        symlink ".config/superfile/config.toml" "$HOME/Library/Application Support/superfile/config.toml"
         symlink ".config/tlrc/config.toml"     "$HOME/Library/Application Support/tlrc/config.toml"
         symlink ".config/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
         ;;
     Linux)
-        symlink ".config/glow/glow.yml"        "$HOME/.config/glow/glow.yml"
-        symlink ".config/superfile/config.toml" "$HOME/.config/superfile/config.toml"
         symlink ".config/tlrc/config.toml"     "$HOME/.config/tlrc/config.toml"
         symlink ".config/vscode/settings.json" "$HOME/.config/Code/User/settings.json"
         ;;
     *)
-        echo "Unsupported OS: $(uname -s) — skipping glow/superfile/tlrc/vscode symlinks." >&2
+        echo "Unsupported OS: $(uname -s) — skipping tlrc/vscode symlinks." >&2
         ;;
 esac
 
