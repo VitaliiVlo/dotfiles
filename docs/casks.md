@@ -9,6 +9,7 @@ Homebrew Cask inventory: GUI applications, CLIs, and fonts. Split into a base se
 | 1password                   | Password manager                 |
 | 1password-cli               | 1Password CLI                    |
 | balenaetcher                | USB flash tool                   |
+| betterdisplay               | Display management (DDC, HiDPI)  |
 | brave-browser               | Web browser (Chromium)           |
 | claude-code                 | Anthropic Claude CLI             |
 | cloudflare-warp             | VPN / 1.1.1.1 client             |
@@ -59,4 +60,4 @@ Homebrew 4.5+ added preliminary Linux cask support. A small subset of `Brewfile`
 | font-jetbrains-mono         | `font` artifact (cross-platform)                 |
 | font-symbols-only-nerd-font | `font` artifact (cross-platform)                 |
 
-Net: 6 of 34 casks are cross-platform via brew. The remaining 28 either install via vendor deb/rpm on Linux (19) or have no Linux build (9). See [Linux packages](linux-packages.md) for both lists.
+Net: 6 of 35 casks are cross-platform via brew. The remaining 29 either install via vendor deb/rpm on Linux (19) or have no Linux build (10). See [Linux packages](linux-packages.md) for both lists.

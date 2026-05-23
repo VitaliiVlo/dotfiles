@@ -266,7 +266,7 @@ sudo systemctl enable --now tailscaled
 These install on macOS via brew and have no Linux equivalent:
 
 - **GUI apps**: `horos` (DICOM viewer, macOS-only), `orbstack` (macOS host required)
-- **macOS-system tools**: `keepingyouawake`, `keka`, `linearmouse`, `maccy`, `middleclick`, `rectangle`, `thaw` (equivalents are distro-specific GNOME/KDE settings or extensions)
+- **macOS-system tools**: `betterdisplay`, `keepingyouawake`, `keka`, `linearmouse`, `maccy`, `middleclick`, `rectangle`, `thaw` (equivalents are distro-specific GNOME/KDE settings or extensions)
 
 ## Immutable distros (Bluefin, Fedora Silverblue)
 
