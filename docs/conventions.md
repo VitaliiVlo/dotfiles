@@ -42,7 +42,7 @@ Shared-behavior rules across every tool in this repo: theme, font, tab size, hid
 | Format on save | `editor.formatOnSave: true` | `format_on_save: "on"` | — | — | — | — | — |
 | Auto save | `files.autoSave: "off"` | `autosave: "off"` | — | — | — | — | — |
 | Detect indent | `editor.detectIndentation: true` | (default: true) | — | — | — | — | — |
-| Auto indent on paste | `editor.autoIndentOnPaste: true` | `auto_indent_on_paste: true` | `smartpaste: true` | — | — | — | — |
+| Auto indent on paste | `editor.autoIndentOnPaste: true` (+ `autoIndentOnPasteWithinString: true`) | `auto_indent_on_paste: true` | `smartpaste: true` | — | — | — | — |
 | Inlay hints | `editor.inlayHints (enabled)` | `inlay_hints.enabled: true` | — | — | — | — | — |
 | Close on file delete | `closeOnFileDelete: true` | `close_on_file_delete: true` | — | — | — | — | — |
 | Auto-close brackets | `autoClosingBrackets: "languageDefined"` | `use_autoclose: true` | — | — | — | — | — |
@@ -285,7 +285,7 @@ Do not attempt to rename the Codex side to `caveman` — Codex will treat it as 
 
 ## Brewfile maintenance
 
-- `Brewfile` is **the dump target**: `make brew-export` overwrites it via `brew bundle dump --force`, then strips any line that also appears in `Brewfile.work`. Net effect: base stays curated, work entries stay separate. **macOS only**: the target self-skips on Linux because Linuxbrew install state covers only the 6 Linux-installable casks, so a Linux dump would wipe the 20 macOS-only cask entries from `Brewfile` (the 8 work casks live in `Brewfile.work`, which `brew bundle dump --file=Brewfile` never touches).
+- `Brewfile` is **the dump target**: `make brew-export` overwrites it via `brew bundle dump --force`, then strips any line that also appears in `Brewfile.work`. Net effect: base stays curated, work entries stay separate. **macOS only**: the target self-skips on Linux because Linuxbrew install state covers only the Linux-installable cask subset (see `casks.md`), so a Linux dump would wipe the macOS-only cask entries from `Brewfile` (work casks live in `Brewfile.work`, which `brew bundle dump --file=Brewfile` never touches).
 - `Brewfile.work` is **manually curated**: `brew bundle dump` does not respect file boundaries, so new work entries must be added by hand to `Brewfile.work` after install. Otherwise the next `make brew-export` will leak them into base.
 - `Brewfile.work` lines must use the same format `brew bundle dump` emits (`cask "name"`, `brew "name"`, etc.). The strip step prefilters `Brewfile.work` through `grep -E '^(brew|cask|tap|vscode|mas|go|uv|npm) "'` before whole-line fixed-string match, so blank lines and comments in `Brewfile.work` are tolerated, but malformed entries (wrong prefix, trailing whitespace) still leak through.
 - Do not re-sort either Brewfile by hand — `brew bundle dump` owns ordering.

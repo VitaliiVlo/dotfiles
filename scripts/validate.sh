@@ -92,13 +92,15 @@ else
 fi
 
 # 5. Brewfiles
-# `brew bundle list` parses the manifest and lists entries; fails loud on syntax
-# errors (catches manifest typos). `brew bundle check` is install-state and
-# reported as a non-fatal warning since validate must work on any host.
+# `brew bundle list --all` parses the manifest and lists every entry type
+# (brew, cask, tap, vscode, mas, go, uv, npm); fails loud on syntax errors
+# (catches manifest typos). Without --all only `brew "..."` lines enumerate,
+# but parser still rejects bad syntax. `brew bundle check` is install-state
+# and reported as a non-fatal warning since validate must work on any host.
 heading "Brewfiles"
 if command -v brew >/dev/null 2>&1; then
     for f in Brewfile Brewfile.work; do
-        if brew bundle list --file="$f" >/dev/null 2>&1; then
+        if brew bundle list --file="$f" --all >/dev/null 2>&1; then
             ok "$f (parse)"
         else
             bad "$f (parse)"

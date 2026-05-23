@@ -122,6 +122,10 @@
       "Read(**/*_rsa)",
       "Read(**/*_ed25519)",
       "Read(**/*.tfvars)",
+      "Read(**/*.p12)",
+      "Read(**/*.pfx)",
+      "Read(**/*.jks)",
+      "Read(**/*.kubeconfig)",
       "Read(**/.aws/credentials)",
       "Read(**/.ssh/*)",
       "Read(**/.kube/config)",
@@ -129,7 +133,8 @@
       "Read(**/.npmrc)",
       "Read(**/.pypirc)",
       "Read(**/.netrc)",
-      "Read(**/credentials.json)"
+      "Read(**/credentials.json)",
+      "Read(**/secrets.*)"
     ],
     "defaultMode": "default"
   },
