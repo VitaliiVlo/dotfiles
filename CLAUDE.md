@@ -40,7 +40,7 @@ make flatpaks-export         # Export installed user flatpaks to flatpaks, then 
 - `Brewfile.work` - Work packages: work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN (curated manually)
 - `flatpaks` - Base Flathub app IDs for Linux, bare one-per-line (no comments — `make flatpaks-export` would wipe them; see "Flatpaks maintenance" in `docs/consistency.md`). Paired with `Brewfile` casks where a Flathub equivalent exists; see `docs/flatpaks.md` for cross-ref table.
 - `flatpaks.work` - Work Flathub app IDs for Linux (paired with `Brewfile.work` casks; curated manually, same bare-line format as `flatpaks`)
-- `.zshrc` / `.zprofile` - Zsh config (starship prompt, fnm, uv, fzf with bat preview, eza aliases, syntax-highlighting, autosuggestions)
+- `.zshrc` / `.zprofile` - Zsh config. `.zprofile` sets `BREW_PREFIX`, XDG base-dir vars, `GOPATH=$XDG_DATA_HOME/go` (Go doesn't honor XDG natively), and `VISUAL`/`EDITOR`. `.zshrc` re-detects `BREW_PREFIX` defensively for non-login shells, keeps `HISTFILE` under `$XDG_STATE_HOME/zsh/history`, loads starship prompt, fnm, uv, fzf with bat preview, eza aliases, syntax-highlighting, autosuggestions.
 - `.config/git/config` / `.config/git/ignore` - Git settings (delta pager, rebase workflow, SSH for GitHub, zdiff3 conflicts, rerere, git-lfs filters) — XDG path
 - `.config/ripgrep/ripgreprc` - Ripgrep defaults (smart-case, hidden files, follow symlinks); resolved via `RIPGREP_CONFIG_PATH`
 - `.config/ghostty/config` - Terminal emulator

@@ -7,7 +7,8 @@ if [[ -z "${BREW_PREFIX:-}" ]]; then
 fi
 
 # History
-HISTFILE="$HOME/.zsh_history"
+HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
+mkdir -p "$(dirname "$HISTFILE")"
 HISTSIZE=50000
 SAVEHIST=50000
 setopt append_history
