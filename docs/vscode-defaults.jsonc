@@ -5,6 +5,8 @@
 	//
 	//  - legacy: Uses the legacy diffing algorithm.
 	//  - advanced: Uses the advanced diffing algorithm.
+	//  - advanced-external: Uses the advanced diffing algorithm from the external `@vscode/diff` package (pure JavaScript).
+	//  - advanced-wasm: Uses the advanced diffing algorithm from the external `@vscode/diff` package (WebAssembly).
 	"diffEditor.diffAlgorithm": "advanced",
 	// Controls whether the diff editor shows empty decorations to see where characters got inserted or deleted.
 	"diffEditor.experimental.showEmptyDecorations": true,
@@ -211,13 +213,6 @@
 	//  - vscode.jake: Extension to add Jake capabilities to VS Code.
 	//  - ms-vscode.js-debug: An extension for debugging Node.js programs and Chrome.
 	//  - ms-vscode.js-debug-companion: Companion extension to js-debug that provides capability for remote debugging
-	//  - bierner.markdown-checkbox: Adds checkbox support to the built-in markdown preview
-	//  - bierner.markdown-emoji: Adds emoji syntax support to VS Code's built-in markdown preview and markdown cells in notebook
-	//  - bierner.markdown-footnotes: Adds [^footnote] syntax support to VS Code's built-in markdown preview
-	//  - bierner.markdown-mermaid: Adds Mermaid diagram and flowchart support to VS Code's builtin markdown preview
-	//  - bierner.markdown-preview-github-styles: Changes VS Code's built-in markdown preview to match Github's style
-	//  - bierner.markdown-yaml-preamble: Renders yaml front matter as a table in the built-in markdown preview
-	//  - PKief.material-icon-theme: Material Design Icons for Visual Studio Code
 	//  - vscode.media-preview: Provides VS Code's built-in previews for images, audio, and video
 	//  - vscode.merge-conflict: Highlighting and commands for inline merge conflicts.
 	//  - vscode.mermaid-markdown-features: Adds Mermaid diagram support to built-in chats, Markdown previews, and notebooks.
@@ -235,22 +230,20 @@
 	//  - vscode.terminal-suggest: Extension to add terminal completions for zsh, bash, and fish terminals.
 	//  - vscode.tunnel-forwarding: Allows forwarding local ports to be accessible over the internet.
 	//  - ms-vscode.vscode-js-profile-table: Text visualizer for profiles taken from the JavaScript debugger
-	//  - mathematic.vscode-pdf: Portable document format (PDF) viewer for Visual Studio Code.
 	//  - ms-python.vscode-python-envs: Provides a unified python environment experience
 	//  - ms-vsliveshare.vsliveshare: Real-time collaborative development from the comfort of your favorite tools.
 	"editor.defaultFoldingRangeProvider": null,
 	// Defines a default formatter which takes precedence over all other formatter settings. Must be the identifier of an extension contributing a formatter.
 	//  - null: None
-	//  - tamasfe.even-better-toml: Fully-featured TOML support
-	//  - vscode.html-language-features: Provides rich language support for HTML and Handlebar files
 	//  - vscode.json-language-features: Provides rich language support for JSON files.
 	//  - yzhang.markdown-all-in-one: All you need to write Markdown (keyboard shortcuts, table of contents, auto preview and more)
 	//  - charliermarsh.ruff: A Visual Studio Code extension with support for the Ruff linter and formatter for Python.
-	//  - redhat.vscode-yaml: YAML Language Support by Red Hat, with built-in Kubernetes syntax support
 	//  - aaron-bond.better-comments: Improve your code commenting by annotating with alert, informational, TODOs, and more!
 	//  - GitHub.copilot-chat: AI chat features powered by Copilot
 	//  - vscode.css-language-features: Provides rich language support for CSS, LESS and SCSS files.
+	//  - tamasfe.even-better-toml: Fully-featured TOML support
 	//  - golang.go: Rich Go language support for Visual Studio Code
+	//  - vscode.html-language-features: Provides rich language support for HTML and Handlebar files
 	//  - vscode.markdown-language-features: Provides rich language support for Markdown.
 	//  - vscode.markdown-math: Adds math support to Markdown in notebooks.
 	//  - vscode.php-language-features: Provides rich language support for PHP files.
@@ -262,6 +255,7 @@
 	//  - vscode.typescript-language-features: Provides rich language support for JavaScript and TypeScript.
 	//  - ms-azuretools.vscode-containers: Makes it easy to create, manage, and debug containerized applications.
 	//  - ms-python.vscode-pylance: A performant, feature-rich language server for Python in VS Code
+	//  - redhat.vscode-yaml: YAML Language Support by Red Hat, with built-in Kubernetes syntax support
 	//  - alefragnani.Bookmarks: Mark lines and jump to them
 	//  - Catppuccin.catppuccin-vsc: 🦌 Soothing pastel theme for VSCode
 	//  - Catppuccin.catppuccin-vsc-icons: 🦊 Soothing pastel icon theme for VSCode
@@ -284,13 +278,6 @@
 	//  - vscode.jake: Extension to add Jake capabilities to VS Code.
 	//  - ms-vscode.js-debug: An extension for debugging Node.js programs and Chrome.
 	//  - ms-vscode.js-debug-companion: Companion extension to js-debug that provides capability for remote debugging
-	//  - bierner.markdown-checkbox: Adds checkbox support to the built-in markdown preview
-	//  - bierner.markdown-emoji: Adds emoji syntax support to VS Code's built-in markdown preview and markdown cells in notebook
-	//  - bierner.markdown-footnotes: Adds [^footnote] syntax support to VS Code's built-in markdown preview
-	//  - bierner.markdown-mermaid: Adds Mermaid diagram and flowchart support to VS Code's builtin markdown preview
-	//  - bierner.markdown-preview-github-styles: Changes VS Code's built-in markdown preview to match Github's style
-	//  - bierner.markdown-yaml-preamble: Renders yaml front matter as a table in the built-in markdown preview
-	//  - PKief.material-icon-theme: Material Design Icons for Visual Studio Code
 	//  - vscode.media-preview: Provides VS Code's built-in previews for images, audio, and video
 	//  - vscode.merge-conflict: Highlighting and commands for inline merge conflicts.
 	//  - vscode.mermaid-markdown-features: Adds Mermaid diagram support to built-in chats, Markdown previews, and notebooks.
@@ -307,7 +294,6 @@
 	//  - vscode.terminal-suggest: Extension to add terminal completions for zsh, bash, and fish terminals.
 	//  - vscode.tunnel-forwarding: Allows forwarding local ports to be accessible over the internet.
 	//  - ms-vscode.vscode-js-profile-table: Text visualizer for profiles taken from the JavaScript debugger
-	//  - mathematic.vscode-pdf: Portable document format (PDF) viewer for Visual Studio Code.
 	//  - ms-python.vscode-python-envs: Provides a unified python environment experience
 	//  - ms-vsliveshare.vsliveshare: Real-time collaborative development from the comfort of your favorite tools.
 	"editor.defaultFormatter": null,
@@ -1201,7 +1187,6 @@
 		"jsProfileVisualizer.cpuprofile.table": false,
 		"jsProfileVisualizer.heapprofile.table": false,
 		"jsProfileVisualizer.heapsnapshot.table": false,
-		"pdf.view": false,
 		"workbench.input.interactive": false,
 		"mainThreadWebview-markdown.preview": false,
 		"mainThreadWebview-simpleBrowser.view": true,
@@ -1575,7 +1560,6 @@
 	//  - catppuccin-frappe
 	//  - catppuccin-macchiato
 	//  - symbols
-	//  - material-icon-theme
 	"workbench.iconTheme": "vs-seti",
 	// Specifies the color theme when system color mode is dark and `window.autoDetectColorScheme` is enabled.
 	"workbench.preferredDarkColorTheme": "Dark 2026",
@@ -1588,7 +1572,6 @@
 	// Specifies the product icon theme used.
 	//  - Default: Default
 	//  - fluent-icons
-	//  - material-product-icons
 	"workbench.productIconTheme": "Default",
 	// Window
 	// If enabled, clicking on an inactive window will both activate the window and trigger the element under the mouse if it is clickable. If disabled, clicking anywhere on an inactive window will activate it only and a second click is required on the element.
@@ -2829,6 +2812,11 @@
 	// Inline Chat
 	// Select the default language model to use for inline chat from the available providers. Model names may include the provider in parentheses, for example 'Claude Haiku 4.5 (copilot)'.
 	//  - : Use the vendor's default model
+	//  - Auto (copilot): Auto selects the best model based on your request complexity and model performance. Model use through Auto is billed at a 10% discount.
+	//  - Claude Haiku 4.5 (copilot): Fastest and most compact Claude model. Ideal for quick responses and simple tasks.
+	//  - GPT-4.1 (copilot): GPT-4.1 has a planned deprecation date of 2026-06-01.
+	//  - GPT-5 mini (copilot): Lightweight GPT model for quick responses and simple tasks with low latency.
+	//  - Raptor mini (Preview) (copilot)
 	"inlineChat.defaultModel": "",
 	// Output
 	// Enable/disable the ability of smart scrolling in the output view. Smart scrolling allows you to lock scrolling automatically when you click in the output view and unlocks when you click in the last line.
@@ -2882,6 +2870,10 @@
 	//  - both: Show both integrated and external terminal actions.
 	"terminal.sourceControlRepositoriesKind": "integrated",
 	// Integrated Terminal
+	// Note: this setting is applicable only when `chat.agent.sandbox.enabled` is enabled. Key/value pairs are passed through to the root of the sandbox runtime configuration.
+	"chat.agent.sandbox.advanced.runtime": {
+		"enableWeakerNestedSandbox": false
+	},
 	// Controls whether agent mode terminal commands that run inside the sandbox are auto-approved. When disabled, the run in terminal tool uses the existing approval flow. This applies only when `chat.agent.sandbox.enabled` is enabled.
 	"chat.agent.sandbox.allowAutoApprove": true,
 	// Controls whether agent mode terminal commands can run outside the sandbox after user confirmation when a sandboxed command fails or when sandbox restrictions would block the command. This applies only when `chat.agent.sandbox.enabled` is enabled.
@@ -2893,6 +2885,10 @@
 	//  - on: Enable sandboxing for agent mode tools.
 	//  - allowNetwork: Enable sandboxing for agent mode tools and allow all network domains.
 	"chat.agent.sandbox.enabled": "off",
+	// Controls whether agent mode uses sandboxing on Windows.
+	//  - off: Disable sandboxing for agent mode tools on Windows.
+	//  - allowNetwork: Enable sandboxing for agent mode tools on Windows and allow all network domains.
+	"chat.agent.sandbox.enabledWindows": "off",
 	// Note: this setting is applicable only when `chat.agent.sandbox.enabled` is enabled. Controls file system access in sandbox on Linux. Paths do not support glob patterns, only literal paths (ex: ./src/, ~/.ssh, .env). **bubblewrap** and **socat** should be installed for this setting to work.
 	"chat.agent.sandbox.fileSystem.linux": {
 		"denyRead": [],
@@ -2906,6 +2902,12 @@
 		"allowRead": [],
 		"allowWrite": [],
 		"denyWrite": []
+	},
+	// Note: this setting is applicable only when `chat.agent.sandbox.enabled` is enabled. Controls file system access in sandbox on Windows. Paths do not support glob patterns, only literal paths (ex: C:\src, C:\Users\me\.ssh, .env).
+	"chat.agent.sandbox.fileSystem.windows": {
+		"denyRead": [],
+		"allowRead": [],
+		"allowWrite": []
 	},
 	// Use `chat.agent.sandbox.fileSystem.linux` instead
 	//
@@ -3786,6 +3788,8 @@
 		"clear",
 		"cls",
 		"clear-host",
+		"agent",
+		"agy",
 		"copilot",
 		"claude",
 		"codex",
@@ -4508,6 +4512,59 @@
 	//  - chat-import: $(chat-import)
 	//  - chat-export: $(chat-export)
 	//  - share-window: $(share-window)
+	//  - circle-slash-compact: $(circle-slash-compact)
+	//  - copilot-compact: $(copilot-compact)
+	//  - folder-opened-compact: $(folder-opened-compact)
+	//  - folder-compact: $(folder-compact)
+	//  - gear-compact: $(gear-compact)
+	//  - git-branch-compact: $(git-branch-compact)
+	//  - library-compact: $(library-compact)
+	//  - record-keys-compact: $(record-keys-compact)
+	//  - remote-compact: $(remote-compact)
+	//  - repo-forked-compact: $(repo-forked-compact)
+	//  - repo-compact: $(repo-compact)
+	//  - shield-compact: $(shield-compact)
+	//  - sparkle-compact: $(sparkle-compact)
+	//  - symbol-color-compact: $(symbol-color-compact)
+	//  - window-compact: $(window-compact)
+	//  - error-compact: $(error-compact)
+	//  - warning-compact: $(warning-compact)
+	//  - pass-compact: $(pass-compact)
+	//  - important: $(important)
+	//  - important-compact: $(important-compact)
+	//  - rocket-compact: $(rocket-compact)
+	//  - unpin: $(unpin)
+	//  - add-compact: $(add-compact)
+	//  - attach-compact: $(attach-compact)
+	//  - beaker-compact: $(beaker-compact)
+	//  - check-compact: $(check-compact)
+	//  - checklist-compact: $(checklist-compact)
+	//  - chevron-down-compact: $(chevron-down-compact)
+	//  - chevron-left-compact: $(chevron-left-compact)
+	//  - chevron-right-compact: $(chevron-right-compact)
+	//  - chevron-up-compact: $(chevron-up-compact)
+	//  - circle-filled-compact: $(circle-filled-compact)
+	//  - circle-small-filled-compact: $(circle-small-filled-compact)
+	//  - close-compact: $(close-compact)
+	//  - collapse-all-compact: $(collapse-all-compact)
+	//  - comment-compact: $(comment-compact)
+	//  - comment-unresolved-compact: $(comment-unresolved-compact)
+	//  - debug-connected-compact: $(debug-connected-compact)
+	//  - debug-disconnect-compact: $(debug-disconnect-compact)
+	//  - edit-compact: $(edit-compact)
+	//  - file-media-compact: $(file-media-compact)
+	//  - git-fetch: $(git-fetch)
+	//  - lightbulb-compact: $(lightbulb-compact)
+	//  - loading-compact: $(loading-compact)
+	//  - pass-filled-compact: $(pass-filled-compact)
+	//  - project-compact: $(project-compact)
+	//  - refresh-compact: $(refresh-compact)
+	//  - search-compact: $(search-compact)
+	//  - session-in-progress-compact: $(session-in-progress-compact)
+	//  - sync-compact: $(sync-compact)
+	//  - terminal-compact: $(terminal-compact)
+	//  - vm-pending: $(vm-pending)
+	//  - worktree-compact: $(worktree-compact)
 	//  - dialog-error: $(dialog-error)
 	//  - dialog-warning: $(dialog-warning)
 	//  - dialog-info: $(dialog-info)
@@ -4533,7 +4590,6 @@
 	//  - newline: $(newline)
 	//  - thumbsdown-filled: $(thumbsdown-filled)
 	//  - thumbsup-filled: $(thumbsup-filled)
-	//  - git-fetch: $(git-fetch)
 	//  - lightbulb-sparkle-autofix: $(lightbulb-sparkle-autofix)
 	//  - debug-breakpoint-pending: $(debug-breakpoint-pending)
 	"terminal.integrated.tabs.defaultIcon": "terminal",
@@ -4642,16 +4698,15 @@
 	"notebook.consolidatedRunButton": false,
 	// Defines a default notebook formatter which takes precedence over all other formatter settings. Must be the identifier of an extension contributing a formatter.
 	//  - null: None
-	//  - tamasfe.even-better-toml: Fully-featured TOML support
-	//  - vscode.html-language-features: Provides rich language support for HTML and Handlebar files
 	//  - vscode.json-language-features: Provides rich language support for JSON files.
 	//  - yzhang.markdown-all-in-one: All you need to write Markdown (keyboard shortcuts, table of contents, auto preview and more)
 	//  - charliermarsh.ruff: A Visual Studio Code extension with support for the Ruff linter and formatter for Python.
-	//  - redhat.vscode-yaml: YAML Language Support by Red Hat, with built-in Kubernetes syntax support
 	//  - aaron-bond.better-comments: Improve your code commenting by annotating with alert, informational, TODOs, and more!
 	//  - GitHub.copilot-chat: AI chat features powered by Copilot
 	//  - vscode.css-language-features: Provides rich language support for CSS, LESS and SCSS files.
+	//  - tamasfe.even-better-toml: Fully-featured TOML support
 	//  - golang.go: Rich Go language support for Visual Studio Code
+	//  - vscode.html-language-features: Provides rich language support for HTML and Handlebar files
 	//  - vscode.markdown-language-features: Provides rich language support for Markdown.
 	//  - vscode.markdown-math: Adds math support to Markdown in notebooks.
 	//  - vscode.php-language-features: Provides rich language support for PHP files.
@@ -4663,6 +4718,7 @@
 	//  - vscode.typescript-language-features: Provides rich language support for JavaScript and TypeScript.
 	//  - ms-azuretools.vscode-containers: Makes it easy to create, manage, and debug containerized applications.
 	//  - ms-python.vscode-pylance: A performant, feature-rich language server for Python in VS Code
+	//  - redhat.vscode-yaml: YAML Language Support by Red Hat, with built-in Kubernetes syntax support
 	//  - alefragnani.Bookmarks: Mark lines and jump to them
 	//  - Catppuccin.catppuccin-vsc: 🦌 Soothing pastel theme for VSCode
 	//  - Catppuccin.catppuccin-vsc-icons: 🦊 Soothing pastel icon theme for VSCode
@@ -4685,13 +4741,6 @@
 	//  - vscode.jake: Extension to add Jake capabilities to VS Code.
 	//  - ms-vscode.js-debug: An extension for debugging Node.js programs and Chrome.
 	//  - ms-vscode.js-debug-companion: Companion extension to js-debug that provides capability for remote debugging
-	//  - bierner.markdown-checkbox: Adds checkbox support to the built-in markdown preview
-	//  - bierner.markdown-emoji: Adds emoji syntax support to VS Code's built-in markdown preview and markdown cells in notebook
-	//  - bierner.markdown-footnotes: Adds [^footnote] syntax support to VS Code's built-in markdown preview
-	//  - bierner.markdown-mermaid: Adds Mermaid diagram and flowchart support to VS Code's builtin markdown preview
-	//  - bierner.markdown-preview-github-styles: Changes VS Code's built-in markdown preview to match Github's style
-	//  - bierner.markdown-yaml-preamble: Renders yaml front matter as a table in the built-in markdown preview
-	//  - PKief.material-icon-theme: Material Design Icons for Visual Studio Code
 	//  - vscode.media-preview: Provides VS Code's built-in previews for images, audio, and video
 	//  - vscode.merge-conflict: Highlighting and commands for inline merge conflicts.
 	//  - vscode.mermaid-markdown-features: Adds Mermaid diagram support to built-in chats, Markdown previews, and notebooks.
@@ -4708,7 +4757,6 @@
 	//  - vscode.terminal-suggest: Extension to add terminal completions for zsh, bash, and fish terminals.
 	//  - vscode.tunnel-forwarding: Allows forwarding local ports to be accessible over the internet.
 	//  - ms-vscode.vscode-js-profile-table: Text visualizer for profiles taken from the JavaScript debugger
-	//  - mathematic.vscode-pdf: Portable document format (PDF) viewer for Visual Studio Code.
 	//  - ms-python.vscode-python-envs: Provides a unified python environment experience
 	//  - ms-vsliveshare.vsliveshare: Real-time collaborative development from the comfort of your favorite tools.
 	"notebook.defaultFormatter": null,
@@ -5355,6 +5403,43 @@
 		".claude/agents": true,
 		"~/.copilot/agents": true
 	},
+	// When enabled, logs all AHP transport messages for agent host connections to JSONL files under the window's log directory.
+	"chat.agentHost.ahpJsonlLoggingEnabled": false,
+	// Tool reference names to expose as client-provided tools in agent host sessions.
+	"chat.agentHost.clientTools": [
+		"runTask",
+		"getTaskOutput",
+		"problems",
+		"runTests",
+		"openBrowserPage",
+		"readPage",
+		"screenshotPage",
+		"navigatePage",
+		"clickElement",
+		"typeInPage",
+		"hoverElement",
+		"dragElement",
+		"handleDialog",
+		"runPlaywrightCode"
+	],
+	// When enabled, Copilot SDK sessions use the Agent Host terminal tool override instead of the SDK's default terminal behavior.
+	"chat.agentHost.customTerminalTool.enabled": false,
+	// When enabled, some agents run in a separate agent host process.
+	"chat.agentHost.enabled": false,
+	// When enabled, logs all IPC traffic for each agent host to a dedicated output channel.
+	"chat.agentHost.ipcLoggingEnabled": false,
+	// When enabled, includes prompt and response content in OTel span attributes. Sets `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT`. Privacy-sensitive: do not enable in environments that ship spans to shared sinks.
+	"chat.agentHost.otel.captureContent": false,
+	// When enabled, the agent host persists every emitted OTel span to a local SQLite database. Spans can be inspected via the `Export Agent Host Traces Database` command. Compatible with external exporters: spans are written to SQLite *and* forwarded to the user-configured sink.
+	"chat.agentHost.otel.dbSpanExporter.enabled": false,
+	// When enabled, the agent host emits OpenTelemetry traces from the Copilot SDK. Requires `chat.agentHost.enabled`. Either configure `chat.agentHost.otel.otlpEndpoint` to ship traces to an external collector or enable `chat.agentHost.otel.dbSpanExporter.enabled` to capture them locally.
+	"chat.agentHost.otel.enabled": false,
+	// Exporter backend used by the Copilot SDK when `chat.agentHost.otel.enabled` is on. `otlp-grpc` is downgraded to `otlp-http` transparently in the CLI runtime.
+	"chat.agentHost.otel.exporterType": "otlp-http",
+	// OTLP endpoint URL when exporter type is `otlp-http` or `otlp-grpc`. Sets `OTEL_EXPORTER_OTLP_ENDPOINT` inside the agent host process.
+	"chat.agentHost.otel.otlpEndpoint": "",
+	// Output path for span JSON lines when exporter type is `file`. Sets `COPILOT_OTEL_FILE_EXPORTER_PATH`.
+	"chat.agentHost.otel.outfile": "",
 	// Controls how the 'Agent Status' indicator appears in the title bar command center. When set to `hidden`, the indicator is not shown. Other values show the indicator and automatically enable `window.commandCenter`. The unread and in-progress session indicators require `chat.viewSessions.enabled` to be enabled.
 	//  - hidden: The agent status indicator is hidden from the title bar.
 	//  - badge: Shows the agent status as a badge next to the command center.
@@ -5373,8 +5458,6 @@
 		"~/.copilot/skills": true,
 		"~/.claude/skills": true
 	},
-	// Controls whether anonymous access is allowed in chat.
-	"chat.allowAnonymousAccess": false,
 	// Controls whether the artifacts view is available in chat.
 	"chat.artifacts.enabled": false,
 	// Rules for extracting artifacts from written files by file path pattern. Maps glob patterns to group configuration.
@@ -5410,8 +5493,6 @@
 	"chat.customizations.harnessSelector.enabled": true,
 	// Controls whether the Chat Customizations editor shows a structured preview for markdown customization files (agents, skills, instructions, prompts). When disabled, the editor always opens the raw markdown in the embedded code editor.
 	"chat.customizations.structuredPreview.enabled": false,
-	// When enabled, custom agents shown in the chat mode picker are sourced from the customization harness service (scoped per session type) instead of the prompts service.
-	"chat.customizations.useChatSessionCustomizationsForCustomAgents": false,
 	// Enables chat participant autodetection for panel chat.
 	"chat.detectParticipant.enabled": true,
 	// Disable and hide built-in AI features provided by GitHub Copilot, including chat and inline suggestions.
@@ -5469,6 +5550,11 @@
 	"chat.experimentalSessionsWindowOverride": false,
 	// Select the default language model to use for the Explore subagent from the available providers.
 	//  - : Use the vendor's default model
+	//  - Auto (copilot): Auto selects the best model based on your request complexity and model performance. Model use through Auto is billed at a 10% discount.
+	//  - Claude Haiku 4.5 (copilot): Fastest and most compact Claude model. Ideal for quick responses and simple tasks.
+	//  - GPT-4.1 (copilot): GPT-4.1 has a planned deprecation date of 2026-06-01.
+	//  - GPT-5 mini (copilot): Lightweight GPT model for quick responses and simple tasks with low latency.
+	//  - Raptor mini (Preview) (copilot)
 	"chat.exploreAgent.defaultModel": "",
 	// Enable using tools contributed by third-party extensions.
 	"chat.extensionTools.enabled": true,
@@ -5574,6 +5660,11 @@
 	"chat.persistentProgress.enabled": false,
 	// Select the default language model to use for the Plan agent from the available providers.
 	//  - : Use the vendor's default model
+	//  - Auto (copilot): Auto selects the best model based on your request complexity and model performance. Model use through Auto is billed at a 10% discount.
+	//  - Claude Haiku 4.5 (copilot): Fastest and most compact Claude model. Ideal for quick responses and simple tasks.
+	//  - GPT-4.1 (copilot): GPT-4.1 has a planned deprecation date of 2026-06-01.
+	//  - GPT-5 mini (copilot): Lightweight GPT model for quick responses and simple tasks with low latency.
+	//  - Raptor mini (Preview) (copilot)
 	"chat.planAgent.defaultModel": "",
 	// When enabled, the plan review widget mounts an editor inline, as opposed to in a separate editor tab.
 	"chat.planReview.inlineEditor.enabled": true,
@@ -5627,8 +5718,10 @@
 		"**/*": true,
 		"**/.vscode/*.json": false,
 		"**/.git/**": false,
-		"**/{package.json,server.xml,build.rs,web.config,.gitattributes,.env}": false,
-		"**/*.{code-workspace,csproj,fsproj,vbproj,vcxproj,proj,targets,props}": false,
+		"**/{package.json,server.xml,build.rs,web.config,.gitattributes,.env,Cargo.toml}": false,
+		"**/*.{code-workspace,csproj,fsproj,vbproj,vcxproj,proj,targets,props,gradle,gradle.kts}": false,
+		"**/gradle.properties": false,
+		"**/ruby_lsp/*/addon": false,
 		"**/*.lock": false,
 		"**/*-lock.{yaml,json}": false
 	},
@@ -5683,10 +5776,10 @@
 	"chat.useHooks": true,
 	// Controls whether instructions from nested `AGENTS.md` files found in the workspace are listed in all chat requests. The language model can load these skills on-demand if the `read` tool is available.
 	"chat.useNestedAgentsMdFiles": false,
-	// Override the language model used by built-in utility flows (titles, summaries, fallback responses, etc.). Leave empty to use the default model.
+	// Override the language model used by built-in utility flows. Leave empty to use the default model.
 	//  - : Use the built-in default utility model
 	"chat.utilityModel": "",
-	// Override the language model used by built-in small/fast utility flows (commit messages, intent detection, inline-chat progress, etc.). A fast and inexpensive model is recommended. Leave empty to use the default model.
+	// Override the language model used by built-in small/fast utility flows. A fast and inexpensive model is recommended. Leave empty to use the default model.
 	//  - : Use the built-in default utility model
 	"chat.utilitySmallModel": "",
 	// Show a progress badge on the chat view when an agent session is in progress that is opened in that view.
@@ -5707,6 +5800,8 @@
 	//
 	//  - legacy: Uses the legacy diffing algorithm.
 	//  - advanced: Uses the advanced diffing algorithm.
+	//  - advanced-external: Uses the advanced diffing algorithm from the external `@vscode/diff` package (pure JavaScript).
+	//  - advanced-wasm: Uses the advanced diffing algorithm from the external `@vscode/diff` package (WebAssembly).
 	"mergeEditor.diffAlgorithm": "advanced",
 	// Controls if deletions in base or one of the inputs should be indicated by a vertical bar.
 	"mergeEditor.showDeletionMarkers": true,
@@ -6001,6 +6096,11 @@
 	"accessibility.verbosity.walkthrough": true,
 	// Controls whether the `window.title` should be optimized for screen readers when in screen reader mode. When enabled, the window title will have `activeEditorState` appended to the end.
 	"accessibility.windowTitleOptimized": true,
+	// Issue Reporter
+	// Enable the new issue reporter wizard instead of the classic issue reporter.
+	"issueReporter.wizard.enabled": false,
+	// When auto-collecting performance diagnostics for the issue reporter wizard, walk the full workspace instead of stopping at the default 20,000-file cap. Set to false on very large workspaces if the scan slows the initial wizard render.
+	"issueReporter.wizard.fullWorkspaceScan": true,
 	// Set the color mode for native UI elements such as native dialogs, menus and title bar. Even if your OS is configured in light color mode, you can select a dark system color theme for the window. You can also configure to automatically adjust based on the `workbench.colorTheme` setting.
 	//
 	// Note: This setting is ignored when `window.autoDetectColorScheme` is enabled.
@@ -6133,6 +6233,10 @@
 	"github.copilot.chat.cli.thinkingEffort.enabled": true,
 	// Enable the Cloud Agent. When disabled, the Cloud Agent will not be available in 'Continue In' context menus.
 	"github.copilot.chat.cloudAgent.enabled": true,
+	// Selects which backend the Cloud Agent uses to create and manage cloud sessions. This setting is experimental and may change. Changes take effect after reloading the window.
+	//  - v1: Use the legacy Jobs API backend.
+	//  - v2: Use the new Mission Control Task API backend.
+	"github.copilot.chat.cloudAgentBackend.version": "v1",
 	// Use instructions files instead. See https://aka.ms/vscode-ghcp-custom-instructions for more information.
 	// A set of instructions that will be added to Copilot requests that generate code.
 	// Instructions can come from:
@@ -6196,10 +6300,6 @@
 	"github.copilot.chat.exploreAgent.model": "",
 	// Enable feedback collection on configuration changes.
 	"github.copilot.chat.feedback.onChange": false,
-	// Freeze the bundled `<instructions>`, `<skills>`, and `<agents>` listing in the system prompt at the first turn of a conversation and reuse it on every subsequent turn. Prevents per-turn churn (e.g. the active mode swapping which subagent entry is listed, or async experimentation flipping a skill in or out) from invalidating the prompt cache. When the listing changes mid-conversation, the updated set is appended to the latest user message so the model still sees instructions, skills, or agents that became available or were removed.
-	//
-	// **Note**: This is an experimental feature.
-	"github.copilot.chat.freezeCustomizationsIndex": true,
 	// Enable the Get Changed Files tool in Copilot Chat. When enabled, the agent can retrieve git diffs of current changes via a dedicated tool.
 	"github.copilot.chat.getChangedFilesTool.enabled": false,
 	// Select the channel for the GitHub MCP Server. When set to Insiders, enables access to experimental features that may change or be removed based on community feedback. [Learn more](https://aka.ms/vscode-gh-mcp-channel).
@@ -6289,6 +6389,10 @@
 	"github.copilot.chat.localIndex.enabled": false,
 	// Enable local workspace recording for analysis.
 	"github.copilot.chat.localWorkspaceRecording.enabled": false,
+	// Per-model capability overrides keyed by model id, intended for evaluating preview and tenanted models against an existing model's capability profile. For each model id, declare an aliased `family`. Setting `family` to a known production family (e.g. `"claude-opus-4.7"`) makes the model receive that family's full capability profile — Anthropic family detection, latest Opus prompt, multi-replace tools, tool search, context editing, extended cache TTL — without a code change.
+	//
+	// **Note**: This is an advanced setting for evaluation use; it is not intended for regular end-user configuration.
+	"github.copilot.chat.modelCapabilityOverrides": {},
 	// Sets the fetcher used for the next edit suggestions.
 	"github.copilot.chat.nesFetcher": "",
 	// Whether to use the [Context7](command:github.copilot.mcp.viewContext7) tools to scaffold project for new workspace creation.
@@ -6335,8 +6439,6 @@
 	"github.copilot.chat.projectLabels.expanded": false,
 	// Add project labels in inline edit requests.
 	"github.copilot.chat.projectLabels.inline": false,
-	// Whether to enable the project setup info skill for Copilot.
-	"github.copilot.chat.projectSetupInfoSkill.enabled": false,
 	// Enable prompt file context provider.
 	"github.copilot.chat.promptFileContextProvider.enabled": true,
 	// A set of instructions that will be added to Copilot requests that generate pull request titles and descriptions.
@@ -6858,13 +6960,25 @@
 	//  - always: Always show zoom controls.
 	"markdown-mermaid.controls.show": "onHoverOrFocus",
 	// Default Mermaid theme for dark mode.
-	"markdown-mermaid.darkModeTheme": "dark",
+	//  - vscode: Mermaid theme derived from the current VS Code color theme.
+	//  - base: Built-in Mermaid theme. The only Mermaid theme that can be customized with theme variables.
+	//  - forest: Built-in Mermaid theme using shades of green.
+	//  - dark: Built-in Mermaid theme for dark backgrounds.
+	//  - default: The default built-in Mermaid theme. Works well with light backgrounds.
+	//  - neutral: Built-in Mermaid theme using a neutral grayscale palette. Suitable for black and white prints.
+	"markdown-mermaid.darkModeTheme": "vscode",
 	// Default languages in Markdown.
 	"markdown-mermaid.languages": [
 		"mermaid"
 	],
 	// Default Mermaid theme for light mode.
-	"markdown-mermaid.lightModeTheme": "default",
+	//  - vscode: Mermaid theme derived from the current VS Code color theme.
+	//  - base: Built-in Mermaid theme. The only Mermaid theme that can be customized with theme variables.
+	//  - forest: Built-in Mermaid theme using shades of green.
+	//  - dark: Built-in Mermaid theme for dark backgrounds.
+	//  - default: The default built-in Mermaid theme. Works well with light backgrounds.
+	//  - neutral: Built-in Mermaid theme using a neutral grayscale palette. Suitable for black and white prints.
+	"markdown-mermaid.lightModeTheme": "vscode",
 	// Maximum height for diagrams. Must be a CSS value with units such as `80vh` or `400px`. Leave empty to try to automatically size diagrams based on their content.
 	"markdown-mermaid.maxHeight": "",
 	// The maximum allowed size of the user's text diagram.
@@ -7927,24 +8041,6 @@
 	"bookmarks.useWorkaroundForFormatters": false,
 	// Allow navigation to wrap around at the first and last bookmarks in scope (current file or all files)
 	"bookmarks.wrapNavigation": true,
-	// Markdown Checkboxes Options
-	// Enable checkboxes in markdown preview.
-	"markdown-checkboxes.enable": true,
-	// Wrap the rendered list items in a `<label>` element.
-	"markdown-checkboxes.label": false,
-	// Adds the label after the checkbox. Only applies when `markdown-checkboxes.label` is set to `true`.
-	"markdown-checkboxes.labelAfter": false,
-	// Markdown Preview Github Styling
-	// Color theme mode for the styling of the Markdown preview.
-	//  - auto: Automatically match the editor color theme.
-	//  - system: Sync to the system/OS color theme.
-	//  - light: Always use the selected Light theme
-	//  - dark: Always use the selected Dark theme
-	"markdown-preview-github-styles.colorTheme": "auto",
-	// Theme to use when displaying in Dark mode. Ignored if `markdown-preview-github-styles.colorTheme` is set to `Single theme: Light`.
-	"markdown-preview-github-styles.darkTheme": "dark",
-	// Theme to use when displaying in Light mode. Ignored if `markdown-preview-github-styles.colorTheme` is set to `Single theme: Dark`
-	"markdown-preview-github-styles.lightTheme": "light",
 	// Catppuccin
 	// Controls which accent color to use.
 	"catppuccin.accentColor": "mauve",
@@ -8443,27 +8539,6 @@
 	"go.vetOnSave": "package",
 	// Configure the default Go language server ('gopls'). In most cases, configuring this section is unnecessary. See [the documentation](https://github.com/golang/tools/blob/master/gopls/doc/settings.md) for all available settings.
 	"gopls": {},
-	// PDF
-	// Default zoom level when opening a PDF.
-	//  - auto: Automatic
-	//  - page-actual: Actual size
-	//  - page-fit: Fit page
-	//  - page-width: Fit width
-	//  - 50: 50%
-	//  - 75: 75%
-	//  - 100: 100%
-	//  - 125: 125%
-	//  - 150: 150%
-	//  - 200: 200%
-	"pdf.defaultZoomValue": "auto",
-	// Sidebar panel to show when opening a PDF.
-	//  - -1: Restore previous state
-	//  - 0: None
-	//  - 1: Thumbnails
-	//  - 2: Outline
-	//  - 3: Attachments
-	//  - 4: Layers
-	"pdf.sidebarViewOnLoad": 0,
 	// Rainbow CSV
 	// Enable automatic content-based separator autodetection for the specified list of separators (multicharacter separators are supported).
 	"rainbow_csv.autodetect_separators": [
@@ -9621,55 +9696,6 @@
 	"liveshare.showReadOnlyUsersInEditor": "whileFollowing",
 	// Controls whether to show verbose notifications, such as when a guest joins and leaves a session.
 	"liveshare.showVerboseNotifications": true,
-	// Material Icons
-	// Select an icon pack that enables specific icons.
-	//  - angular: Icons for Angular.
-	//  - angular_ngrx: Icons for Angular and ngrx.
-	//  - react: Icons for React.
-	//  - react_redux: Icons for React and Redux.
-	//  - roblox: Icons for Roblox.
-	//  - qwik: Icons for Qwik.
-	//  - vue: Icons for Vue.
-	//  - vue_vuex: Icons for Vue and Vuex.
-	//  - nest: Icons for NestJS.
-	//  - bashly: Icons for Bashly.
-	//  - none: No icon pack enabled.
-	"material-icon-theme.activeIconPack": "angular",
-	// Enable logging to the output channel.
-	"material-icon-theme.enableLogging": false,
-	// Set custom file icon associations.
-	"material-icon-theme.files.associations": {},
-	// Change the color of the file icons.
-	"material-icon-theme.files.color": "#90a4ae",
-	// Clone any existing icon and create a new one with custom colors and associations
-	"material-icon-theme.files.customClones": [],
-	// Set custom folder icon associations.
-	"material-icon-theme.folders.associations": {},
-	// Change the color of the folder icons.
-	"material-icon-theme.folders.color": "#90a4ae",
-	// Clone any existing icon and create a new one with custom colors and associations
-	"material-icon-theme.folders.customClones": [],
-	// Set the type for the folder icons.
-	//  - specific: Select specific folder icons.
-	//  - classic: Select classic folder icons.
-	//  - none: No folder icons.
-	"material-icon-theme.folders.theme": "specific",
-	// Hide explorer arrows before folder.
-	"material-icon-theme.hidesExplorerArrows": false,
-	// Set custom language icon associations.
-	"material-icon-theme.languages.associations": {},
-	// Clone any existing icon and create a new one with custom colors and associations
-	"material-icon-theme.languages.customClones": [],
-	// Set the log level for output messages.
-	"material-icon-theme.logLevel": "info",
-	// Change the opacity of the icons.
-	"material-icon-theme.opacity": 1,
-	// Set custom root folder icon associations.
-	"material-icon-theme.rootFolders.associations": {},
-	// Change the color of the root folder icons.
-	"material-icon-theme.rootFolders.color": "#90a4ae",
-	// Change the saturation of the icons.
-	"material-icon-theme.saturation": 1,
 	// quicktype
 	// Convert stringified booleans into booleans, and back.
 	"quicktype.inferBooleanStrings": true,
