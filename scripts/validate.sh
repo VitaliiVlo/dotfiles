@@ -19,7 +19,6 @@ heading "TOML"
 toml_files=(
     .config/codex/config.toml
     .config/atuin/config.toml
-    .config/bottom/bottom.toml
     .config/yazi/yazi.toml
     .config/starship.toml
     .config/tlrc/config.toml
@@ -212,8 +211,12 @@ common_paths=(
     "$HOME/.config/starship.toml"
     "$HOME/.config/ghostty/config"
     "$HOME/.config/bat/config"
+    "$HOME/.config/btop/btop.conf"
+    "$HOME/.config/btop/themes/catppuccin_macchiato.theme"
+    "$HOME/.config/btop/themes/catppuccin_frappe.theme"
+    "$HOME/.config/btop/themes/catppuccin_latte.theme"
+    "$HOME/.config/btop/themes/catppuccin_mocha.theme"
     "$HOME/.config/atuin/config.toml"
-    "$HOME/.config/bottom/bottom.toml"
     "$HOME/.config/glow/glow.yml"
     "$HOME/.config/superfile/config.toml"
     "$HOME/.config/yazi/yazi.toml"

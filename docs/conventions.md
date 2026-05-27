@@ -149,6 +149,7 @@ Consistent with editors showing line numbers:
 - glow: `style: "auto"` (auto-detects)
 - Codex: `tui.theme = "catppuccin-macchiato"` (TUI only, no light/system mode)
 - Superfile: `theme = "catppuccin-macchiato"` (TUI only, no light/system mode; built-in theme file at `~/.config/superfile/theme/catppuccin-macchiato.toml` on both OSes; spf honors `$XDG_CONFIG_HOME` exported by `.zprofile` via `adrg/xdg`)
+- btop: `color_theme = "catppuccin_macchiato"` (TUI only, no light/system mode; btop ships no Catppuccin themes by default, so `catppuccin_{macchiato,latte,frappe,mocha}.theme` are vendored from `catppuccin/btop` into `~/.config/btop/themes/`)
 
 ## Inline diagnostics
 

@@ -17,16 +17,21 @@ echo "Creating symbolic links from $DOTFILES_DIR to $HOME..."
 symlink ".zprofile" "$HOME/.zprofile"
 symlink ".zshrc"    "$HOME/.zshrc"
 
-# Shell tools (history, pager, system monitor, terminal, search, prompt)
+# Shell tools
 # glow + superfile honor $XDG_CONFIG_HOME (exported in .zprofile), so .config/ works on macOS too.
-symlink ".config/atuin/config.toml"     "$HOME/.config/atuin/config.toml"
-symlink ".config/bat/config"            "$HOME/.config/bat/config"
-symlink ".config/bottom/bottom.toml"    "$HOME/.config/bottom/bottom.toml"
-symlink ".config/ghostty/config"        "$HOME/.config/ghostty/config"
-symlink ".config/glow/glow.yml"         "$HOME/.config/glow/glow.yml"
-symlink ".config/ripgrep/ripgreprc"     "$HOME/.config/ripgrep/ripgreprc"
-symlink ".config/starship.toml"         "$HOME/.config/starship.toml"
-symlink ".config/superfile/config.toml" "$HOME/.config/superfile/config.toml"
+# btop themes: macchiato (active) first, rest alphabetized.
+symlink ".config/atuin/config.toml"                      "$HOME/.config/atuin/config.toml"
+symlink ".config/bat/config"                             "$HOME/.config/bat/config"
+symlink ".config/btop/btop.conf"                         "$HOME/.config/btop/btop.conf"
+symlink ".config/btop/themes/catppuccin_macchiato.theme" "$HOME/.config/btop/themes/catppuccin_macchiato.theme"
+symlink ".config/btop/themes/catppuccin_frappe.theme"    "$HOME/.config/btop/themes/catppuccin_frappe.theme"
+symlink ".config/btop/themes/catppuccin_latte.theme"     "$HOME/.config/btop/themes/catppuccin_latte.theme"
+symlink ".config/btop/themes/catppuccin_mocha.theme"     "$HOME/.config/btop/themes/catppuccin_mocha.theme"
+symlink ".config/ghostty/config"                         "$HOME/.config/ghostty/config"
+symlink ".config/glow/glow.yml"                          "$HOME/.config/glow/glow.yml"
+symlink ".config/ripgrep/ripgreprc"                      "$HOME/.config/ripgrep/ripgreprc"
+symlink ".config/starship.toml"                          "$HOME/.config/starship.toml"
+symlink ".config/superfile/config.toml"                  "$HOME/.config/superfile/config.toml"
 
 # Git/file tools
 symlink ".config/gh/config.yml"       "$HOME/.config/gh/config.yml"

@@ -52,7 +52,8 @@ Linux GUI apps install via vendor deb/rpm. Per-app commands in `docs/linux-packa
 - `.config/micro/settings.json` - Terminal text editor
 - `.config/yazi/yazi.toml` - Terminal file manager settings
 - `.config/atuin/config.toml` - Atuin shell history (filter parity with `hist_ignore_space`)
-- `.config/bottom/bottom.toml` - Bottom (`btm`) system monitor (tree view + command column + battery, cache memory shown, unnormalized per-core CPU, byte/binary network units, table scroll position)
+- `.config/btop/btop.conf` - btop system monitor (Catppuccin Macchiato theme, transparent background, `save_config_on_exit = false` to prevent btop's default behavior of rewriting the file with all ~500 expanded defaults on quit)
+- `.config/btop/themes/catppuccin_{macchiato,latte,frappe,mocha}.theme` - upstream Catppuccin btop themes from `catppuccin/btop` (btop ships no Catppuccin themes by default; auto-discovered from `$XDG_CONFIG_HOME/btop/themes/`)
 - `.config/glow/glow.yml` - Glow Markdown renderer (auto theme, pager on, line numbers in TUI; XDG on both OSes because glow honors `$XDG_CONFIG_HOME` explicitly in `main.go`)
 - `.config/tlrc/config.toml` - tlrc (tldr client) — show platform title, short+long flags (non-XDG on macOS, XDG on Linux; tlrc uses Rust `dirs::config_dir()` and ignores `$XDG_CONFIG_HOME` on Darwin)
 - `.config/superfile/config.toml` - Superfile (`spf`) terminal file manager (Catppuccin Macchiato, bat preview with border, binary file sizes, zoxide integration; XDG on both OSes because spf reads `xdg.ConfigHome` from `adrg/xdg`, which honors the env var set in `.zprofile`)
@@ -144,8 +145,8 @@ Defined in `.zshrc`:
 | Alias    | Command                                |
 | -------- | -------------------------------------- |
 | `kk`     | `kubectl`                              |
-| `kctx`   | `kubectl config current-context`       |
-| `lzg`    | `lazygit`                              |
+| `kx`     | `kubectx`                              |
+| `kn`     | `kubens`                               |
 | `c`      | `clear`                                |
 | `cat`    | `bat` (if installed)                   |
 | `ls`     | `eza --icons=auto --group-directories-first`        |
@@ -207,7 +208,8 @@ ghostty +show-config --default --docs      # Should show parsed config, no error
 ghostty +show-config                        # Should round-trip current config, exit 0
 bat --list-themes | grep -i catppuccin     # Should show "Catppuccin Macchiato"
 delta --list-syntax-themes | grep -i catppuccin  # Should show Catppuccin themes
-btm --version                               # Should show version
+btop --version                              # Primary system monitor TUI
+htop --version                              # Classic process monitor
 glow --version                              # config at ~/.config/glow/glow.yml on both OSes (glow honors $XDG_CONFIG_HOME)
 atuin doctor                                # Should show config + DB ok
 tldr --config-path                          # macOS: ~/Library/Application Support/tlrc/config.toml; Linux: ~/.config/tlrc/config.toml
@@ -222,7 +224,7 @@ uv python list --only-installed             # Should show installed Python versi
 
 Run `make validate` (delegates to `scripts/validate.sh`). Covers:
 
-1. Parse every TOML (`.config/codex/config.toml`, atuin, bottom, yazi, starship, tlrc, superfile)
+1. Parse every TOML (`.config/codex/config.toml`, atuin, yazi, starship, tlrc, superfile)
 2. Parse every plain JSON (claude/settings, micro, ccstatusline)
 3. Parse every YAML (gh, lazygit, glow) — needs `yq`
 4. Parse JSONC (zed, vscode) — needs `node`
@@ -288,7 +290,7 @@ The doc covers: editor settings matrix (VSCode/Zed/Micro/Ghostty/Bat/Delta/Yazi)
 
 The `.config/claude/settings.json` configures permissions and plugins:
 
-- **Allowed:** Read-only git/docker/k8s, build/test/lint tools (`shellcheck`, `shfmt`), dependency sync (`go mod tidy/download`, `uv sync/lock`, `npm ci`), version probes (`go/uv/python/python3/node/npm --version`, `fnm list/current`), web search, web fetch from dev docs (GitHub, Stack Overflow, MDN, Go/Python/Node/Terraform/Docker/Kubernetes/Claude docs), file search and inspection (`fd`, `rg`, `grep`, `find`, `which`, `bat`, `eza`, `head`, `tail`, `ls`, `wc`, `jq`, `yq`, `tldr`, `date`)
+- **Allowed:** Read-only git/gh/docker/kubectl subcommands; build/test/lint (`shellcheck`, `shfmt`, `pytest`, `mypy`, `eslint`, `jest`, `vitest`, `tsc --noEmit`, `golangci-lint`); dependency sync (`go mod tidy/download`, `uv sync/lock`, `npm ci`) + dep queries (`uv pip list/show`, `uv tree`, `npm ls/list/outdated/view`); version probes (`go/uv/python/python3/node/npm --version`, `fnm list/current`); web search + fetch from dev docs (GitHub, Stack Overflow, MDN, Go/Python/Node/Terraform/Docker/Kubernetes/Claude docs); file search and inspection (`fd`, `rg`, `grep`, `find`, `which`, `bat`, `eza`, `head`, `tail`, `ls`, `wc`, `tldr`, `tree`, `file`, `readlink`, `realpath`, `stat`); structured data (`jq`, `yq`); text utils (`cut`, `diff`, `echo`, `printf`, `sort`, `tr`, `uniq`); system info (`cd`, `date`, `ps`, `pwd`, `sleep`, `uname`); clipboard (`pbcopy`, `wl-copy`). `go env` intentionally excluded (`go env -w` writes persistent config).
 - **Denied:** `.env`, `.ssh/*`, `.kube/config`, `.git-credentials`, credentials, private keys, `.tfvars` (`Read` tool only — see note below)
 - **Requires approval:** Arbitrary package install (`brew install`, `npm install`, `uv add`), direct code execution, git writes, docker mutations
 - **Sensitive-data trust boundary:** `Read(...)` deny rules only cover the `Read` tool. Allowed `Bash(...)` readers (`bat`, `head`, `tail`, `cat` via alias, `jq`, `yq`, `grep`, `rg`, `ls`, `wc`, `find`, `fd`) can target the same paths without prompting. Actual protection comes from the model-level `Sensitive Data` rule in `.config/claude/CLAUDE.md`, not from the JSON allow/deny.

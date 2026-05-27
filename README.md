@@ -123,7 +123,8 @@ The following files are automatically symlinked by running `make symlinks`:
 - `.config/micro/settings.json` - Micro editor settings
 - `.config/yazi/yazi.toml` - Yazi file manager settings
 - `.config/atuin/config.toml` - Atuin shell history settings
-- `.config/bottom/bottom.toml` - Bottom (`btm`) system monitor settings
+- `.config/btop/btop.conf` - btop system monitor (theme + anti-bloat flag)
+- `.config/btop/themes/catppuccin_*.theme` - Catppuccin theme files (macchiato/latte/frappe/mocha) from `catppuccin/btop`
 - `.config/glow/glow.yml` - Glow Markdown renderer settings (XDG path on both OSes; glow honors `$XDG_CONFIG_HOME` exported by `.zprofile`)
 - `.config/tlrc/config.toml` - tlrc (tldr client) settings (linked into Library/Application Support/tlrc on macOS; tlrc ignores `$XDG_CONFIG_HOME` on Darwin)
 - `.config/superfile/config.toml` - Superfile (`spf`) terminal file manager settings (XDG path on both OSes; spf reads `xdg.ConfigHome` via adrg/xdg, honors `$XDG_CONFIG_HOME`)
@@ -199,22 +200,21 @@ make versions           # Show installed Go, Node, Python versions
 | atuin                   | Shell history sync + Ctrl+R replacement                 |
 | awscli                  | AWS command-line interface                              |
 | bat                     | `cat` with syntax highlighting                          |
-| bottom                  | System monitor TUI (`btm`, modern `htop`)               |
+| btop                    | System monitor TUI (mouse + charts + GPU panels)        |
+| buf                     | Modern Protocol Buffers toolkit (lint, breaking, gen)   |
 | corepack                | Node package-manager bootstrap (yarn/pnpm enabler)      |
 | delve                   | Go debugger (binary: `dlv`)                             |
-| dua-cli                 | Interactive disk usage analyzer (alternative to gdu)    |
+| dust                    | Visual `du` tree printer (one-shot disk usage)          |
 | exiftool                | Read/write image/audio/video metadata                   |
 | eza                     | Modern `ls` replacement                                 |
 | fd                      | Modern `find` replacement                               |
 | fnm                     | Fast Node Manager (auto-switches via `.node-version`)   |
 | fx                      | Terminal JSON viewer / processor                        |
 | fzf                     | Fuzzy finder (Ctrl+T files, Alt+C dirs)                 |
-| gdu                     | Fast parallel disk usage analyzer (Go)                  |
 | gh                      | GitHub CLI                                              |
 | git                     | Distributed version control                             |
 | git-delta               | Syntax-highlighting git pager (replaces `less`)         |
 | git-lfs                 | Git Large File Storage extension                        |
-| gitui                   | Git TUI (Rust, alternative to lazygit)                  |
 | glow                    | Terminal Markdown renderer                              |
 | go                      | Go toolchain (1.26)                                     |
 | golangci-lint           | Go meta-linter                                          |
@@ -223,11 +223,12 @@ make versions           # Show installed Go, Node, Python versions
 | gopls                   | Go language server                                      |
 | gotests                 | Go test boilerplate generator                           |
 | helm                    | Kubernetes package manager                              |
+| htop                    | Classic process monitor (universal fallback)            |
 | impl                    | Go interface method stub generator                      |
 | jq                      | Command-line JSON processor                             |
 | k9s                     | Kubernetes TUI                                          |
-| kdash                   | Kubernetes dashboard TUI (Rust)                         |
 | kubectl                 | Kubernetes CLI                                          |
+| kubectx                 | Kubernetes context switcher (ships kubens for namespaces) |
 | kustomize               | Kubernetes manifest overlays/patches                    |
 | lazydocker              | Docker TUI                                              |
 | lazygit                 | Git TUI                                                 |
@@ -235,10 +236,8 @@ make versions           # Show installed Go, Node, Python versions
 | litecli                 | SQLite CLI with autocomplete                            |
 | micro                   | Terminal text editor                                    |
 | mockgen                 | Go mock generator (`go.uber.org/mock`)                  |
-| oapi-codegen            | OpenAPI 3 client/server Go code generator               |
+| ncdu                    | Interactive disk usage analyzer (classic, Zig)          |
 | pgcli                   | PostgreSQL CLI with autocomplete                        |
-| protobuf                | Protocol Buffers compiler (`protoc`)                    |
-| rainfrog                | Postgres/MySQL/SQLite database TUI (alternative to lazysql) |
 | ripgrep                 | Fast `grep` replacement                                 |
 | ruff                    | Python linter / formatter (Rust)                        |
 | sevenzip                | 7-Zip file archiver                                     |
@@ -292,7 +291,7 @@ Native deb/rpm install commands for each cask on Linux: see [`docs/linux-package
 
 The `.config/claude/settings.json` configures permissions and plugins:
 
-- **Allowed:** Web search, fetch from dev docs (GitHub, Stack Overflow, MDN, Go/Python/Node/Terraform/Docker/Kubernetes/Claude docs), git/docker/k8s read-only commands, build/test/lint tools (`shellcheck`, `shfmt`), dependency sync (`go mod tidy/download`, `uv sync/lock`, `npm ci`), version probes (`go/uv/python/python3/node/npm --version`, `fnm list/current`), file search and inspection (`fd`, `rg`, `grep`, `find`, `which`, `bat`, `eza`, `head`, `tail`, `ls`, `wc`, `jq`, `yq`, `tldr`, `date`)
+- **Allowed:** Web search + fetch from dev docs (GitHub, Stack Overflow, MDN, Go/Python/Node/Terraform/Docker/Kubernetes/Claude docs); git/gh/docker/kubectl read-only subcommands; build/test/lint (`shellcheck`, `shfmt`, `pytest`, `mypy`, `eslint`, `jest`, `vitest`, `tsc --noEmit`, `golangci-lint`); dependency sync (`go mod tidy/download`, `uv sync/lock`, `npm ci`) + dep queries (`uv pip list/show`, `uv tree`, `npm ls/list/outdated/view`); version probes (`go/uv/python/python3/node/npm --version`, `fnm list/current`); file search and inspection (`fd`, `rg`, `grep`, `find`, `which`, `bat`, `eza`, `head`, `tail`, `ls`, `wc`, `tldr`, `tree`, `file`, `readlink`, `realpath`, `stat`); structured data (`jq`, `yq`); text utils (`cut`, `diff`, `echo`, `printf`, `sort`, `tr`, `uniq`); system info (`cd`, `date`, `ps`, `pwd`, `sleep`, `uname`); clipboard (`pbcopy`, `wl-copy`). `go env` intentionally excluded (`go env -w` writes persistent config).
 - **Denied:** `.env` files, `.ssh/*`, `.kube/config`, `.git-credentials`, credentials, private keys, `.tfvars` (covers the `Read` tool only; allowed `Bash` readers like `bat`/`head`/`jq` can still target these paths — the model-level `Sensitive Data` rule in user CLAUDE.md is the actual guarantee)
 - **Requires approval:** Arbitrary package install (`brew install`, `npm install`, `uv add`), direct code execution (`python`, `node`, `go run`), git writes, docker mutations
 - **Enabled plugins:** pyright-lsp, gopls-lsp, typescript-lsp, code-review, feature-dev, code-simplifier, claude-md-management, caveman, context7, slack, atlassian, posthog, datadog, pr-review-toolkit

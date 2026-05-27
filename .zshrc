@@ -28,8 +28,8 @@ setopt pushd_ignore_dups
 # Aliases
 alias kk='kubectl'
 alias c='clear'
-alias kctx='kubectl config current-context'
-alias lzg='lazygit'
+alias kx='kubectx'
+alias kn='kubens'
 
 if command -v bat &>/dev/null; then alias cat='bat'; fi
 
