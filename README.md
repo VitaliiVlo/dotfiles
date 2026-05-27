@@ -32,7 +32,7 @@ Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** 
 
 1. Complete [Prerequisites → Linux](#linux).
 2. Clone this repository.
-3. Run `make setup` (base) or `make setup-all` (base + work). Same chain as macOS: `macos-defaults` (no-op on Linux) → `linux-defaults` applies GNOME `gsettings` → `symlinks` → `brew-install-base` installs formulae + the Linux-installable cask subset (`docs/casks.md`) → `versions`. `setup-all` swaps in `brew-install` for the base+work superset.
+3. Run `make setup` (base) or `make setup-all` (base + work). Same chain as macOS: `macos-defaults` (no-op on Linux) → `linux-defaults` applies GNOME `gsettings` → `symlinks` → `brew-install-base` installs formulae + the Linux-installable cask subset (`docs/casks.md`) → `versions`. `setup-all` swaps in `brew-install` for the base+work superset. Every `Brewfile.work` cask lacks a Linuxbrew build, so on Linux `brew-install-work` is effectively a no-op for casks; install work GUIs via vendor deb/rpm (`docs/linux-packages.md`).
 4. Install GUI apps via vendor `.deb` / `.rpm`. See [`docs/linux-packages.md`](docs/linux-packages.md) for per-app commands.
 
 Run `make help` to list all available targets.
@@ -236,6 +236,7 @@ make versions           # Show installed Go, Node, Python versions
 | litecli                 | SQLite CLI with autocomplete                            |
 | micro                   | Terminal text editor                                    |
 | mockgen                 | Go mock generator (`go.uber.org/mock`)                  |
+| mongosh                 | MongoDB shell                                           |
 | ncdu                    | Interactive disk usage analyzer (classic, Zig)          |
 | pgcli                   | PostgreSQL CLI with autocomplete                        |
 | ripgrep                 | Fast `grep` replacement                                 |

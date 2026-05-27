@@ -29,7 +29,7 @@ Linux GUI apps install via vendor deb/rpm. Per-app commands in `docs/linux-packa
 
 - `LICENSE` - MIT license
 - `README.md` - Quick start, prerequisites, configuration inventory, validation, updating, plugin/marketplace summary, templates
-- `scripts/symlinks.sh` - Creates symlinks (uses `set -euo pipefail`; defines `symlink` helper; branches on `uname -s` for glow/superfile/tlrc/vscode)
+- `scripts/symlinks.sh` - Creates symlinks (uses `set -euo pipefail`; defines `symlink` helper; branches on `uname -s` for tlrc/vscode)
 - `scripts/macos-defaults.sh` - macOS defaults via `defaults write` (non-interactive, idempotent; guards `uname -s == Darwin`, no-op on Linux)
 - `scripts/linux-defaults.sh` - Linux/GNOME defaults via `gsettings` (non-interactive, idempotent; guards `uname -s == Linux`, requires `gsettings` + `XDG_CURRENT_DESKTOP=*GNOME*`, no-op on macOS / KDE / headless)
 - `scripts/validate.sh` - Full audit runner (parses every TOML/JSON/YAML/JSONC, `brew bundle list --all` for Brewfile parse plus non-fatal `brew bundle check` for install state, ghostty validate, shellcheck, shfmt, `zsh -n` on `.zshrc`/`.zprofile`, codex/rules sanity grep, symlink verification). Backs `make validate`. Skips macOS-native symlinks on Linux.
