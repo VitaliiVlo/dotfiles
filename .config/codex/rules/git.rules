@@ -1,13 +1,15 @@
 # Git read-only
-prefix_rule(pattern=["git", ["status", "diff", "log", "show", "blame", "branch", "remote", "tag", "rev-parse"]], decision="allow")
-prefix_rule(pattern=["git", "stash", "list"], decision="allow")
+prefix_rule(pattern=["git", ["blame", "branch", "check-ignore", "describe", "diff", "fetch", "grep", "log", "ls-files", "ls-remote", "merge-base", "remote", "rev-list", "rev-parse", "show", "status", "tag"]], decision="allow")
+prefix_rule(pattern=["git", "reflog", "show"], decision="allow")
+prefix_rule(pattern=["git", "stash", ["list", "show"]], decision="allow")
+prefix_rule(pattern=["git", "worktree", "list"], decision="allow")
 
 # GitHub CLI read-only
-prefix_rule(pattern=["gh", "pr", ["view", "list", "diff", "checks", "status"]], decision="allow")
-prefix_rule(pattern=["gh", "repo", ["view", "list"]], decision="allow")
-prefix_rule(pattern=["gh", "release", ["view", "list"]], decision="allow")
-prefix_rule(pattern=["gh", "run", ["view", "list"]], decision="allow")
-prefix_rule(pattern=["gh", "workflow", ["view", "list"]], decision="allow")
+prefix_rule(pattern=["gh", "auth", "status"], decision="allow")
+prefix_rule(pattern=["gh", "pr", ["checks", "diff", "list", "status", "view"]], decision="allow")
+prefix_rule(pattern=["gh", "release", ["list", "view"]], decision="allow")
+prefix_rule(pattern=["gh", "repo", ["list", "view"]], decision="allow")
+prefix_rule(pattern=["gh", "run", ["list", "view"]], decision="allow")
 prefix_rule(pattern=["gh", "search"], decision="allow")
 prefix_rule(pattern=["gh", "status"], decision="allow")
-prefix_rule(pattern=["gh", "auth", "status"], decision="allow")
+prefix_rule(pattern=["gh", "workflow", ["list", "view"]], decision="allow")

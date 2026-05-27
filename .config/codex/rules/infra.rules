@@ -1,6 +1,6 @@
 # Docker read-only
-prefix_rule(pattern=["docker", ["ps", "images", "logs"]], decision="allow")
-prefix_rule(pattern=["docker", "compose", ["ps", "config", "logs"]], decision="allow")
+prefix_rule(pattern=["docker", ["images", "logs", "ps"]], decision="allow")
+prefix_rule(pattern=["docker", "compose", ["config", "logs", "ps"]], decision="allow")
 
 # Kubernetes read-only
-prefix_rule(pattern=["kubectl", ["get", "describe", "logs"]], decision="allow")
+prefix_rule(pattern=["kubectl", ["describe", "get", "logs"]], decision="allow")
