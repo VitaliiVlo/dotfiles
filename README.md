@@ -247,6 +247,7 @@ make versions           # Show installed Go, Node, Python versions
 | starship                | Cross-shell prompt                                      |
 | superfile               | Modern terminal file manager (alternative to yazi)      |
 | swag                    | Swagger 2.0 doc generator for Go                        |
+| taproom                 | Interactive Homebrew TUI (tap `gromgit/brewtils`)       |
 | tlrc                    | `tldr` client (Rust); binary is `tldr`                  |
 | typescript              | TypeScript compiler (`tsc`)                             |
 | typescript-language-server | TypeScript / JavaScript language server              |
