@@ -6,6 +6,7 @@ Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** 
 
 - [Quick start](#quick-start)
 - [Prerequisites](#prerequisites)
+  - [Local overrides](#local-overrides)
 - [Configuration files](#configuration-files)
 - [macOS settings](#macos-settings)
 - [Linux settings](#linux-settings)
@@ -26,13 +27,13 @@ Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** 
 
 1. Complete [Prerequisites → macOS](#macos).
 2. Clone this repository.
-3. Run `make setup` (base) or `make setup-all` (base + work). `setup` chains `macos-defaults` → `linux-defaults` (no-op) → `symlinks` → `brew-install-base` → `versions`. `setup-all` swaps in `brew-install` for the base+work superset.
+3. Run `make setup` (base) or `make setup-all` (base + work). `setup` chains `macos-defaults` → `linux-defaults` (no-op) → `symlinks` → `local-overrides` → `brew-install-base` → `versions`. `setup-all` swaps in `brew-install` for the base+work superset.
 
 ### Linux (GNOME)
 
 1. Complete [Prerequisites → Linux](#linux).
 2. Clone this repository.
-3. Run `make setup` (base) or `make setup-all` (base + work). Same chain as macOS: `macos-defaults` (no-op on Linux) → `linux-defaults` applies GNOME `gsettings` → `symlinks` → `brew-install-base` installs formulae + the Linux-installable cask subset (`docs/casks.md`) → `versions`. `setup-all` swaps in `brew-install` for the base+work superset. Every `Brewfile.work` cask lacks a Linuxbrew build, so on Linux `brew-install-work` is effectively a no-op for casks; install work GUIs via vendor deb/rpm (`docs/linux-packages.md`).
+3. Run `make setup` (base) or `make setup-all` (base + work). Same chain as macOS: `macos-defaults` (no-op on Linux) → `linux-defaults` applies GNOME `gsettings` → `symlinks` → `local-overrides` → `brew-install-base` installs formulae + the Linux-installable cask subset (`docs/casks.md`) → `versions`. `setup-all` swaps in `brew-install` for the base+work superset. Every `Brewfile.work` cask lacks a Linuxbrew build, so on Linux `brew-install-work` is effectively a no-op for casks; install work GUIs via vendor deb/rpm (`docs/linux-packages.md`).
 4. Install GUI apps via vendor `.deb` / `.rpm`. See [`docs/linux-packages.md`](docs/linux-packages.md) for per-app commands.
 
 Run `make help` to list all available targets.
@@ -67,14 +68,14 @@ Run `make help` to list all available targets.
 
 > Targets GNOME-based distros listed in [Applications](docs/applications.md): Fedora Workstation, elementary OS, Pop!_OS, Ubuntu, Zorin OS. Immutable variants (Bluefin, Fedora Silverblue) work too, but extra packages must be layered via `rpm-ostree` (or installed inside Distrobox/Toolbox) instead of `dnf`. KDE / Sway sessions skip the `gsettings` defaults block but everything else applies. Linuxbrew prefix defaults to `/home/linuxbrew/.linuxbrew` in `.zshrc` / `.zprofile` (override via `BREW_PREFIX` env).
 
-- **Install build prerequisites:**
+- **Install build prerequisites:** `scripts/local-overrides.py` needs Python 3.11+ (stdlib `tomllib`). Fedora 39+, Ubuntu 24.04+, and recent Debian ship a compatible `python3`. Older distros are out of scope.
   ```bash
   # Debian/Ubuntu (Pop!_OS, elementary OS)
   sudo apt-get update
-  sudo apt-get install -y build-essential procps curl file git zsh
+  sudo apt-get install -y build-essential procps curl file git zsh python3
 
   # Fedora Workstation
-  sudo dnf install -y @development-tools procps-ng curl file git zsh
+  sudo dnf install -y @development-tools procps-ng curl file git zsh python3
 
   # Fedora Silverblue / Bluefin (immutable; layer once, then reboot)
   sudo rpm-ostree install zsh
@@ -97,12 +98,19 @@ Run `make help` to list all available targets.
 - **Install GUI apps via vendor deb/rpm.** Per-app commands (apt/dnf repos, signed keys, GitHub release downloads) live in [`docs/linux-packages.md`](docs/linux-packages.md). Vendor packages respect `~/.config/<tool>/`, so the repo's symlinks resolve without Flatpak-sandbox quirks.
 - **GNOME-only defaults:** `make linux-defaults` skips silently outside GNOME (`XDG_CURRENT_DESKTOP` check). Other DEs configure their own way.
 
-### Personalization (post-clone)
+### Local overrides
 
-These files ship with the maintainer's identity baked in. Override locally after the first symlink pass; they will be overwritten on every `make symlinks`, so prefer machine-specific includes:
+Per-machine data (git identity, `GOPRIVATE`, Claude team marketplaces/plugins, Codex trusted projects) is kept in a single gitignored file and rendered into the tracked configs by a setup-time script. Tracked configs ship with neutral placeholders; the script injects real values on each `make setup` (or standalone `make local-overrides`).
 
-- `.config/git/config` `[user]` (`email`, `name`) — override via `git config --global --file ~/.config/git/config.local user.email ...` and add `[include] path = ~/.config/git/config.local` to a local fork, or just edit `.config/git/config` and keep the change out of upstream.
-- `.zprofile` `GOPRIVATE` — defaults to the maintainer's GitHub namespace. Re-export in `~/.zprofile.local` (sourced manually) or edit in place.
+1. First run inside `make setup` creates `.local/source.toml` from `.local.example.toml`, prints a fill-in prompt to stderr, and returns 0 so the rest of the chain (`brew-install-base`, `versions`) continues with neutral placeholders. Edit `.local/source.toml` with your values, then re-run `make local-overrides` to inject them. Schema sections: `[git]`, `[go]`, `[claude.marketplaces.<key>]`, `[claude].plugins`, `[codex].trusted_projects`.
+2. Re-run `make local-overrides`. The script reads the clean base from `git show HEAD:<path>` for each tracked target, applies the overrides, and writes back to:
+   - `.config/git/config` — `[user]` block replaced
+   - `.zprofile` — `GOPRIVATE` line replaced
+   - `.config/claude/settings.json` — `extraKnownMarketplaces` and `enabledPlugins` extended
+   - `.config/codex/config.toml` — `[projects."<path>"]` blocks appended
+3. The resulting working-tree diff on those four files is intentional. **Do not commit it.** Each run reads from HEAD, so overrides never compound and a fresh `git pull` + re-run keeps state consistent.
+
+`.local/` is gitignored; `.local.example.toml` is the committed schema source. `make setup` and `make setup-all` chain `local-overrides` after `symlinks` so a clean clone reaches the configured state in one command.
 
 ## Configuration files
 
@@ -146,6 +154,7 @@ Used directly from the repo:
 - `docs/linux-packages.md` - Native deb/rpm install commands for each cask on Linux
 - `CLAUDE.md` - Repository instructions for Claude Code (auto-discovered in cwd; Codex reads it via `project_doc_fallback_filenames`)
 - `docs/vscode-defaults.jsonc` - VSCode defaults snapshot for offline comparison (regenerate via `Preferences: Open Default Settings (JSON)`)
+- `.local.example.toml` - Schema for per-machine overrides; copy to `.local/source.toml` (gitignored) and fill in. See [Local overrides](#local-overrides).
 
 ## macOS settings
 
@@ -192,6 +201,7 @@ make brew-install-work  # Install work packages only
 make brew-cleanup       # Clean up old versions and cache
 make brew-export        # Export installed packages (incl. VSCode extensions) to Brewfile, then strip Brewfile.work entries; add new work entries to Brewfile.work manually
 make versions           # Show installed Go, Node, Python versions
+make local-overrides    # Re-render per-machine overrides from .local/source.toml; see Local overrides
 ```
 
 | Tool                    | Description                                             |

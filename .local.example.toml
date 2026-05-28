@@ -1,0 +1,38 @@
+# Local overrides — copy to `.local/source.toml` and fill in real values.
+# `.local/` is gitignored; tracked configs hold neutral placeholders.
+# Re-run `make local-overrides` (or `make setup`) after editing this file.
+
+[git]
+email = "your.email@example.com"
+name = "your-username"
+
+[go]
+# Module path glob matching your private modules.
+# Empty/unset = keep HEAD default (no override applied).
+private = "github.com/your-org/*"
+
+# Each table key becomes an entry in Claude's `extraKnownMarketplaces`.
+# [claude.marketplaces.<key>]
+#   source = "github" | "git"
+#   repo   = "<org/repo>"        (when source = "github")
+#   url    = "<git url>"         (when source = "git")
+#   auto_update = true | false   (default true)
+
+# [claude.marketplaces.example-team]
+# source = "github"
+# repo = "your-org/your-claude-marketplace"
+# auto_update = true
+
+[claude]
+# Each entry becomes `enabledPlugins["<id>"] = true`.
+# Format: "<plugin-name>@<marketplace-key>"
+plugins = [
+  # "coding-standards@example-team",
+  # "devops@example-team",
+]
+
+[codex]
+# Each path becomes `[projects."<path>"]` with `trust_level = "trusted"`.
+trusted_projects = [
+  # "/Users/you/Projects/foo",
+]

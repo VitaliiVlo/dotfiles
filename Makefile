@@ -1,13 +1,13 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help setup setup-all symlinks macos-defaults linux-defaults versions validate brew-install brew-install-base brew-install-work brew-cleanup brew-export
+.PHONY: help setup setup-all symlinks local-overrides macos-defaults linux-defaults versions validate brew-install brew-install-base brew-install-work brew-cleanup brew-export
 
 help: ## List available targets
 	@awk 'BEGIN {FS = ":.*## "}; /^[a-zA-Z0-9_-]+:.*## / {printf "  %-22s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-setup: macos-defaults linux-defaults symlinks brew-install-base versions ## Base setup: configure OS, symlink configs, install base packages, show versions
+setup: macos-defaults linux-defaults symlinks local-overrides brew-install-base versions ## Base setup: configure OS, symlink configs, apply local overrides, install base packages, show versions
 
-setup-all: macos-defaults linux-defaults symlinks brew-install versions ## Full setup: base setup + work packages
+setup-all: macos-defaults linux-defaults symlinks local-overrides brew-install versions ## Full setup: base setup + work packages
 
 macos-defaults: ## Configure macOS defaults: folders, system, screenshots, Finder, Dock (no-op on Linux)
 	./scripts/macos-defaults.sh
@@ -17,6 +17,9 @@ linux-defaults: ## Configure Linux/GNOME defaults: folders, input, Nautilus, des
 
 symlinks: ## Symlink configs to home directory
 	./scripts/symlinks.sh
+
+local-overrides: ## Apply personal overrides from .local/source.toml into tracked git/zprofile/claude/codex configs
+	./scripts/local-overrides.py
 
 versions: ## Show installed Go, Node, Python versions
 	@printf '%s\n' "--- Go ---"

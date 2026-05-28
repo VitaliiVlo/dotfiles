@@ -1,0 +1,14 @@
+# Per-machine overrides (see `.local.example.toml` and README "Local overrides")
+.local/
+
+# Duplicates of ~/.config/git/ignore so this repo is protected on fresh clones
+# (before `make symlinks` wires the global ignore) and for outside contributors
+# who do not share this dotfiles setup.
+.DS_Store
+.env
+.env.*
+.idea/
+.vscode/
+__pycache__/
+*.pyc
+*.swp

@@ -9,9 +9,10 @@ Cross-platform dotfiles repository (macOS and Linux/GNOME) for setting up a deve
 ## Key commands
 
 ```bash
-make setup              # Base setup: configure OS, symlink configs, install base packages, show versions
+make setup              # Base setup: configure OS, symlink configs, apply local overrides, install base packages, show versions
 make setup-all          # Full setup: base setup + work packages
 make symlinks           # Symlink configs to home directory
+make local-overrides    # Render per-machine overrides from .local/source.toml into tracked git/zprofile/claude/codex configs
 make macos-defaults     # Configure macOS defaults: folders, system, screenshots, Finder, Dock (no-op on Linux)
 make linux-defaults     # Configure Linux/GNOME defaults: folders, input, Nautilus, desktop (no-op on macOS / non-GNOME)
 make versions           # Show installed Go, Node, Python versions
@@ -30,9 +31,12 @@ Linux GUI apps install via vendor deb/rpm. Per-app commands in `docs/linux-packa
 - `LICENSE` - MIT license
 - `README.md` - Quick start, prerequisites, configuration inventory, validation, updating, plugin/marketplace summary, templates
 - `scripts/symlinks.sh` - Creates symlinks (uses `set -euo pipefail`; defines `symlink` helper; branches on `uname -s` for tlrc/vscode)
+- `scripts/local-overrides.py` - Renders per-machine overrides from `.local/source.toml` into tracked git/zprofile/claude/codex configs; reads base from `git show HEAD:<path>` each run so overrides never compound. See "Local overrides" below.
 - `scripts/macos-defaults.sh` - macOS defaults via `defaults write` (non-interactive, idempotent; guards `uname -s == Darwin`, no-op on Linux)
 - `scripts/linux-defaults.sh` - Linux/GNOME defaults via `gsettings` (non-interactive, idempotent; guards `uname -s == Linux`, requires `gsettings` + `XDG_CURRENT_DESKTOP=*GNOME*`, no-op on macOS / KDE / headless)
 - `scripts/validate.sh` - Full audit runner (parses every TOML/JSON/YAML/JSONC, `brew bundle list --all` for Brewfile parse plus non-fatal `brew bundle check` for install state, ghostty validate, shellcheck, shfmt, `zsh -n` on `.zshrc`/`.zprofile`, codex/rules sanity grep, symlink verification). Backs `make validate`. Skips macOS-native symlinks on Linux.
+- `.local.example.toml` - Schema template for per-machine overrides (committed). Copy to `.local/source.toml` (gitignored) and fill in.
+- `.gitignore` - Repo-root gitignore. Only excludes `.local/` (per-machine override data + rendered scratch).
 - `docs/applications.md` - Curated GUI app picks per category, VSCode setup, search-engine bangs
 - `docs/casks.md` - Homebrew Cask inventory split into base, work, and Linux-installable subsets
 - `docs/conventions.md` - Cross-config consistency tables (shared behavior across all tools: theme, font, telemetry, git pager, etc.). Read when adding a new tool or auditing drift.
@@ -90,6 +94,7 @@ When adding a new tool, config file, cask, or formula, update all of these in lo
 - **CLAUDE.md "Repository structure" list** — add bullet describing the file's purpose
 - **`docs/conventions.md` tables** — add row(s) if the tool shares behavior (theme, font, tab size, hidden files, telemetry, auto-update, git pager, etc.) with existing tools
 - **`scripts/validate.sh`** — extend the matching block (TOML/JSON/YAML/JSONC parse list, or symlink list) so `make validate` covers the new config
+- **`.local.example.toml`** + **`scripts/local-overrides.py`** — if the tool grows a per-machine override (identity, private namespace, team marketplace, trusted path, etc.), extend the schema and the renderer. Tracked file stays neutral; real value lives in `.local/source.toml`.
 
 When removing a tool, sweep the same list in reverse.
 
@@ -122,6 +127,20 @@ When adding or editing config files, follow this style across all of them:
 
   Unknown OS prints a warning and skips this block. Claude/Codex use `~/.claude` and `~/.codex` on both OSes (non-XDG always); no branching needed there.
 - Symlinks grouped by category (in this order): Shell → Shell tools (history/pager/system monitor/terminal/search/prompt/file manager) → Git/file tools → Editors → AI agents → platform-native paths. Within each group, tools are alphabetized. Add new symlinks under the matching group in alpha order. For tools with split macOS/Linux paths, add to both branches of the `case` block.
+
+### scripts/local-overrides.py
+
+- Single source of truth: `.local/source.toml` (gitignored). Schema example committed at `.local.example.toml`.
+- First run with no `.local/source.toml` copies the example and exits, prompting the user to fill it in.
+- Each run reads the clean base for each tracked target from `git show HEAD:<path>` so overrides apply to a known starting point and never compound across runs.
+- Writes back to four tracked files (the same paths users' tools read via existing symlinks):
+  - `.config/git/config` — `[user]` block replaced via regex match through the next section header.
+  - `.zprofile` — `GOPRIVATE` export line replaced.
+  - `.config/claude/settings.json` — `extraKnownMarketplaces.<key>` entries inserted, `enabledPlugins["<id>"] = true` toggles added.
+  - `.config/codex/config.toml` — `[projects."<path>"]` blocks appended.
+- Working-tree diff on those four files after a run is intentional. The user keeps it uncommitted. A fresh `git pull` followed by `make local-overrides` restores the same state.
+- Idempotent: re-running with the same `.local/source.toml` produces byte-identical output.
+- Tracked configs ship with neutral placeholders (`your.email@example.com`, `github.com/your-org/*`, no team plugins, no trusted projects). Overrides upgrade them.
 
 ### scripts/macos-defaults.sh
 
@@ -224,7 +243,7 @@ uv python list --only-installed             # Should show installed Python versi
 
 Run `make validate` (delegates to `scripts/validate.sh`). Covers:
 
-1. Parse every TOML (`.config/codex/config.toml`, atuin, yazi, starship, tlrc, superfile)
+1. Parse every TOML (`.config/codex/config.toml`, atuin, yazi, starship, tlrc, superfile, `.local.example.toml`, and `.local/source.toml` if present)
 2. Parse every plain JSON (claude/settings, micro, ccstatusline)
 3. Parse every YAML (gh, lazygit, glow) — needs `yq`
 4. Parse JSONC (zed, vscode) — needs `node`

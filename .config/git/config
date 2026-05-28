@@ -1,6 +1,6 @@
 [user]
-	email = vitalii.vlo@gmail.com
-	name = vitalii-vlo
+	email = your.email@example.com
+	name = your-username
 
 [url "git@github.com:"]
 	insteadOf = https://github.com/

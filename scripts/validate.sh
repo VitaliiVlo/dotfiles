@@ -23,7 +23,11 @@ toml_files=(
     .config/starship.toml
     .config/tlrc/config.toml
     .config/superfile/config.toml
+    .local.example.toml
 )
+if [[ -f .local/source.toml ]]; then
+    toml_files+=(.local/source.toml)
+fi
 for f in "${toml_files[@]}"; do
     if python3 -c "import tomllib,sys; tomllib.loads(open(sys.argv[1]).read())" "$f" 2>/dev/null; then
         ok "$f"
@@ -148,6 +152,16 @@ if command -v shfmt >/dev/null 2>&1; then
     fi
 else
     echo "SKIP (shfmt not installed)"
+fi
+
+# 7b2. Python syntax-check on scripts/local-overrides.py. shellcheck/shfmt skip
+# Python; ast.parse catches syntax errors before `make setup` runs the script.
+# Using ast.parse (not py_compile) avoids creating scripts/__pycache__/.
+heading "python syntax"
+if python3 -c "import ast,sys; ast.parse(open(sys.argv[1]).read())" scripts/local-overrides.py 2>/dev/null; then
+    ok "scripts/local-overrides.py"
+else
+    bad "scripts/local-overrides.py"
 fi
 
 # 7c. zsh syntax-check on .zshrc / .zprofile. shellcheck/shfmt do not parse zsh,

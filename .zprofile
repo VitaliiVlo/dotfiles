@@ -20,7 +20,7 @@ export EDITOR="$VISUAL"
 export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/ripgreprc"
 
 # Go (Go does not honor XDG natively; explicit GOPATH redirects everything)
-export GOPRIVATE="github.com/vitalii-vlo/*"
+export GOPRIVATE="github.com/your-org/*"
 export GOPATH="$XDG_DATA_HOME/go"
 export PATH="$GOPATH/bin:$PATH"
 

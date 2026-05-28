@@ -284,6 +284,8 @@ Do not attempt to rename the Codex side to `caveman` — Codex will treat it as 
 
 **Third-party marketplace state fields:** Codex CLI writes `last_updated` and `last_revision` into the `[marketplaces.<name>]` block on every `codex plugin marketplace update`. They are intentionally **not** committed in `.config/codex/config.toml` because each refresh produces a noisy diff. Only `source_type` and `source` are tracked; the timestamp + revision fields repopulate locally after the first update.
 
+**Per-machine team marketplaces:** `scripts/local-overrides.py` injects extra `extraKnownMarketplaces.<key>` entries (Claude) and `[projects."<path>"]` trust blocks (Codex) from `.local/source.toml`. Tracked configs ship with only the shared `caveman` market; team-specific entries land in the working tree on each `make local-overrides` run. See README "Local overrides".
+
 ## Brewfile maintenance
 
 - `Brewfile` is **the dump target**: `make brew-export` overwrites it via `brew bundle dump --force`, then strips any line that also appears in `Brewfile.work`. Net effect: base stays curated, work entries stay separate. **macOS only**: the target self-skips on Linux because Linuxbrew install state covers only the Linux-installable cask subset (see `casks.md`), so a Linux dump would wipe the macOS-only cask entries from `Brewfile` (work casks live in `Brewfile.work`, which `brew bundle dump --file=Brewfile` never touches).
