@@ -47,7 +47,7 @@ terminal_title = ["spinner", "thread", "project", "app-name"]
 # Data & Telemetry
 [history]
 persistence = "save-all"
-max_bytes = 104857600  # 100 MiB cap
+max_bytes = 104857600    # 100 MiB cap
 
 [analytics]
 enabled = false
@@ -84,8 +84,6 @@ enabled = true
 [plugins."slack@openai-curated"]
 enabled = true
 
-# Codex CLI repopulates last_updated / last_revision locally on first `codex plugin marketplace update`.
-# Not committed: they rot on every refresh.
 [marketplaces.caveman-repo]
 source_type = "git"
 source = "https://github.com/JuliusBrussee/caveman.git"

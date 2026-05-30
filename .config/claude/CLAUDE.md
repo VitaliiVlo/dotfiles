@@ -38,6 +38,7 @@ Fallbacks only when a repo gives no signal:
 - MUST use repo-native commands first: `make`, `task`, package scripts, checked-in scripts. Ad-hoc shell only when no repo command exists.
 - For ad-hoc shell only (search, listing, inspection): use `rg` over `grep`, `fd` over `find`, `bat` over `cat`, `eza` over `ls`, `jq`/`yq` for JSON/YAML parsing, `tldr` for quick command reference. DO NOT replace a repo-defined script or `make` target with these.
 - Use `gh` CLI for GitHub workflows.
+- Per-language toolchains: Node via `fnm` (auto-switches on `cd` via `.node-version` / `.nvmrc`; install missing versions with `fnm install <ver>`; run `npm`/`npx` against the active selection, not a globally-installed Node). Python via `uv` (owns interpreters, venvs, and deps: `uv python install/list`, `uv venv`, `uv sync`, `uv run <cmd>`; never call system `pip` or hand-roll venvs; `uv add` is a dependency add and needs explicit approval). Go via Homebrew with no per-project switcher; respect `go.mod`'s `toolchain` directive, which makes `go` auto-fetch the pinned version on invocation.
 - Respect `.gitignore`, lockfiles, toolchain files, and existing automation.
 - Use read-only inspection first. Ask before installs, migrations, or destructive actions.
 - DO NOT install packages or add dependencies without explicit approval. This includes `brew install`, `npm install <pkg>`, `pip install`, `uv add`, `go get`, `cargo add`. Lockfile-only refresh commands (`npm ci`, `uv sync`, `go mod tidy`) are fine.

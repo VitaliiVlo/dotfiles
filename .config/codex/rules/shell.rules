@@ -2,7 +2,7 @@
 prefix_rule(pattern=[["bat", "eza", "fd", "rg", "tldr"]], decision="allow")
 
 # Standard utilities
-prefix_rule(pattern=[["cd", "cut", "date", "diff", "echo", "file", "find", "grep", "head", "ls", "printf", "ps", "pwd", "readlink", "realpath", "sleep", "sort", "stat", "tail", "tr", "tree", "uname", "uniq", "wc", "which"]], decision="allow")
+prefix_rule(pattern=[["awk", "cd", "cut", "date", "diff", "echo", "file", "find", "grep", "head", "ls", "printf", "ps", "pwd", "readlink", "realpath", "sed", "sleep", "sort", "stat", "tail", "tr", "tree", "uname", "uniq", "wc", "which"]], decision="allow")
 
 # Structured data
 prefix_rule(pattern=[["jq", "yq"]], decision="allow")
