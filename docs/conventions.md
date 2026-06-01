@@ -76,17 +76,19 @@ Minimize across all tools:
 
 ## File search/listing tools
 
-Must stay in sync across: `fd` alias in `.zshrc`, `.config/ripgrep/ripgreprc`, yazi, eza aliases, Finder defaults, superfile
+Must stay in sync across: `fd` alias in `.zshrc`, `.config/ripgrep/ripgreprc`, yazi, eza aliases, Finder defaults (macOS), Nautilus defaults (Linux/GNOME), superfile
 
-| Behavior | fd | rg | yazi | eza | Finder | superfile |
-|---|---|---|---|---|---|---|
-| Hidden files | `--hidden` | `--hidden` | `show_hidden = true` | `-a` (in `ll`/`lt`) | `AppleShowAllFiles` | runtime toggle only (no config key) |
-| Follow symlinks | `--follow` | `--follow` | `show_symlink = true` | — | — | always shown (no config key) |
-| Dirs first | — | — | `sort_dir_first = true` | `--group-directories-first` | `_FXSortFoldersFirst` | hardcoded behavior (no config key) |
-| Case insensitive | — | `--smart-case` | `sort_sensitive = false` | — | — | `case_sensitive_sort = false` |
-| Sort by name (alphabetical) | — | — | `sort_by = "alphabetical"` | — | — | `default_sort_type = 0` |
-| Sort reverse | — | — | `sort_reverse = false` | — | — | `sort_order_reversed = false` |
-| No extra columns | — | — | `linemode = "none"` | — | — | `file_panel_extra_columns = 0` |
+| Behavior | fd | rg | yazi | eza | Finder | Nautilus | superfile |
+|---|---|---|---|---|---|---|---|
+| Hidden files | `--hidden` | `--hidden` | `show_hidden = true` | `-a` (in `ll`/`lt`) | `AppleShowAllFiles` | `org.gnome.nautilus.preferences show-hidden-files` | runtime toggle only (no config key) |
+| Follow symlinks | `--follow` | `--follow` | `show_symlink = true` | — | — | — | always shown (no config key) |
+| Dirs first | — | — | `sort_dir_first = true` | `--group-directories-first` | `_FXSortFoldersFirst` | `org.gtk.Settings.FileChooser sort-directories-first` + `org.gtk.gtk4.Settings.FileChooser sort-directories-first` | hardcoded behavior (no config key) |
+| Case insensitive | — | `--smart-case` | `sort_sensitive = false` | — | — | — | `case_sensitive_sort = false` |
+| Sort by name (alphabetical) | — | — | `sort_by = "alphabetical"` | — | — | — | `default_sort_type = 0` |
+| Sort reverse | — | — | `sort_reverse = false` | — | — | — | `sort_order_reversed = false` |
+| No extra columns | — | — | `linemode = "none"` | — | — | — | `file_panel_extra_columns = 0` |
+| Search current folder only | — | — | — | — | `FXDefaultSearchScope = "SCcf"` | `org.gnome.nautilus.preferences recursive-search = 'never'` | — |
+| Default view | — | — | — | — | `FXPreferredViewStyle = "Nlsv"` (list) | `org.gnome.nautilus.preferences default-folder-viewer = 'list-view'` | — |
 
 ## Italic text rendering
 
@@ -295,7 +297,7 @@ Do not attempt to rename the Codex side to `caveman` — Codex will treat it as 
 
 ## Linux GUI apps
 
-Vendor `.deb` / `.rpm` packages install separately from the Brewfile. Recommended install path per cask (vendor apt/dnf repo, GitHub release, or upstream install script) lives in [`linux-packages.md`](linux-packages.md). Flatpak is intentionally not used: vendor packages respect `~/.config/<tool>/`, integrate with `apt` / `dnf` for updates, and avoid the `XDG_CONFIG_HOME` remap that would break the repo's symlinks. Casks without a Linux build are listed in `linux-packages.md` under "Casks with no Linux build" with GNOME / GTK alternatives.
+Vendor `.deb` / `.rpm` packages install separately from the Brewfile. Recommended install path per cask (vendor apt/dnf repo, GitHub release, or upstream install script) lives in [`linux-packages.md`](linux-packages.md). Flatpak is avoided for any app whose config this repo symlinks (`~/.config/<tool>/`): vendor packages respect `$XDG_CONFIG_HOME`, integrate with `apt` / `dnf` for updates, and avoid the per-app sandbox path remap that would break the symlinks in `scripts/symlinks.sh`. Apps with no repo-managed config (one-shot GUIs in `linux-tips.md`) can still use Flatpak. Casks without a Linux build are listed in `linux-packages.md` under "Casks with no Linux build" with GNOME / GTK alternatives.
 
 **Tailscale name divergence:** the macOS cask is `tailscale-app` (the GUI bundle). On Linux the upstream installer ships `tailscale` (CLI + `tailscaled` daemon only; no GUI tray, see `linux-packages.md`). The two are intentionally different packages; do not rename the cask to match the Linux package or vice versa.
 

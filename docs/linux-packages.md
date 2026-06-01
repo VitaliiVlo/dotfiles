@@ -2,7 +2,7 @@
 
 Recommended install path per `Brewfile` / `Brewfile.work` cask on Linux. Each entry links upstream so commands stay current at the source instead of rotting here.
 
-Flatpak and Snap are intentionally not used: both sandbox `~/.config/<tool>/` to per-app paths, which breaks the repo's symlinks. Native `.deb` / `.rpm` packages read `$XDG_CONFIG_HOME` directly and integrate with `apt` / `dnf` for updates.
+Flatpak and Snap are avoided for every app whose config is repo-symlinked (`~/.config/<tool>/`): both runtimes sandbox config to per-app paths and break the symlinks listed in `scripts/symlinks.sh`. Native `.deb` / `.rpm` packages read `$XDG_CONFIG_HOME` directly and integrate with `apt` / `dnf` for updates. Apps with no repo-managed config (one-shot GUIs like OCR or screen recorders in [`linux-tips.md`](linux-tips.md)) can still be installed via Flatpak when no clean native package exists.
 
 ## Brew-installable on Linuxbrew (no extra work)
 

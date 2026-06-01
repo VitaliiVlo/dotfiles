@@ -1,6 +1,15 @@
 # macOS Tips
 
-Non-obvious shortcuts and behaviors worth remembering. `defaults write` recipes already applied by `make macos-defaults` are not repeated here, see `scripts/macos-defaults.sh`.
+Non-obvious shortcuts and behaviors worth remembering. `defaults write` recipes already applied by `make macos-defaults` are not repeated here, see `scripts/macos-defaults.sh`. Linux equivalents live in [`linux-tips.md`](linux-tips.md).
+
+Targets (current as of mid-2026):
+
+| Stack            | Version baseline                                                                |
+| ---------------- | ------------------------------------------------------------------------------- |
+| macOS            | **26 Tahoe** (Sept 2025, Liquid Glass UI, Spotlight redesign, clipboard history); 15 Sequoia still supported |
+| Next             | macOS 27 expected at WWDC 2026 (June 8 keynote), ships fall 2026; M1+ only        |
+| Apple Intelligence | On-device + Private Cloud Compute, gated by M1+ Mac and supported region/language |
+| Xcode CLT        | 16.4+ (Sequoia), 17.x (Tahoe)                                                    |
 
 ## Clipboard and paste
 
@@ -8,7 +17,7 @@ Non-obvious shortcuts and behaviors worth remembering. `defaults write` recipes 
 | -------------------------------- | ---------------------------------------------------------------------------------------- |
 | `Option+Shift+Cmd+V`             | Paste and match style (strips formatting; for Slack, Jira, docs)                         |
 | Universal Clipboard              | Copy on iPhone / iPad / Mac, paste on another nearby Apple device                        |
-| Clipboard history (macOS Tahoe+) | Browse recent copied items                                                               |
+| `Cmd+Space` then `Cmd+4`         | Spotlight Clipboard History (macOS 26 Tahoe+). Click item to restore to clipboard, or double-click to paste at cursor. Off by default in *Settings → Spotlight*; ~10 items, 8h retention, 16,384-char cap, not synced via Universal Clipboard. 26.1 added retention-duration controls. |
 
 ## Screenshots and screen recording
 
@@ -55,7 +64,8 @@ Control-click a folder in Finder path bar → copy pathname. Finder Quick Action
 | Drag URL from browser → Desktop              | Creates `.webloc` shortcut                                   |
 | Drag attachment from Mail → Desktop          | Saves file directly                                          |
 | Drag file over folder, hover                 | Spring-loaded folder opens automatically (recursive)         |
-| Drag file with `Option` held                 | Copy instead of move                                         |
+| Drag file with `Option` held                 | Force copy (within same volume, default is move)             |
+| Drag file with `Cmd` held                    | Force move (across volumes, default is copy)                 |
 | Drag file with `Option+Cmd` held             | Create alias (symlink-like)                                  |
 
 ## Window and app lifecycle
@@ -101,6 +111,8 @@ weather Berlin
 focus
 timer 10 minutes
 ```
+
+**macOS 26 Tahoe redesign**: results unified and intelligently ranked across apps / files / messages / mail / calendar via Apple Intelligence. New chip filters (`PDFs`, `Emails`, ...) narrow scope. **Quick Keys**: type a short letter sequence to trigger an app action (e.g. `nn` = New Note, `sm` = Send Message); discover yours in *Settings → Spotlight → Quick Keys*. Third-party apps expose actions via the App Intents API. Clipboard History tile lives behind `Cmd+4` once Spotlight is open (see Clipboard section).
 
 ## Text input
 

@@ -24,7 +24,7 @@ make brew-cleanup       # Clean up old versions and cache
 make brew-export        # Export installed packages (incl. VSCode extensions) to Brewfile, then strip Brewfile.work entries; add new work entries to Brewfile.work manually (macOS only; Linuxbrew dump would wipe macOS-only casks)
 ```
 
-Linux GUI apps install via vendor deb/rpm. Recommended install path per cask in `docs/linux-packages.md`. No Flatpak.
+Linux GUI apps install via vendor deb/rpm. Recommended install path per cask in `docs/linux-packages.md`. Flatpak is avoided for any app whose config this repo symlinks under `~/.config/<tool>/` (the per-app sandbox path remap would break those symlinks); one-shot apps with no repo-managed config (OCR / screen recorders / etc. in `docs/linux-tips.md`) can still use Flatpak when no clean native package exists.
 
 ## Repository structure
 
@@ -36,11 +36,12 @@ Linux GUI apps install via vendor deb/rpm. Recommended install path per cask in 
 - `scripts/linux-defaults.sh` - Linux/GNOME defaults via `gsettings` (non-interactive, idempotent; guards `uname -s == Linux`, requires `gsettings` + `XDG_CURRENT_DESKTOP=*GNOME*`, no-op on macOS / KDE / headless)
 - `scripts/validate.sh` - Full audit runner (parses every TOML/JSON/YAML/JSONC, `brew bundle list --all` for Brewfile parse plus non-fatal `brew bundle check` for install state, ghostty validate, shellcheck, shfmt, `zsh -n` on `.zshrc`/`.zprofile`, codex/rules sanity grep, symlink verification). Backs `make validate`. Skips macOS-native symlinks on Linux.
 - `.local.example.toml` - Schema template for per-machine overrides (committed). Copy to `.local/source.toml` (gitignored) and fill in.
-- `.gitignore` - Repo-root gitignore. Only excludes `.local/` (per-machine override data + rendered scratch).
+- `.gitignore` - Repo-root gitignore. Excludes `.local/` (per-machine override data + rendered scratch) plus a subset of the global `.config/git/ignore` entries (`.DS_Store`, `.env`, `.env.*`, `.idea/`, `.vscode/`, `__pycache__/`, `*.pyc`, `*.swp`) so the repo stays protected on fresh clones before `make symlinks` wires the global ignore, and for outside contributors who don't share this dotfiles setup.
 - `docs/applications.md` - Curated GUI app picks per category, VSCode setup, search-engine bangs
 - `docs/casks.md` - Homebrew Cask inventory split into base, work, and Linux-installable subsets
 - `docs/conventions.md` - Cross-config consistency tables (shared behavior across all tools: theme, font, telemetry, git pager, etc.). Read when adding a new tool or auditing drift.
 - `docs/macos-tips.md` - Non-obvious shortcuts and behaviors (clipboard, screenshots, Finder, Mission Control, Spotlight, Continuity, shell helpers)
+- `docs/linux-tips.md` - Non-obvious shortcuts and behaviors for GNOME-on-Wayland distros tracked in `docs/applications.md` (clipboard, screenshots, Nautilus, workspaces, GNOME search, cross-device sharing, shell helpers, Wayland notes, per-distro deltas for Fedora/Bluefin, Ubuntu/Pop, Pop COSMIC, Mint/Cinnamon, Zorin)
 - `Makefile` - Task runner targets (`make help` for list)
 - `Brewfile` - Base packages: shell essentials, fonts, daily-driver apps, VSCode extensions
 - `Brewfile.work` - Work packages: work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN, browser (curated manually)

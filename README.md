@@ -11,6 +11,7 @@ Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** 
 - [macOS settings](#macos-settings)
 - [Linux settings](#linux-settings)
 - [macOS tips](docs/macos-tips.md) — non-obvious shortcuts and behaviors (clipboard, screenshots, Finder, Mission Control, Spotlight, Continuity, shell helpers)
+- [Linux tips](docs/linux-tips.md) — non-obvious shortcuts and behaviors for GNOME-on-Wayland (clipboard, screenshots, Nautilus, workspaces, GNOME search, cross-device sharing, shell helpers, Wayland notes, per-distro deltas)
 - [Applications](docs/applications.md) — curated GUI app picks by category, VSCode setup, search engine bangs
 - [CLI tools](#cli-tools)
 - [Validate](#validate)
@@ -66,7 +67,7 @@ Run `make help` to list all available targets.
 
 ### Linux
 
-> Targets GNOME-based distros listed in [Applications](docs/applications.md) (Fedora, Bluefin, Zorin OS, Pop!_OS, Ubuntu, Linux Mint). Immutable variants (Bluefin, Fedora Silverblue) work too, but extra packages must be layered via `rpm-ostree` (or installed inside Distrobox/Toolbox) instead of `dnf`. KDE / Sway sessions skip the `gsettings` defaults block but everything else applies. Linuxbrew prefix defaults to `/home/linuxbrew/.linuxbrew` in `.zshrc` / `.zprofile` (override via `BREW_PREFIX` env).
+> Targets the distros listed in [Applications](docs/applications.md) (Fedora, Bluefin, Zorin OS, Pop!_OS, Ubuntu, Linux Mint). GNOME-first by default: `make linux-defaults` writes `gsettings` keys that apply to GNOME Shell (Fedora / Bluefin / Zorin / Ubuntu) and silently skips on Pop!_OS 24.04 LTS+ (COSMIC) and Linux Mint (Cinnamon); see [`docs/linux-tips.md`](docs/linux-tips.md) for per-DE deltas. Immutable variants (Bluefin, Fedora Silverblue) work too, but extra packages must be layered via `rpm-ostree` (or installed inside Distrobox/Toolbox) instead of `dnf`. KDE / Sway / headless sessions also skip the `gsettings` block but everything else (symlinks, Brewfile, shell) applies. Linuxbrew prefix defaults to `/home/linuxbrew/.linuxbrew` in `.zshrc` / `.zprofile` (override via `BREW_PREFIX` env).
 
 - **Install build prerequisites:** `scripts/local-overrides.py` needs Python 3.11+ (stdlib `tomllib`). Fedora 39+, Ubuntu 24.04+, and recent Debian ship a compatible `python3`. Older distros are out of scope.
   ```bash
@@ -95,7 +96,7 @@ Run `make help` to list all available targets.
   # Pipe pubkey to clipboard: wl-copy < ~/.ssh/id_ed25519.pub  (Wayland)
   #                          xclip -selection clipboard < ~/.ssh/id_ed25519.pub  (X11)
   ```
-- **Install GUI apps via vendor deb/rpm.** Recommended install path per cask (vendor apt/dnf repo, GitHub release, or upstream install script) lives in [`docs/linux-packages.md`](docs/linux-packages.md). Vendor packages respect `~/.config/<tool>/`, so the repo's symlinks resolve without Flatpak-sandbox quirks.
+- **Install GUI apps via vendor deb/rpm.** Recommended install path per cask (vendor apt/dnf repo, GitHub release, or upstream install script) lives in [`docs/linux-packages.md`](docs/linux-packages.md). Vendor packages respect `~/.config/<tool>/`, so the repo's symlinks resolve without the per-app sandbox path remap that Flatpak / Snap impose. Flatpak stays an option for one-shot apps that have no config in this repo (see [`docs/linux-tips.md`](docs/linux-tips.md) for examples).
 - **GNOME-only defaults:** `make linux-defaults` skips silently outside GNOME (`XDG_CURRENT_DESKTOP` check). Other DEs configure their own way.
 
 ### Local overrides
@@ -134,9 +135,9 @@ The following files are automatically symlinked by running `make symlinks`:
 - `.config/btop/btop.conf` - btop system monitor (theme + anti-bloat flag)
 - `.config/btop/themes/catppuccin_*.theme` - Catppuccin theme files (macchiato/latte/frappe/mocha) from `catppuccin/btop`
 - `.config/glow/glow.yml` - Glow Markdown renderer settings (XDG path on both OSes; glow honors `$XDG_CONFIG_HOME` exported by `.zprofile`)
-- `.config/tlrc/config.toml` - tlrc (tldr client) settings (linked into Library/Application Support/tlrc on macOS; tlrc ignores `$XDG_CONFIG_HOME` on Darwin)
+- `.config/tlrc/config.toml` - tlrc (tldr client) settings (macOS: `~/Library/Application Support/tlrc/config.toml`, Linux: `~/.config/tlrc/config.toml`; tlrc ignores `$XDG_CONFIG_HOME` on Darwin via the Rust `dirs` crate)
 - `.config/superfile/config.toml` - Superfile (`spf`) terminal file manager settings (XDG path on both OSes; spf reads `xdg.ConfigHome` via adrg/xdg, honors `$XDG_CONFIG_HOME`)
-- `.config/vscode/settings.json` - VSCode configuration (linked into `Library/Application Support/Code/User`)
+- `.config/vscode/settings.json` - VSCode configuration (macOS: `~/Library/Application Support/Code/User/settings.json`, Linux: `~/.config/Code/User/settings.json`; VSCode hardcodes `app.getPath('userData')` and ignores `$XDG_CONFIG_HOME` on Darwin)
 - `.config/zed/settings.json` - Zed editor settings
 - `.config/claude/settings.json` - Claude Code permissions
 - `.config/claude/CLAUDE.md` - Claude Code user-level instructions
@@ -185,6 +186,10 @@ Guards: skips silently on non-Linux, when `gsettings` missing, or when `XDG_CURR
 ## macOS tips
 
 Non-obvious shortcuts and behaviors (clipboard, screenshots, Finder, Mission Control, Spotlight, Continuity, shell helpers): see [`docs/macos-tips.md`](docs/macos-tips.md).
+
+## Linux tips
+
+Non-obvious shortcuts and behaviors for the GNOME-on-Wayland distros tracked in [`docs/applications.md`](docs/applications.md) (clipboard, screenshots, Nautilus, workspaces, GNOME search, cross-device sharing, shell helpers, Wayland notes, per-distro deltas for Fedora/Bluefin, Ubuntu/Pop, Pop COSMIC, Mint/Cinnamon, Zorin): see [`docs/linux-tips.md`](docs/linux-tips.md).
 
 ## Applications
 
