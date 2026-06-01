@@ -40,12 +40,15 @@ Install via official installers or Homebrew Cask.
 | Todo                  | **Apple Reminders**, Things 3                                                        |
 | Calendar              | **Apple Calendar**, Fantastical                                                      |
 | Mail                  | **Apple Mail**, Mimestream                                                           |
+| Communication (Work)  | **Slack**, Microsoft Teams, Zoom                                                     |
+| Communication (Home)  | **Telegram**, WhatsApp                                                               |
 | Photos                | **Apple Photos**, Google Photos                                                      |
+| Video Player          | **Apple QuickTime Player**, IINA                                                     |
 | Password Manager      | **Apple Passwords**, 1Password, Bitwarden                                            |
 | Office                | **Apple iWork** (Pages, Numbers, Keynote), Google Workspace, Microsoft 365           |
 | macOS Utilities       | **Rectangle**, Maccy, Keka, KeepingYouAwake, Thaw, MiddleClick, LinearMouse, balenaEtcher, BetterDisplay |
 | Networking            | **Tailscale**, Cloudflare WARP, LocalSend                                            |
-| Linux Distros         | **Fedora Workstation**, elementary OS, Pop!_OS, Ubuntu, Zorin OS, Bluefin, Fedora Silverblue |
+| Linux Distros         | **Fedora**, Bluefin, Zorin OS, Pop!_OS, Ubuntu, Linux Mint                            |
 
 ## VSCode setup
 

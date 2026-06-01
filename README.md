@@ -16,7 +16,7 @@ Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** 
 - [Validate](#validate)
 - [Updating](#updating)
 - [Casks](docs/casks.md) — Homebrew Cask inventory (base, work, Linux-installable)
-- [Linux packages](docs/linux-packages.md) — native deb/rpm install paths for each cask on Linux
+- [Linux packages](docs/linux-packages.md) — recommended Linux install path per cask (link-out table to upstream install docs)
 - [Claude Code](#claude-code)
 - [Codex](#codex)
 - [Templates](#templates)
@@ -34,7 +34,7 @@ Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** 
 1. Complete [Prerequisites → Linux](#linux).
 2. Clone this repository.
 3. Run `make setup` (base) or `make setup-all` (base + work). Same chain as macOS: `macos-defaults` (no-op on Linux) → `linux-defaults` applies GNOME `gsettings` → `symlinks` → `local-overrides` → `brew-install-base` installs formulae + the Linux-installable cask subset (`docs/casks.md`) → `versions`. `setup-all` swaps in `brew-install` for the base+work superset. Every `Brewfile.work` cask lacks a Linuxbrew build, so on Linux `brew-install-work` is effectively a no-op for casks; install work GUIs via vendor deb/rpm (`docs/linux-packages.md`).
-4. Install GUI apps via vendor `.deb` / `.rpm`. See [`docs/linux-packages.md`](docs/linux-packages.md) for per-app commands.
+4. Install GUI apps via vendor `.deb` / `.rpm`. See [`docs/linux-packages.md`](docs/linux-packages.md) for the recommended install path per cask.
 
 Run `make help` to list all available targets.
 
@@ -66,15 +66,15 @@ Run `make help` to list all available targets.
 
 ### Linux
 
-> Targets GNOME-based distros listed in [Applications](docs/applications.md): Fedora Workstation, elementary OS, Pop!_OS, Ubuntu, Zorin OS. Immutable variants (Bluefin, Fedora Silverblue) work too, but extra packages must be layered via `rpm-ostree` (or installed inside Distrobox/Toolbox) instead of `dnf`. KDE / Sway sessions skip the `gsettings` defaults block but everything else applies. Linuxbrew prefix defaults to `/home/linuxbrew/.linuxbrew` in `.zshrc` / `.zprofile` (override via `BREW_PREFIX` env).
+> Targets GNOME-based distros listed in [Applications](docs/applications.md) (Fedora, Bluefin, Zorin OS, Pop!_OS, Ubuntu, Linux Mint). Immutable variants (Bluefin, Fedora Silverblue) work too, but extra packages must be layered via `rpm-ostree` (or installed inside Distrobox/Toolbox) instead of `dnf`. KDE / Sway sessions skip the `gsettings` defaults block but everything else applies. Linuxbrew prefix defaults to `/home/linuxbrew/.linuxbrew` in `.zshrc` / `.zprofile` (override via `BREW_PREFIX` env).
 
 - **Install build prerequisites:** `scripts/local-overrides.py` needs Python 3.11+ (stdlib `tomllib`). Fedora 39+, Ubuntu 24.04+, and recent Debian ship a compatible `python3`. Older distros are out of scope.
   ```bash
-  # Debian/Ubuntu (Pop!_OS, elementary OS)
+  # Debian/Ubuntu (Pop!_OS, Linux Mint)
   sudo apt-get update
   sudo apt-get install -y build-essential procps curl file git zsh python3
 
-  # Fedora Workstation
+  # Fedora
   sudo dnf install -y @development-tools procps-ng curl file git zsh python3
 
   # Fedora Silverblue / Bluefin (immutable; layer once, then reboot)
@@ -95,7 +95,7 @@ Run `make help` to list all available targets.
   # Pipe pubkey to clipboard: wl-copy < ~/.ssh/id_ed25519.pub  (Wayland)
   #                          xclip -selection clipboard < ~/.ssh/id_ed25519.pub  (X11)
   ```
-- **Install GUI apps via vendor deb/rpm.** Per-app commands (apt/dnf repos, signed keys, GitHub release downloads) live in [`docs/linux-packages.md`](docs/linux-packages.md). Vendor packages respect `~/.config/<tool>/`, so the repo's symlinks resolve without Flatpak-sandbox quirks.
+- **Install GUI apps via vendor deb/rpm.** Recommended install path per cask (vendor apt/dnf repo, GitHub release, or upstream install script) lives in [`docs/linux-packages.md`](docs/linux-packages.md). Vendor packages respect `~/.config/<tool>/`, so the repo's symlinks resolve without Flatpak-sandbox quirks.
 - **GNOME-only defaults:** `make linux-defaults` skips silently outside GNOME (`XDG_CURRENT_DESKTOP` check). Other DEs configure their own way.
 
 ### Local overrides
@@ -151,7 +151,7 @@ Used directly from the repo:
 
 - `Brewfile` - Base Brewfile (shell, fonts, daily-driver apps, VSCode extensions)
 - `Brewfile.work` - Work Brewfile (work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN, browser; curated manually)
-- `docs/linux-packages.md` - Native deb/rpm install commands for each cask on Linux
+- `docs/linux-packages.md` - Recommended Linux install path per cask (link-out table to upstream install docs)
 - `CLAUDE.md` - Repository instructions for Claude Code (auto-discovered in cwd; Codex reads it via `project_doc_fallback_filenames`)
 - `docs/vscode-defaults.jsonc` - VSCode defaults snapshot for offline comparison (regenerate via `Preferences: Open Default Settings (JSON)`)
 - `.local.example.toml` - Schema for per-machine overrides; copy to `.local/source.toml` (gitignored) and fill in. See [Local overrides](#local-overrides).
@@ -284,11 +284,11 @@ For full audit, run `make validate` (delegates to `scripts/validate.sh`). Covers
 - `brew update && brew upgrade` — update Homebrew formulae and casks
 - `make brew-export` — refresh `Brewfile` from current install state (macOS only; Linuxbrew dump would wipe macOS-only casks). Add new work entries to `Brewfile.work` manually; see `docs/conventions.md` "Brewfile maintenance" for strip step semantics.
 - `make brew-cleanup` — prune old versions and cache
-- macOS GUI apps: cask auto-update via `brew upgrade` (VSCode, Brave, Helium, Zen, Ghostty, Zed, Claude Code, Codex have their own in-app updaters too; cask still authoritative)
-- Linux GUI apps via vendor apt/dnf repo (covered by `sudo apt-get upgrade` / `sudo dnf upgrade`): 1Password, Beekeeper Studio (deb only), Brave, Cloudflare WARP, Firefox, Ghostty (Ubuntu universe or Fedora Copr), Google Chrome, Helium, Tailscale, VSCode, Zen (Fedora Copr only)
-- Linux GUI apps via in-app updater: Obsidian, Zed
-- Linux GUI apps via manual GitHub release re-download: balenaEtcher, Beekeeper Studio (rpm only), Bruno, Headlamp, LocalSend, Zen (Debian community deb)
-- Linux GUI apps via manual vendor download re-download: MongoDB Compass (`mongodb.com/try/download/compass`), Slack (`slack.com/downloads/linux`)
+- macOS GUI apps: cask auto-update via `brew upgrade` (VSCode, Brave, Helium, Zen, Ghostty, Zed, Claude Code, Codex, IINA, Telegram, WhatsApp have their own in-app updaters too; cask still authoritative)
+- Linux GUI apps via vendor apt/dnf repo (covered by `sudo apt-get upgrade` / `sudo dnf upgrade`): 1Password, Beekeeper Studio (deb only), Brave, Bruno (deb only), Cloudflare WARP, Firefox, Ghostty (Ubuntu universe or Fedora Copr), Google Chrome, Helium, Slack, Tailscale, Telegram (distro `telegram-desktop`), VSCode
+- Linux GUI apps via in-app updater: Obsidian, Zed, Zen (Firefox-based built-in updater)
+- Linux GUI apps via manual GitHub release re-download: balenaEtcher, Beekeeper Studio (rpm only), Bruno (rpm only), Headlamp, LocalSend
+- Linux GUI apps via manual vendor download re-download: MongoDB Compass (`mongodb.com/try/download/compass`)
 - Go: `brew upgrade go`. Node: `fnm install <version>`. Python: `uv python install <version>`.
 
 ## Casks
@@ -297,13 +297,13 @@ Homebrew Cask inventory (base, work, Linux-installable subset): see [`docs/casks
 
 ## Linux packages
 
-Native deb/rpm install commands for each cask on Linux: see [`docs/linux-packages.md`](docs/linux-packages.md).
+Recommended Linux install path per cask (link-out table): see [`docs/linux-packages.md`](docs/linux-packages.md).
 
 ## Claude Code
 
 The `.config/claude/settings.json` configures permissions and plugins:
 
-- **Allowed:** Web search + fetch from dev docs (GitHub, Stack Overflow, MDN, Go/Python/Node/Terraform/Docker/Kubernetes/Claude docs); git/gh/docker/kubectl read-only subcommands; build/test/lint (`shellcheck`, `shfmt`, `pytest`, `mypy`, `pyright`, `pip-audit`, `ruff check/format`, `eslint`, `jest`, `prettier`, `tsc`, `vitest`, `npm test` + `npm run build/format/lint/test/typecheck`, `golangci-lint`, `govulncheck`, `go fmt/vet`, `gofmt`); dependency sync (`go mod tidy/download/graph/verify/why`, `uv sync/lock/build`, `npm ci/audit`) + dep queries (`uv pip list/show`, `uv tree`, `npm ls/list/outdated/view`); ephemeral runners (`uvx`, `uv run`, `npx` wrappers for the test/lint/format tools above); build runner (`make --dry-run`/`make -n`); version probes (`go/uv/python/python3/node/npm --version`, `fnm list/current`); file search and inspection (`fd`, `rg`, `grep`, `find`, `which`, `bat`, `eza`, `head`, `tail`, `ls`, `wc`, `tldr`, `tree`, `file`, `readlink`, `realpath`, `stat`); structured data (`jq`, `yq`); text utils (`awk`, `cut`, `diff`, `echo`, `printf`, `sed`, `sort`, `tr`, `uniq`); system info (`cd`, `date`, `ps`, `pwd`, `sleep`, `uname`); clipboard (`pbcopy`, `wl-copy`). `go env` intentionally excluded (`go env -w` writes persistent config).
+- **Allowed:** Web search + fetch from dev docs (GitHub, Stack Overflow, MDN, Go/Python/Node/Terraform/Docker/Kubernetes/Claude docs); git/gh/docker/kubectl read-only subcommands; build/test/lint (`shellcheck`, `shfmt`, `pytest`, `mypy`, `pyright`, `pip-audit`, `ruff check/format`, `eslint`, `jest`, `prettier`, `tsc`, `vitest`, `npm test` + `npm run build/format/lint/test/typecheck`, `golangci-lint`, `govulncheck`, `go fmt/vet`, `gofmt`); dependency sync (`go mod tidy/download/graph/verify/why`, `uv sync/lock/build`, `npm ci/audit`) + dep queries (`uv pip list/show`, `uv tree`, `npm ls/list/outdated/view`); ephemeral runners (`uvx`, `uv run`, `npx` wrappers for the test/lint/format tools above); build runner (`make --dry-run`/`make -n`); version probes (`go version`, `uv/python/python3/node/npm --version`, `fnm list/current`); file search and inspection (`fd`, `rg`, `grep`, `find`, `which`, `bat`, `eza`, `head`, `tail`, `ls`, `wc`, `tldr`, `tree`, `file`, `readlink`, `realpath`, `stat`); structured data (`jq`, `yq`); text utils (`awk`, `cut`, `diff`, `echo`, `printf`, `sed`, `sort`, `tr`, `uniq`); system info (`cd`, `date`, `ps`, `pwd`, `sleep`, `uname`); clipboard (`pbcopy`, `wl-copy`). `go env` intentionally excluded (`go env -w` writes persistent config).
 - **Denied:** `.env` files, `.ssh/*`, `.kube/config`, `.git-credentials`, credentials, private keys, `.tfvars` (covers the `Read` tool only; allowed `Bash` readers like `bat`/`head`/`jq` can still target these paths — the model-level `Sensitive Data` rule in user CLAUDE.md is the actual guarantee)
 - **Requires approval:** Arbitrary package install (`brew install`, `npm install`, `uv add`), direct code execution (`python`, `node`, `go run`), git writes, docker mutations
 - **Enabled plugins:** pyright-lsp, gopls-lsp, typescript-lsp, code-review, feature-dev, code-simplifier, claude-md-management, caveman, context7, slack, atlassian, posthog, datadog, pr-review-toolkit

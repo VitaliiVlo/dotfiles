@@ -21,6 +21,7 @@ Homebrew Cask inventory: GUI applications, CLIs, and fonts. Split into a base se
 | ghostty                     | Terminal emulator                |
 | helium-browser              | Web browser (Chromium, privacy)  |
 | horos                       | Medical imaging viewer (DICOM)   |
+| iina                        | Video player (mpv-based)         |
 | keepingyouawake             | Prevent sleep                    |
 | keka                        | File archiver                    |
 | linearmouse                 | Per-device mouse customization   |
@@ -29,8 +30,10 @@ Homebrew Cask inventory: GUI applications, CLIs, and fonts. Split into a base se
 | middleclick                 | Three-finger tap as middle click |
 | obsidian                    | Notes / knowledge base           |
 | rectangle                   | Window manager                   |
+| telegram                    | Messaging                        |
 | thaw                        | Menu bar manager                 |
 | visual-studio-code          | Code editor                      |
+| whatsapp                    | Messaging                        |
 | zed                         | Code editor                      |
 | zen                         | Web browser (Gecko)              |
 
@@ -60,4 +63,4 @@ Homebrew 4.5+ added preliminary Linux cask support. A small subset of `Brewfile`
 | font-jetbrains-mono         | `font` artifact (cross-platform)                 |
 | font-symbols-only-nerd-font | `font` artifact (cross-platform)                 |
 
-Net: 6 of 35 casks are cross-platform via brew. The remaining 29 either install via vendor deb/rpm on Linux (19) or have no Linux build (10). See [Linux packages](linux-packages.md) for both lists.
+Net: 6 of 38 casks are cross-platform via brew. The remaining 32 either install via vendor deb/rpm on Linux (20) or have no Linux build (12). See [Linux packages](linux-packages.md) for both lists.

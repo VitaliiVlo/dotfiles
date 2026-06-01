@@ -24,7 +24,7 @@ make brew-cleanup       # Clean up old versions and cache
 make brew-export        # Export installed packages (incl. VSCode extensions) to Brewfile, then strip Brewfile.work entries; add new work entries to Brewfile.work manually (macOS only; Linuxbrew dump would wipe macOS-only casks)
 ```
 
-Linux GUI apps install via vendor deb/rpm. Per-app commands in `docs/linux-packages.md`. No Flatpak.
+Linux GUI apps install via vendor deb/rpm. Recommended install path per cask in `docs/linux-packages.md`. No Flatpak.
 
 ## Repository structure
 
@@ -44,7 +44,7 @@ Linux GUI apps install via vendor deb/rpm. Per-app commands in `docs/linux-packa
 - `Makefile` - Task runner targets (`make help` for list)
 - `Brewfile` - Base packages: shell essentials, fonts, daily-driver apps, VSCode extensions
 - `Brewfile.work` - Work packages: work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN, browser (curated manually)
-- `docs/linux-packages.md` - Native deb/rpm install commands for each cask on Linux (vendor apt/dnf repos, signed keys, GitHub release downloads)
+- `docs/linux-packages.md` - Recommended Linux install path per cask (link-out table; rows point at upstream install docs for vendor apt/dnf repos, GitHub releases, or install scripts)
 - `.zshrc` / `.zprofile` - Zsh config. `.zprofile` sets `BREW_PREFIX`, XDG base-dir vars, `GOPATH=$XDG_DATA_HOME/go` (Go doesn't honor XDG natively), and `VISUAL`/`EDITOR`. `.zshrc` re-detects `BREW_PREFIX` only (defensively, for non-login interactive shells where `.zprofile` was not sourced); other env vars use `${XDG_STATE_HOME:-...}` style fallbacks where they matter. `.zshrc` keeps `HISTFILE` under `$XDG_STATE_HOME/zsh/history` and loads starship prompt, fnm, uv, fzf with bat preview, eza aliases, syntax-highlighting, autosuggestions. Ghostty and Terminal.app open login shells, so `.zprofile` runs in practice; non-login interactive shells (e.g. `zsh -i` inside scripts) lose `RIPGREP_CONFIG_PATH` / `VISUAL` / `EDITOR` / `GOPATH` unless `.zprofile` is sourced manually.
 - `.config/git/config` / `.config/git/ignore` - Git settings (delta pager, rebase workflow, SSH for GitHub, zdiff3 conflicts, rerere, git-lfs filters) — XDG path
 - `.config/ripgrep/ripgreprc` - Ripgrep defaults (smart-case, hidden files, follow symlinks); resolved via `RIPGREP_CONFIG_PATH`
@@ -89,7 +89,7 @@ When adding a new tool, config file, cask, or formula, update all of these in lo
 - **Symlink** — add `symlink <repo-src> <abs-dest>` call to `scripts/symlinks.sh` if the tool reads a config file from a fixed path
 - **README "Configuration files" list** — add bullet under `## Configuration files` if a config file is symlinked
 - **README "CLI tools" table** or **`docs/casks.md`** — add row if user-facing CLI / GUI tool
-- **`docs/linux-packages.md`** — add per-app section with deb/rpm commands if the cask has a Linux build
+- **`docs/linux-packages.md`** — add a row to the Base/Work app table linking the upstream install docs if the cask has a Linux build
 - **`docs/applications.md` table** — add row if GUI app fits an existing category, or add new category row
 - **CLAUDE.md "Repository structure" list** — add bullet describing the file's purpose
 - **`docs/conventions.md` tables** — add row(s) if the tool shares behavior (theme, font, tab size, hidden files, telemetry, auto-update, git pager, etc.) with existing tools
@@ -309,7 +309,7 @@ The doc covers: editor settings matrix (VSCode/Zed/Micro/Ghostty/Bat/Delta/Yazi)
 
 The `.config/claude/settings.json` configures permissions and plugins:
 
-- **Allowed:** Read-only git/gh/docker/kubectl subcommands; build/test/lint (`shellcheck`, `shfmt`, `pytest`, `mypy`, `pyright`, `pip-audit`, `ruff check/format`, `eslint`, `jest`, `prettier`, `tsc`, `vitest`, `npm test` + `npm run build/format/lint/test/typecheck`, `golangci-lint`, `govulncheck`, `go fmt/vet`, `gofmt`); dependency sync (`go mod tidy/download/graph/verify/why`, `uv sync/lock/build`, `npm ci/audit`) + dep queries (`uv pip list/show`, `uv tree`, `npm ls/list/outdated/view`); ephemeral runners (`uvx`, `uv run`, `npx` wrappers for the test/lint/format tools above); build runner (`make --dry-run`/`make -n`); version probes (`go/uv/python/python3/node/npm --version`, `fnm list/current`); web search + fetch from dev docs (GitHub, Stack Overflow, MDN, Go/Python/Node/Terraform/Docker/Kubernetes/Claude docs); file search and inspection (`fd`, `rg`, `grep`, `find`, `which`, `bat`, `eza`, `head`, `tail`, `ls`, `wc`, `tldr`, `tree`, `file`, `readlink`, `realpath`, `stat`); structured data (`jq`, `yq`); text utils (`awk`, `cut`, `diff`, `echo`, `printf`, `sed`, `sort`, `tr`, `uniq`); system info (`cd`, `date`, `ps`, `pwd`, `sleep`, `uname`); clipboard (`pbcopy`, `wl-copy`). `go env` intentionally excluded (`go env -w` writes persistent config).
+- **Allowed:** Read-only git/gh/docker/kubectl subcommands; build/test/lint (`shellcheck`, `shfmt`, `pytest`, `mypy`, `pyright`, `pip-audit`, `ruff check/format`, `eslint`, `jest`, `prettier`, `tsc`, `vitest`, `npm test` + `npm run build/format/lint/test/typecheck`, `golangci-lint`, `govulncheck`, `go fmt/vet`, `gofmt`); dependency sync (`go mod tidy/download/graph/verify/why`, `uv sync/lock/build`, `npm ci/audit`) + dep queries (`uv pip list/show`, `uv tree`, `npm ls/list/outdated/view`); ephemeral runners (`uvx`, `uv run`, `npx` wrappers for the test/lint/format tools above); build runner (`make --dry-run`/`make -n`); version probes (`go version`, `uv/python/python3/node/npm --version`, `fnm list/current`); web search + fetch from dev docs (GitHub, Stack Overflow, MDN, Go/Python/Node/Terraform/Docker/Kubernetes/Claude docs); file search and inspection (`fd`, `rg`, `grep`, `find`, `which`, `bat`, `eza`, `head`, `tail`, `ls`, `wc`, `tldr`, `tree`, `file`, `readlink`, `realpath`, `stat`); structured data (`jq`, `yq`); text utils (`awk`, `cut`, `diff`, `echo`, `printf`, `sed`, `sort`, `tr`, `uniq`); system info (`cd`, `date`, `ps`, `pwd`, `sleep`, `uname`); clipboard (`pbcopy`, `wl-copy`). `go env` intentionally excluded (`go env -w` writes persistent config).
 - **Denied:** `.env`, `.ssh/*`, `.kube/config`, `.git-credentials`, credentials, private keys, `.tfvars` (`Read` tool only — see note below)
 - **Requires approval:** Arbitrary package install (`brew install`, `npm install`, `uv add`), direct code execution, git writes, docker mutations
 - **Sensitive-data trust boundary:** `Read(...)` deny rules only cover the `Read` tool. Allowed `Bash(...)` readers (`bat`, `head`, `tail`, `cat` via alias, `grep`, `rg`, `awk`, `sed`, `jq`, `yq`, `ls`, `wc`, `find`, `fd`) can target the same paths without prompting. Actual protection comes from the model-level `Sensitive Data` rule in `.config/claude/CLAUDE.md`, not from the JSON allow/deny.

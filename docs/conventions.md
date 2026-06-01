@@ -295,6 +295,8 @@ Do not attempt to rename the Codex side to `caveman` — Codex will treat it as 
 
 ## Linux GUI apps
 
-Vendor `.deb` / `.rpm` packages install separately from the Brewfile. Per-app install commands live in [`linux-packages.md`](linux-packages.md). Flatpak is intentionally not used: vendor packages respect `~/.config/<tool>/`, integrate with `apt` / `dnf` for updates, and avoid the `XDG_CONFIG_HOME` remap that would break the repo's symlinks. Casks without a Linux build (`horos`, `orbstack`, macOS-system tools) are listed in `linux-packages.md` under "Casks with no Linux build".
+Vendor `.deb` / `.rpm` packages install separately from the Brewfile. Recommended install path per cask (vendor apt/dnf repo, GitHub release, or upstream install script) lives in [`linux-packages.md`](linux-packages.md). Flatpak is intentionally not used: vendor packages respect `~/.config/<tool>/`, integrate with `apt` / `dnf` for updates, and avoid the `XDG_CONFIG_HOME` remap that would break the repo's symlinks. Casks without a Linux build are listed in `linux-packages.md` under "Casks with no Linux build" with GNOME / GTK alternatives.
 
 **Tailscale name divergence:** the macOS cask is `tailscale-app` (the GUI bundle). On Linux the upstream installer ships `tailscale` (CLI + `tailscaled` daemon only; no GUI tray, see `linux-packages.md`). The two are intentionally different packages; do not rename the cask to match the Linux package or vice versa.
+
+**Telegram name divergence:** the macOS cask is `telegram` (Cocoa build). On Linux distros ship the cross-platform Qt build as `telegram-desktop` (apt/dnf). Same upstream app, different package name; do not rename either to match the other.
