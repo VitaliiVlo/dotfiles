@@ -1,6 +1,6 @@
 # Applications
 
-Curated GUI app picks per category for macOS and Linux. Most picks are macOS-first (medical imaging, OrbStack, several utilities ship macOS-only); Linux install paths live in [`linux-packages.md`](linux-packages.md) and [`casks.md`](casks.md).
+Curated GUI app picks per category. Cross-platform where possible, with macOS as the primary lens for tie-breakers.
 
 ## Selection criteria
 
@@ -26,29 +26,31 @@ Install via official installers or Homebrew Cask.
 | Containers            | **OrbStack**, Colima, Podman Desktop                                                 |
 | Kubernetes            | **Headlamp**, Aptakube, Freelens                                                     |
 | Kubernetes Remote Dev | **Telepresence**, mirrord                                                            |
-| Database              | **Beekeeper Studio**, TablePlus, Postico, MongoDB Compass                            |
+| Database              | **Beekeeper Studio**, DBeaver, TablePlus, Postico, MongoDB Compass                   |
 | API Testing           | **Bruno**, Yaak, Hoppscotch                                                          |
 | Medical Imaging       | **Horos**, Weasis, OsiriX Lite                                                       |
 | Browser (Gecko)       | **Firefox**, Zen + **uBlock Origin**                                                 |
 | Browser (Chromium)    | **Brave**, Helium + **uBlock Origin Lite**                                           |
 | Browser (WebKit)      | **Safari**, Orion + **wBlock**                                                       |
 | Search Engine         | **DuckDuckGo**, Kagi, Brave Search                                                   |
-| Maps                  | **Google Maps**, Waze, Organic Maps, Mapy.com                                        |
+| Maps                  | **Google Maps**, Apple Maps, Waze, Organic Maps, Mapy.com                            |
 | Diagrams              | **Excalidraw**, tldraw                                                               |
 | Diagram as Code       | **Mermaid**, D2                                                                      |
 | Notes                 | **Apple Notes**, Bear, Obsidian, Joplin, Logseq                                      |
 | Todo                  | **Apple Reminders**, Things 3                                                        |
 | Calendar              | **Apple Calendar**, Fantastical                                                      |
-| Mail                  | **Apple Mail**, Mimestream                                                           |
+| Mail                  | **Apple Mail**, Mimestream, Thunderbird                                              |
 | Communication (Work)  | **Slack**, Microsoft Teams, Zoom                                                     |
 | Communication (Home)  | **Telegram**, WhatsApp                                                               |
 | Photos                | **Apple Photos**, Google Photos                                                      |
-| Video Player          | **Apple QuickTime Player**, IINA                                                     |
+| Video Player          | **Apple QuickTime Player**, IINA, VLC                                                |
 | Password Manager      | **Apple Passwords**, 1Password, Bitwarden                                            |
-| Office                | **Apple iWork** (Pages, Numbers, Keynote), Google Workspace, Microsoft 365           |
-| macOS Utilities       | **Rectangle**, Maccy, Keka, KeepingYouAwake, Thaw, MiddleClick, LinearMouse, balenaEtcher, BetterDisplay |
-| Networking            | **Tailscale**, Cloudflare WARP, LocalSend                                            |
-| Linux Distros         | **Fedora**, Bluefin, Zorin OS, Pop!_OS, Ubuntu, Linux Mint                            |
+| Office                | **Apple iWork**, LibreOffice, OnlyOffice, Google Workspace (PWA), Microsoft 365      |
+| Backup                | **Time Machine**                                                                     |
+| Networking            | **Tailscale**, Cloudflare WARP, Proton VPN                                           |
+| File Transfer         | **AirDrop**, LocalSend, KDE Connect                                                  |
+| macOS Utilities       | **Rectangle**, Maccy, Keka, KeepingYouAwake, MiddleClick, LinearMouse, balenaEtcher, BetterDisplay |
+| Linux Distros         | **Fedora**, Fedora Silverblue, Bluefin, Vanilla OS, Zorin OS, Ubuntu (versions + deltas in [`linux-tips.md`](linux-tips.md)) |
 
 ## VSCode setup
 

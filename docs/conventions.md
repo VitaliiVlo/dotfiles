@@ -297,8 +297,8 @@ Do not attempt to rename the Codex side to `caveman` — Codex will treat it as 
 
 ## Linux GUI apps
 
-Vendor `.deb` / `.rpm` packages install separately from the Brewfile. Recommended install path per cask (vendor apt/dnf repo, GitHub release, or upstream install script) lives in [`linux-packages.md`](linux-packages.md). Flatpak is avoided for any app whose config this repo symlinks (`~/.config/<tool>/`): vendor packages respect `$XDG_CONFIG_HOME`, integrate with `apt` / `dnf` for updates, and avoid the per-app sandbox path remap that would break the symlinks in `scripts/symlinks.sh`. Apps with no repo-managed config (one-shot GUIs in `linux-tips.md`) can still use Flatpak. Casks without a Linux build are listed in `linux-packages.md` under "Casks with no Linux build" with GNOME / GTK alternatives.
+Vendor `.deb` / `.rpm` packages install separately from the Brewfile. Flatpak is avoided for any app whose config this repo symlinks (`~/.config/<tool>/`): vendor packages respect `$XDG_CONFIG_HOME`, integrate with `apt` / `dnf` for updates, and avoid the per-app sandbox path remap that would break the symlinks in `scripts/symlinks.sh`. Apps with no repo-managed config (one-shot GUIs in `linux-tips.md`) can still use Flatpak.
 
-**Tailscale name divergence:** the macOS cask is `tailscale-app` (the GUI bundle). On Linux the upstream installer ships `tailscale` (CLI + `tailscaled` daemon only; no GUI tray, see `linux-packages.md`). The two are intentionally different packages; do not rename the cask to match the Linux package or vice versa.
+**Tailscale name divergence:** the macOS cask is `tailscale-app` (the GUI bundle). On Linux the upstream installer ships `tailscale` (CLI + `tailscaled` daemon only; no GUI tray). The two are intentionally different packages; do not rename the cask to match the Linux package or vice versa.
 
 **Telegram name divergence:** the macOS cask is `telegram` (Cocoa build). On Linux distros ship the cross-platform Qt build as `telegram-desktop` (apt/dnf). Same upstream app, different package name; do not rename either to match the other.

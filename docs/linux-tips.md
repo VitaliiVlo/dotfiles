@@ -1,6 +1,6 @@
 # Linux Tips
 
-Non-obvious shortcuts and behaviors worth remembering for the distros tracked in [`applications.md`](applications.md) (Fedora, Bluefin, Zorin OS, Pop!_OS, Ubuntu, Linux Mint). Default assumption: **GNOME on Wayland**. Cinnamon (Linux Mint) and COSMIC (Pop!_OS 24.04 LTS+) deltas live in [Distro-specific deltas](#distro-specific-deltas). `gsettings` recipes already applied by `make linux-defaults` are not repeated here, see `scripts/linux-defaults.sh`. macOS equivalents live in [`macos-tips.md`](macos-tips.md).
+Non-obvious shortcuts and behaviors worth remembering for Fedora, Fedora Silverblue, Bluefin, Vanilla OS, Zorin OS, Ubuntu. Default assumption: **GNOME on Wayland** across the set. Atomic-specific notes (rpm-ostree / bootc / ABRoot / apx) live in [Distro-specific deltas](#distro-specific-deltas). `gsettings` recipes already applied by `make linux-defaults` are not repeated here, see `scripts/linux-defaults.sh`. macOS equivalents live in [`macos-tips.md`](macos-tips.md).
 
 Targets (current as of mid-2026):
 
@@ -11,12 +11,11 @@ Targets (current as of mid-2026):
 | Qt / KDE Frameworks  | Qt 6.10+ (Plasma 6.6 Feb 2026, Plasma 6.7 June 2026), KF 6.24+                    |
 | Wayland / portals    | `xdg-desktop-portal` 1.20+, `xdg-desktop-portal-gnome` 50, PipeWire 1.4+         |
 | Fedora Workstation   | 44 (April 2026, GNOME 50, `dnf5` default)                                       |
+| Fedora Silverblue    | 44 (April 2026, GNOME 50, atomic via `rpm-ostree` + `bootc`)                    |
 | Bluefin              | Rolling on Fedora 44 base, **bootc**-based image                                 |
+| Vanilla OS           | **2 "Orchid"** (Jul 2024, Debian sid base via Vib, GNOME 46, ABRoot atomic, `apx` subsystems) |
+| Zorin OS             | **18.1** (April 2026, Ubuntu 24.04 HWE base, GNOME 46 themed, Wayland default, supported to April 2029) |
 | Ubuntu LTS           | **26.04 LTS "Resolute Raccoon"** (April 2026, GNOME 50, Rust coreutils, systemd 259, cgroup v2 mandatory); 24.04 LTS still supported |
-| Pop!_OS              | **24.04 LTS** (December 2025, COSMIC default; receives rolling COSMIC Epoch updates) |
-| COSMIC               | Epoch 1.0.8+ (Feb 2026)                                                          |
-| Linux Mint (Cinnamon)| **22.3 "Zena"** (Jan 2026, Cinnamon 6.4, Ubuntu 24.04 base, supported to April 2029) |
-| Zorin OS             | **18.1** (April 2026, Ubuntu 24.04 HWE base, supported to April 2029)            |
 
 ## Clipboard and paste
 
@@ -35,7 +34,7 @@ Primary selection and the Ctrl+C clipboard are independent buffers; both survive
 
 ## Screenshots and screen recording
 
-GNOME 42+ ships a unified capture overlay; the standalone `gnome-screenshot` binary is no longer installed by default (still packaged separately if you want `--interactive` from scripts). Pop!_OS / Ubuntu / Fedora / Bluefin / Zorin all use it.
+GNOME 42+ ships a unified capture overlay; the standalone `gnome-screenshot` binary is no longer installed by default (still packaged separately if you want `--interactive` from scripts). Fedora / Silverblue / Bluefin / Vanilla / Zorin / Ubuntu all use it.
 
 | Shortcut                       | Use                                                                              |
 | ------------------------------ | -------------------------------------------------------------------------------- |
@@ -48,7 +47,7 @@ GNOME 42+ ships a unified capture overlay; the standalone `gnome-screenshot` bin
 
 Built-in recorder has no audio and no cursor toggle. For anything beyond a quick clip on GNOME use **OBS Studio** (PipeWire capture, "Screen Capture (PipeWire)" source), **Kooha** (Flatpak `io.github.seadve.Kooha`, also portal-based), or **gpu-screen-recorder** (NVENC / VAAPI / AV1 hardware encode).
 
-`grim` + `slurp`, `wf-recorder`, and `wl-screenrec` are **wlroots-only** (Sway, Hyprland, Wayfire) and do **not** work on GNOME's Mutter or COSMIC: they rely on the `wlr-screencopy-v1` protocol, which neither compositor implements. On GNOME / COSMIC, all third-party screen capture goes through `xdg-desktop-portal-gnome` / `xdg-desktop-portal-cosmic` (PipeWire stream).
+`grim` + `slurp`, `wf-recorder`, and `wl-screenrec` are **wlroots-only** (Sway, Hyprland, Wayfire) and do **not** work on GNOME's Mutter: they rely on the `wlr-screencopy-v1` protocol, which Mutter does not implement. On GNOME, all third-party screen capture goes through `xdg-desktop-portal-gnome` (PipeWire stream).
 
 ## Files (Nautilus) and file dialogs
 
@@ -109,7 +108,7 @@ GNOME drops the Mac "app stays running with no window" model: closing the last w
 | `Super+Up`                | Maximize                                                                        |
 | `Super+Down`              | Unmaximize / restore                                                            |
 | `Super+Left` / `Super+Right` | Tile to half screen                                                          |
-| `Ctrl+Alt+Delete`         | Log-out dialog (default on Ubuntu / Pop / Mint; rebind in *Settings → Keyboard* on Fedora / Bluefin / Zorin) |
+| `Ctrl+Alt+Delete`         | Log-out dialog (default on Ubuntu / Zorin; rebind in *Settings → Keyboard* on Fedora / Silverblue / Bluefin / Vanilla) |
 | `Super+L`                 | Lock screen                                                                     |
 | `Super+M` / `Super+V`     | Notification list / message tray                                                |
 
@@ -174,7 +173,6 @@ No Apple Continuity. Use neutral, network-based tools:
 | **LocalSend**       | AirDrop-style file send to phones / other desktops on the same LAN (Linux, macOS, Win, iOS, Android) |
 | **KDE Connect**     | Phone ↔ desktop: clipboard sync, file send, SMS, media control, find-my-phone, remote input (works fine in GNOME via `gnome-shell-extension-gsconnect`) |
 | **Tailscale**       | Mesh VPN. `tailscale file cp ./report.pdf <host>:` for direct file send across machines |
-| **Warpinator**      | Mint-native LAN file send (Cinnamon default, also Flatpak)                              |
 | **syncthing**       | Folder sync between any two devices, no cloud                                           |
 
 ## Top bar and Quick Settings
@@ -188,14 +186,14 @@ GNOME's top-right cluster (network, Bluetooth, volume, battery, power profile) i
 | Scroll on volume slider                            | Fine adjust                                                  |
 | `Shift`-click power-profile chip                   | (no-op in stock GNOME; many extensions add modifier actions) |
 | Middle-click app icon in dash                      | Open new window                                              |
-| `Ctrl+Alt+T`                                       | Open terminal (Ubuntu / Mint default, **not Fedora / Bluefin**: add in *Settings → Keyboard → Custom Shortcuts*) |
+| `Ctrl+Alt+T`                                       | Open terminal (Ubuntu / Zorin default, **not Fedora / Silverblue / Bluefin / Vanilla**: add in *Settings → Keyboard → Custom Shortcuts*) |
 
 Useful extensions (install via *Extension Manager*, `extension-manager` package):
 
 - **Caffeine** (`KeepingYouAwake` equivalent)
 - **Clipboard Indicator** (Maccy equivalent)
-- **AppIndicator and KStatusNotifierItem Support** (tray icons for Slack, Telegram, Discord; required on Fedora / Bluefin / Zorin to see them at all)
-- **Dash to Dock** or **Dash to Panel** (already a focus on Zorin/Ubuntu; on Fedora install manually)
+- **AppIndicator and KStatusNotifierItem Support** (tray icons for Slack, Telegram, Discord; required on Fedora / Silverblue / Bluefin / Vanilla to see them at all; preinstalled on Zorin and Ubuntu)
+- **Dash to Dock** or **Dash to Panel** (preinstalled on Zorin/Ubuntu; on Fedora / Silverblue / Bluefin / Vanilla install manually)
 - **Vitals** (CPU, memory, temps, fan in the top bar)
 - **Just Perfection** (fine-grained shell tweaks)
 - **Tactile** / **Tiling Shell** (Rectangle equivalent)
@@ -222,7 +220,7 @@ Mouse-only users: enable *Mouse → Show position on Ctrl press* in **Settings �
 
 | Binding             | Command                                                                          |
 | ------------------- | -------------------------------------------------------------------------------- |
-| `Ctrl+Alt+T`        | `ghostty` (Fedora / Bluefin / Zorin lack this default)                            |
+| `Ctrl+Alt+T`        | `ghostty` (Fedora / Silverblue / Bluefin / Vanilla lack this default; preset on Ubuntu / Zorin) |
 | `Super+E`           | `nautilus` (Files)                                                                |
 | `Super+Shift+S`     | `gnome-screenshot -i` (region capture without going through overlay; install the `gnome-screenshot` package first, it is no longer pulled in by default) |
 | `Super+B`           | Browser of choice                                                                 |
@@ -231,7 +229,7 @@ Mouse-only users: enable *Mouse → Show position on Ctrl press* in **Settings �
 ## Image viewer, document viewer, archives
 
 - **Loupe** (`loupe`) GNOME 45+ default image viewer, GPU-accelerated, replaces Eye of GNOME. `Ctrl+R` rotate, `Ctrl+C` copy, drag image out to save.
-- **Papers** (formerly **Evince**, package `papers` on Fedora 41+ and Ubuntu 26.04+, still `evince` on Ubuntu 24.04 / Mint 22.x / Zorin 17) PDF / PS / DjVu / Comic Book. `F5` presentation, `Ctrl+F` find, sidebar tabs include annotations + bookmarks.
+- **Papers** (formerly **Evince**, package `papers` on Fedora 41+ / Silverblue 41+ / Bluefin / Ubuntu 26.04+, still `evince` on Ubuntu 24.04 / Zorin 18 / Vanilla OS 2) PDF / PS / DjVu / Comic Book. `F5` presentation, `Ctrl+F` find, sidebar tabs include annotations + bookmarks.
 - **File Roller** (`file-roller`) double-click any archive (`.zip`, `.tar.*`, `.7z`, `.rar` with `unrar`/`unar`) to browse before extracting.
 - **GNOME Image Viewer + Loupe + Papers** all support drag-out-to-save and Markup-style cropping via *Edit → Crop*.
 
@@ -248,14 +246,14 @@ For PDF signing / form-fill / page reordering use **Xournal++** (annotations + s
 | `gio mount smb://server/share`                | Mount remote shares as if from Files sidebar                                     |
 | `notify-send "Build done" "exit 0"`           | Desktop notification (also: `&& notify-send ...` after long jobs)                |
 | `systemd-inhibit --what=idle:sleep make build` | Block idle/sleep for one command (macOS `caffeinate` analog)                    |
-| `spd-say "build finished"`                    | Text-to-speech (speech-dispatcher; pre-installed on Ubuntu/Pop, install on Fedora) |
+| `spd-say "build finished"`                    | Text-to-speech (speech-dispatcher; pre-installed on Ubuntu / Zorin / Vanilla, install on Fedora / Silverblue / Bluefin) |
 | `tracker3 search "term"` / `locate file`      | System-wide file search (Tracker indexes GNOME-aware, `locate` via `plocate`)    |
 | `nmcli` / `nmtui`                             | NetworkManager CLI / TUI: `nmcli device wifi list`, `nmcli connection up <name>` |
 | `bluetoothctl`                                | BlueZ interactive shell: `scan on`, `pair`, `connect`                            |
 | `loginctl lock-session`                       | Lock screen from script                                                          |
 | `systemctl --user list-units`                 | List per-user systemd services (e.g. pipewire, xdg-desktop-portal)               |
 | `journalctl --user -f`                        | Tail per-user journal (Wayland session errors, portal failures land here)        |
-| `flatpak run <app.id>` / `flatpak list`       | Run / list Flatpaks (most desktop apps on Bluefin, Mint, Fedora Workstation)     |
+| `flatpak run <app.id>` / `flatpak list`       | Run / list Flatpaks (primary user-app channel on Silverblue, Bluefin, Vanilla; common on Fedora Workstation) |
 | `gsettings list-recursively org.gnome.<…>`    | Inspect / dconf-dump current GNOME setting values                                |
 | `dconf watch /`                               | Live-watch dconf writes (great for reverse-engineering a setting in Settings UI) |
 
@@ -271,14 +269,15 @@ For PDF signing / form-fill / page reordering use **Xournal++** (annotations + s
 
 ## Distro-specific deltas
 
-### Fedora Workstation / Bluefin
+### Fedora Workstation / Silverblue / Bluefin
 
-- Package manager: `dnf5` (default since Fedora 41, Nov 2024). `dnf5 search`, `dnf5 install`, `dnf5 history`. Group install: `dnf5 group install "Development Tools"`.
-- Codecs: enable **RPM Fusion** (`free` + `nonfree`) for h264, ffmpeg, Intel VAAPI drivers. One-liner: `dnf5 install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm`.
-- Fedora 44 (April 28, 2026) ships GNOME 50, KDE Plasma 6.6, kernel 6.14, glibc 2.41.
-- Bluefin (atomic): migrated from pure `rpm-ostree` to **bootc**-based images during 2025. `bootc upgrade` / `bootc switch` move the deployed image; `rpm-ostree install <pkg>` still works for layering packages onto it (reboot to apply). Prefer Flatpak or `brew` for user-space tools whenever possible to keep the base image clean.
+- Fedora 44 (April 28, 2026) ships GNOME 50, KDE Plasma 6.6, kernel 6.14, glibc 2.41 across all variants.
+- Workstation package manager: `dnf5` (default since Fedora 41, Nov 2024). `dnf5 search`, `dnf5 install`, `dnf5 history`. Group install: `dnf5 group install "Development Tools"`.
+- Codecs: enable **RPM Fusion** (`free` + `nonfree`) for h264, ffmpeg, Intel VAAPI drivers. One-liner: `dnf5 install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm`. On Silverblue / Bluefin, layer the same RPMs via `rpm-ostree install <url>` then reboot.
+- Silverblue (atomic): root image immutable. `rpm-ostree install <pkg>` layers packages onto the next deployment (reboot to apply); `rpm-ostree status` shows current + pending deployments; `rpm-ostree rollback` reverts to the previous one. Prefer **Flatpak** (`flatpak install flathub <app.id>`) or **Toolbox / Distrobox** (`toolbox create`, `distrobox create`) for everything user-space; layer only what must touch the host.
+- Bluefin (atomic, Silverblue base + devex layer): migrated from pure `rpm-ostree` to **bootc**-based images during 2025. `bootc upgrade` / `bootc switch` move the deployed image; `rpm-ostree install` still works for ad-hoc layering. Prefer Flatpak or `brew` for user-space tools to keep the base image clean.
 - Bluefin tasks via `ujust`: `ujust` (menu), `ujust toggle-pop-shell`, `ujust install-system-flatpaks`, `ujust setup-luks-tpm-unlock`, `ujust install-coding-extras`. Self-documenting; run with no args to browse.
-- SELinux is enforcing by default. If an app refuses to read a file with no obvious permission issue, check `journalctl -t setroubleshoot` or `ausearch -m avc -ts recent`.
+- SELinux enforcing by default on all three. If an app refuses to read a file with no obvious permission issue, check `journalctl -t setroubleshoot` or `ausearch -m avc -ts recent`.
 
 ### Ubuntu (26.04 LTS "Resolute Raccoon")
 
@@ -288,35 +287,15 @@ For PDF signing / form-fill / page reordering use **Xournal++** (annotations + s
 - NVIDIA Wayland performance noticeably improved (explicit-sync protocol, GBM by default). `ubuntu-drivers devices` + `ubuntu-drivers autoinstall` for NVIDIA / Broadcom.
 - 24.04 LTS "Noble Numbat" remains supported until April 2029 (ESM to 2034). On 24.04, GNOME is 46, evince is the PDF reader, and Rust coreutils are not the default.
 
-### Pop!_OS 24.04 LTS (COSMIC)
+### Vanilla OS
 
-System76 cut Pop!_OS 24.04 LTS on December 11, 2025 with **COSMIC** (Rust-based DE) as the default, replacing the GNOME-plus-Pop-Shell stack from Pop!_OS 22.04. COSMIC Epoch 1.x ships continuous point releases (1.0.8 in Feb 2026). Pop!_OS 26.04 LTS is on the roadmap with a new versioning scheme.
+Latest: **Vanilla OS 2 "Orchid"** (July 2024, Debian sid base via Vib, GNOME 46, ABRoot atomic). Updates ride on `vso` (vanilla system operator); ABRoot keeps two parallel root images for atomic rollback. Host kept minimal; most user-space packages run inside `apx` subsystems (Distrobox wrapper) rather than on the host root.
 
-Most GNOME shortcuts above do not apply on COSMIC. Highlights:
-
-- Built-in auto-tiling everywhere (no Pop Shell extension). Toggle floating per-window `Super+G`. Stack mode `Super+S`.
-- Tile resize / move with `Super+arrow`; detach window with `Super+Ctrl+arrow`; tile direction `Super+O`.
-- Workspaces are per-display by default. Configure in `cosmic-settings → Workspaces`.
-- App library `Super+A`; Launcher `Super`. Settings is a separate native app (`cosmic-settings`, not `gnome-control-center`).
-- Files manager is **COSMIC Files** (not Nautilus). Terminal is **COSMIC Terminal**. Text editor is **COSMIC Edit**. Shortcut conventions track GNOME closely.
-- App ecosystem: GTK / libadwaita / Qt apps all work; COSMIC reads `XDG_*` env vars normally, so the dotfiles in this repo apply unchanged.
-
-For users still on **Pop!_OS 22.04 LTS** (GNOME 42 + Pop Shell): `Super+Y` toggle auto-tiling, `Super+arrow` tile direction, `Super+G` float exception, `Super+Ctrl+arrow` detach.
-
-### Linux Mint (Cinnamon)
-
-Latest: **Linux Mint 22.3 "Zena"** (January 2026, Cinnamon 6.4, Ubuntu 24.04 base, supported through April 2029). Mint exhausted its A-Z codename series with Zena; the next major release is slated for late 2026 with a longer development cycle. HWE ISOs ship kernel 6.17.
-
-- Different DE: Cinnamon, not GNOME Shell. Notable shortcut deltas:
-  - `Ctrl+Alt+T` opens terminal (default).
-  - `Super+L` lock screen.
-  - `Ctrl+Alt+arrow` switch workspace (no `Super+Page` binding by default).
-  - `Ctrl+Alt+Up` Scale (Mission Control equivalent), `Ctrl+Alt+Down` Expo (workspaces grid).
-- Files manager: **Nemo** (Nautilus fork). Same `Ctrl+H` / `Ctrl+L` / `F2`. Adds *Open as root* + dual-pane (`F3`).
-- Default cross-device sharing: **Warpinator** (Mint's own).
-- Software sources: deb + Flatpak. Snap disabled by default. Mint Update Manager batches updates by safety level.
-- Timeshift preinstalled for system snapshots; configure on first boot.
-- Cinnamon defaults to Xorg, not Wayland (Cinnamon's Wayland session is still experimental as of 6.4). Several Wayland-only tips in this doc (HDR, fractional scaling on mixed-DPI, `wl-clipboard`) do not apply unless you flip the session manually at the login screen.
+- Package manager: **`apx`**. `apx install <pkg>` defaults to a managed Distrobox subsystem (`apx list` to inspect). For host-level layering: `apx install --sysprefix vso-core <pkg>` writes into the next ABRoot deployment, reboot to apply. No direct host `apt` by default.
+- Updates: `vso update` (downloads to inactive root), reboot to apply. `vso config` for upgrade scheduling and channel pin. `vso trigger-update` for immediate check.
+- Wayland session ships default. NVIDIA users: prefer the **`vanilla-exp`** image variant for newer driver stack; main image pinned to NVIDIA 535 for stability after early-2026 GDM-freeze regressions.
+- GNOME 46 lags 4 cycles behind Fedora 50 / Ubuntu 50. Trade is atomic rollback safety + Debian package depth, not bleeding-edge GNOME features (HDR maturity, GNOME 50 Tokyo polish).
+- Configs in this repo apply unchanged: XDG paths honored, `flatpak` + `brew` recommended for user-space tools.
 
 ### Zorin OS
 

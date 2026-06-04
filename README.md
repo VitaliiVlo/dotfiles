@@ -12,12 +12,11 @@ Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** 
 - [Linux settings](#linux-settings)
 - [macOS tips](docs/macos-tips.md) — non-obvious shortcuts and behaviors (clipboard, screenshots, Finder, Mission Control, Spotlight, Continuity, shell helpers)
 - [Linux tips](docs/linux-tips.md) — non-obvious shortcuts and behaviors for GNOME-on-Wayland (clipboard, screenshots, Nautilus, workspaces, GNOME search, cross-device sharing, shell helpers, Wayland notes, per-distro deltas)
-- [Applications](docs/applications.md) — curated GUI app picks by category, VSCode setup, search engine bangs
+- [Applications](docs/applications.md) — curated GUI app picks by category (cross-platform where possible, macOS as tie-breaker lens), VSCode setup, search engine bangs
 - [CLI tools](#cli-tools)
 - [Validate](#validate)
 - [Updating](#updating)
 - [Casks](docs/casks.md) — Homebrew Cask inventory (base, work, Linux-installable)
-- [Linux packages](docs/linux-packages.md) — recommended Linux install path per cask (link-out table to upstream install docs)
 - [Claude Code](#claude-code)
 - [Codex](#codex)
 - [Templates](#templates)
@@ -34,8 +33,8 @@ Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** 
 
 1. Complete [Prerequisites → Linux](#linux).
 2. Clone this repository.
-3. Run `make setup` (base) or `make setup-all` (base + work). Same chain as macOS: `macos-defaults` (no-op on Linux) → `linux-defaults` applies GNOME `gsettings` → `symlinks` → `local-overrides` → `brew-install-base` installs formulae + the Linux-installable cask subset (`docs/casks.md`) → `versions`. `setup-all` swaps in `brew-install` for the base+work superset. Every `Brewfile.work` cask lacks a Linuxbrew build, so on Linux `brew-install-work` is effectively a no-op for casks; install work GUIs via vendor deb/rpm (`docs/linux-packages.md`).
-4. Install GUI apps via vendor `.deb` / `.rpm`. See [`docs/linux-packages.md`](docs/linux-packages.md) for the recommended install path per cask.
+3. Run `make setup` (base) or `make setup-all` (base + work). Same chain as macOS: `macos-defaults` (no-op on Linux) → `linux-defaults` applies GNOME `gsettings` → `symlinks` → `local-overrides` → `brew-install-base` installs formulae + the Linux-installable cask subset (`docs/casks.md`) → `versions`. `setup-all` swaps in `brew-install` for the base+work superset. Every `Brewfile.work` cask lacks a Linuxbrew build, so on Linux `brew-install-work` is effectively a no-op for casks; install work GUIs via vendor deb/rpm.
+4. Install GUI apps via vendor `.deb` / `.rpm`.
 
 Run `make help` to list all available targets.
 
@@ -67,19 +66,22 @@ Run `make help` to list all available targets.
 
 ### Linux
 
-> Targets the distros listed in [Applications](docs/applications.md) (Fedora, Bluefin, Zorin OS, Pop!_OS, Ubuntu, Linux Mint). GNOME-first by default: `make linux-defaults` writes `gsettings` keys that apply to GNOME Shell (Fedora / Bluefin / Zorin / Ubuntu) and silently skips on Pop!_OS 24.04 LTS+ (COSMIC) and Linux Mint (Cinnamon); see [`docs/linux-tips.md`](docs/linux-tips.md) for per-DE deltas. Immutable variants (Bluefin, Fedora Silverblue) work too, but extra packages must be layered via `rpm-ostree` (or installed inside Distrobox/Toolbox) instead of `dnf`. KDE / Sway / headless sessions also skip the `gsettings` block but everything else (symlinks, Brewfile, shell) applies. Linuxbrew prefix defaults to `/home/linuxbrew/.linuxbrew` in `.zshrc` / `.zprofile` (override via `BREW_PREFIX` env).
+> Targets Fedora, Fedora Silverblue, Bluefin, Vanilla OS, Zorin OS, Ubuntu. All GNOME-on-Wayland: `make linux-defaults` writes `gsettings` keys that apply across the set; see [`docs/linux-tips.md`](docs/linux-tips.md) for per-distro deltas. Atomic variants (Bluefin, Fedora Silverblue, Vanilla OS) work too, but extra packages must be layered via `rpm-ostree` / `bootc` (Fedora atomics) or `apx` / `vso` (Vanilla OS), or installed inside Distrobox/Toolbox, instead of `dnf` / `apt`. KDE / Sway / headless sessions skip the `gsettings` block but everything else (symlinks, Brewfile, shell) applies. Linuxbrew prefix defaults to `/home/linuxbrew/.linuxbrew` in `.zshrc` / `.zprofile` (override via `BREW_PREFIX` env).
 
 - **Install build prerequisites:** `scripts/local-overrides.py` needs Python 3.11+ (stdlib `tomllib`). Fedora 39+, Ubuntu 24.04+, and recent Debian ship a compatible `python3`. Older distros are out of scope.
   ```bash
-  # Debian/Ubuntu (Pop!_OS, Linux Mint)
+  # Debian/Ubuntu (Zorin OS)
   sudo apt-get update
   sudo apt-get install -y build-essential procps curl file git zsh python3
 
   # Fedora
   sudo dnf install -y @development-tools procps-ng curl file git zsh python3
 
-  # Fedora Silverblue / Bluefin (immutable; layer once, then reboot)
+  # Fedora Silverblue / Bluefin (atomic; layer once, then reboot)
   sudo rpm-ostree install zsh
+
+  # Vanilla OS (atomic; layer via apx on host subsystem)
+  sudo apx install --sysprefix vso-core zsh git python3
   ```
 - **Install Homebrew (Linuxbrew)**
   ```bash
@@ -96,7 +98,7 @@ Run `make help` to list all available targets.
   # Pipe pubkey to clipboard: wl-copy < ~/.ssh/id_ed25519.pub  (Wayland)
   #                          xclip -selection clipboard < ~/.ssh/id_ed25519.pub  (X11)
   ```
-- **Install GUI apps via vendor deb/rpm.** Recommended install path per cask (vendor apt/dnf repo, GitHub release, or upstream install script) lives in [`docs/linux-packages.md`](docs/linux-packages.md). Vendor packages respect `~/.config/<tool>/`, so the repo's symlinks resolve without the per-app sandbox path remap that Flatpak / Snap impose. Flatpak stays an option for one-shot apps that have no config in this repo (see [`docs/linux-tips.md`](docs/linux-tips.md) for examples).
+- **Install GUI apps via vendor deb/rpm.** Vendor packages respect `~/.config/<tool>/`, so the repo's symlinks resolve without the per-app sandbox path remap that Flatpak / Snap impose. Flatpak stays an option for one-shot apps that have no config in this repo (see [`docs/linux-tips.md`](docs/linux-tips.md) for examples).
 - **GNOME-only defaults:** `make linux-defaults` skips silently outside GNOME (`XDG_CURRENT_DESKTOP` check). Other DEs configure their own way.
 
 ### Local overrides
@@ -152,7 +154,6 @@ Used directly from the repo:
 
 - `Brewfile` - Base Brewfile (shell, fonts, daily-driver apps, VSCode extensions)
 - `Brewfile.work` - Work Brewfile (work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN, browser; curated manually)
-- `docs/linux-packages.md` - Recommended Linux install path per cask (link-out table to upstream install docs)
 - `CLAUDE.md` - Repository instructions for Claude Code (auto-discovered in cwd; Codex reads it via `project_doc_fallback_filenames`)
 - `docs/vscode-defaults.jsonc` - VSCode defaults snapshot for offline comparison (regenerate via `Preferences: Open Default Settings (JSON)`)
 - `.local.example.toml` - Schema for per-machine overrides; copy to `.local/source.toml` (gitignored) and fill in. See [Local overrides](#local-overrides).
@@ -189,7 +190,7 @@ Non-obvious shortcuts and behaviors (clipboard, screenshots, Finder, Mission Con
 
 ## Linux tips
 
-Non-obvious shortcuts and behaviors for the GNOME-on-Wayland distros tracked in [`docs/applications.md`](docs/applications.md) (clipboard, screenshots, Nautilus, workspaces, GNOME search, cross-device sharing, shell helpers, Wayland notes, per-distro deltas for Fedora/Bluefin, Ubuntu/Pop, Pop COSMIC, Mint/Cinnamon, Zorin): see [`docs/linux-tips.md`](docs/linux-tips.md).
+Non-obvious shortcuts and behaviors for GNOME-on-Wayland distros (clipboard, screenshots, Nautilus, workspaces, GNOME search, cross-device sharing, shell helpers, Wayland notes, per-distro deltas for Fedora/Silverblue/Bluefin, Vanilla OS, Zorin, Ubuntu): see [`docs/linux-tips.md`](docs/linux-tips.md).
 
 ## Applications
 
@@ -262,7 +263,6 @@ make local-overrides    # Re-render per-machine overrides from .local/source.tom
 | starship                | Cross-shell prompt                                      |
 | superfile               | Modern terminal file manager (alternative to yazi)      |
 | swag                    | Swagger 2.0 doc generator for Go                        |
-| taproom                 | Interactive Homebrew TUI (tap `gromgit/brewtils`)       |
 | tlrc                    | `tldr` client (Rust); binary is `tldr`                  |
 | typescript              | TypeScript compiler (`tsc`)                             |
 | typescript-language-server | TypeScript / JavaScript language server              |
@@ -289,20 +289,16 @@ For full audit, run `make validate` (delegates to `scripts/validate.sh`). Covers
 - `brew update && brew upgrade` — update Homebrew formulae and casks
 - `make brew-export` — refresh `Brewfile` from current install state (macOS only; Linuxbrew dump would wipe macOS-only casks). Add new work entries to `Brewfile.work` manually; see `docs/conventions.md` "Brewfile maintenance" for strip step semantics.
 - `make brew-cleanup` — prune old versions and cache
-- macOS GUI apps: cask auto-update via `brew upgrade` (VSCode, Brave, Helium, Zen, Ghostty, Zed, Claude Code, Codex, IINA, Telegram, WhatsApp have their own in-app updaters too; cask still authoritative)
-- Linux GUI apps via vendor apt/dnf repo (covered by `sudo apt-get upgrade` / `sudo dnf upgrade`): 1Password, Beekeeper Studio (deb only), Brave, Bruno (deb only), Cloudflare WARP, Firefox, Ghostty (Ubuntu universe or Fedora Copr), Google Chrome, Helium, Slack, Tailscale, Telegram (distro `telegram-desktop`), VSCode
+- macOS GUI apps: cask auto-update via `brew upgrade` (VSCode, Brave, Helium, Zen, Ghostty, Zed, Claude Code, Codex, IINA, Telegram have their own in-app updaters too; cask still authoritative)
+- Linux GUI apps via vendor apt/dnf repo (covered by `sudo apt-get upgrade` / `sudo dnf upgrade`): 1Password, balenaEtcher, Beekeeper Studio (deb only), Brave, Bruno (deb only), Cloudflare WARP, Firefox, Ghostty (Ubuntu universe or Fedora Copr), Google Chrome, Helium, Slack, Tailscale, Telegram (distro `telegram-desktop`), VSCode
 - Linux GUI apps via in-app updater: Obsidian, Zed, Zen (Firefox-based built-in updater)
-- Linux GUI apps via manual GitHub release re-download: balenaEtcher, Beekeeper Studio (rpm only), Bruno (rpm only), Headlamp, LocalSend
+- Linux GUI apps via manual GitHub release re-download: Beekeeper Studio (rpm only), Bruno (rpm only), Headlamp, LocalSend
 - Linux GUI apps via manual vendor download re-download: MongoDB Compass (`mongodb.com/try/download/compass`)
 - Go: `brew upgrade go`. Node: `fnm install <version>`. Python: `uv python install <version>`.
 
 ## Casks
 
 Homebrew Cask inventory (base, work, Linux-installable subset): see [`docs/casks.md`](docs/casks.md).
-
-## Linux packages
-
-Recommended Linux install path per cask (link-out table): see [`docs/linux-packages.md`](docs/linux-packages.md).
 
 ## Claude Code
 

@@ -9,3 +9,6 @@ prefix_rule(pattern=[["jq", "yq"]], decision="allow")
 
 # Clipboard
 prefix_rule(pattern=[["pbcopy", "wl-copy"]], decision="allow")
+
+# Scratch dir
+prefix_rule(pattern=["mkdir", "-p", "/tmp/codex"], decision="allow")

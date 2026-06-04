@@ -50,6 +50,7 @@ Fallbacks only when a repo gives no signal:
 - DO NOT amend published commits.
 - Protect `main` and `master`. Never force-push.
 - No AI attribution in artifacts (see `## Drafting Prose` for full scope).
+- Prefer `(cd <path> && git <sub>)` over `git -C <path> <sub>`. The allowlist matchers are token/prefix-based: `git <sub>` and `cd` are both allowed, but `git -C <path> <sub>` does not match the allowed `git <sub>` patterns and triggers an approval prompt every time.
 
 ## Drafting Prose
 

@@ -56,6 +56,7 @@
       "Bash(yq:*)",
       "Bash(cd:*)",
       "Bash(date:*)",
+      "Bash(mkdir -p /tmp/claude)",
       "Bash(ps:*)",
       "Bash(pwd:*)",
       "Bash(sleep:*)",

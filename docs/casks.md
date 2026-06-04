@@ -1,6 +1,6 @@
 # Casks
 
-Homebrew Cask inventory: GUI applications, CLIs, and fonts. Split into a base set installed by `make brew-install-base` and a work set installed by `make brew-install-work`. A subset is cross-platform via Linuxbrew; the rest install on Linux via vendor deb/rpm (see [`linux-packages.md`](linux-packages.md)).
+Homebrew Cask inventory: GUI applications, CLIs, and fonts. Split into a base set installed by `make brew-install-base` and a work set installed by `make brew-install-work`. A subset is cross-platform via Linuxbrew; the rest install on Linux via vendor deb/rpm.
 
 ## Base casks
 
@@ -31,7 +31,6 @@ Homebrew Cask inventory: GUI applications, CLIs, and fonts. Split into a base se
 | obsidian                    | Notes / knowledge base           |
 | rectangle                   | Window manager                   |
 | telegram                    | Messaging                        |
-| thaw                        | Menu bar manager                 |
 | visual-studio-code          | Code editor                      |
 | whatsapp                    | Messaging                        |
 | zed                         | Code editor                      |
@@ -63,4 +62,4 @@ Homebrew 4.5+ added preliminary Linux cask support. A small subset of `Brewfile`
 | font-jetbrains-mono         | `font` artifact (cross-platform)                 |
 | font-symbols-only-nerd-font | `font` artifact (cross-platform)                 |
 
-Net: 6 of 38 casks are cross-platform via brew. The remaining 32 either install via vendor deb/rpm on Linux (20) or have no Linux build (12). See [Linux packages](linux-packages.md) for both lists.
+Net: 6 of 37 casks are cross-platform via brew. The remaining 31 either install via vendor deb/rpm on Linux (20) or have no Linux build (11).
