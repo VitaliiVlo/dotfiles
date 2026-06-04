@@ -17,3 +17,6 @@ prompt: enabled
 prefer_editor_prompt: disabled
 browser:
 aliases: {}
+
+# Telemetry
+telemetry: disabled

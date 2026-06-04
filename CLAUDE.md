@@ -107,7 +107,7 @@ When adding or editing config files, follow this style across all of them:
 - **Drop tautology** — `# Enable completion` above `compinit`, `# Aliases` above an alias block where every line is `alias x=...` is fluff.
 - **JSONC comment style** — use `// Name` (single-line) for section dividers in `.config/vscode/settings.json` and `.config/zed/settings.json`. Do not use `/* Name */` block-style.
 - **Trim verbose schema docs** — when a tool emits its config with full per-key docstrings (e.g. `gh config init`), strip them; keys are self-documenting.
-- **Plain JSON files (no comments allowed)** — micro's `settings.json` is parsed by Go's strict `encoding/json`, which rejects `//` and `/* */`. Use **blank lines** between key clusters for visual grouping; document the cluster meaning in this file. Current micro grouping: `tabsize`/`tabstospaces`/`autoindent`/`smartpaste` (indentation) → `rmtrailingws`/`eofnewline`/`fileformat` (whitespace & save) → `syntax`/`cursorline`/`matchbrace`/`colorcolumn`/`scrollbar`/`scrollmargin`/`diffgutter`/`basename`/`hlsearch`/`savecursor`/`wordwrap` (display) → `encoding`/`truecolor` (encoding).
+- **Plain JSON files (no comments allowed)** — micro's `settings.json` is parsed by Go's strict `encoding/json`, which rejects `//` and `/* */`. Use **blank lines** between key clusters for visual grouping; document the cluster meaning in this file. Current micro grouping: `tabsize`/`tabstospaces`/`autoindent`/`smartpaste` (indentation) → `rmtrailingws`/`eofnewline`/`fileformat`/`mkparents` (whitespace & save) → `syntax`/`cursorline`/`matchbrace`/`colorcolumn`/`scrollbar`/`scrollmargin`/`diffgutter`/`basename`/`hlsearch`/`hltrailingws`/`savecursor`/`wordwrap` (display) → `encoding`/`truecolor` (encoding).
 
 ## Script behavior
 
@@ -147,6 +147,7 @@ When adding or editing config files, follow this style across all of them:
 - Restarts affected processes (Finder, Dock, SystemUIServer)
 - Safe to re-run: idempotent `mkdir -p` and `defaults write` commands
 - Guards `uname -s == Darwin`; exits 0 on Linux so the shared `make setup` chain stays safe to invoke cross-OS
+- Power management intentionally omitted: `pmset` writes require sudo (no non-interactive path). On-demand sleep prevention via `keepingyouawake` cask (Brewfile) and `caffeinate` shell helper. Linux counterpart sets `sleep-inactive-ac-type = 'nothing'` via `gsettings` (no sudo); see `scripts/linux-defaults.sh`
 
 ### scripts/linux-defaults.sh
 

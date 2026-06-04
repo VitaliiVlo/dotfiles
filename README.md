@@ -289,7 +289,7 @@ For full audit, run `make validate` (delegates to `scripts/validate.sh`). Covers
 - `brew update && brew upgrade` — update Homebrew formulae and casks
 - `make brew-export` — refresh `Brewfile` from current install state (macOS only; Linuxbrew dump would wipe macOS-only casks). Add new work entries to `Brewfile.work` manually; see `docs/conventions.md` "Brewfile maintenance" for strip step semantics.
 - `make brew-cleanup` — prune old versions and cache
-- macOS GUI apps: cask auto-update via `brew upgrade` (VSCode, Brave, Helium, Zen, Ghostty, Zed, Claude Code, Codex, IINA, Telegram have their own in-app updaters too; cask still authoritative)
+- macOS GUI apps: cask auto-update via `brew upgrade` (VSCode, Brave, Helium, Zen, Ghostty, Zed, Claude Code, Codex, IINA, Telegram, WhatsApp have their own in-app updaters too; cask still authoritative)
 - Linux GUI apps via vendor apt/dnf repo (covered by `sudo apt-get upgrade` / `sudo dnf upgrade`): 1Password, balenaEtcher, Beekeeper Studio (deb only), Brave, Bruno (deb only), Cloudflare WARP, Firefox, Ghostty (Ubuntu universe or Fedora Copr), Google Chrome, Helium, Slack, Tailscale, Telegram (distro `telegram-desktop`), VSCode
 - Linux GUI apps via in-app updater: Obsidian, Zed, Zen (Firefox-based built-in updater)
 - Linux GUI apps via manual GitHub release re-download: Beekeeper Studio (rpm only), Bruno (rpm only), Headlamp, LocalSend

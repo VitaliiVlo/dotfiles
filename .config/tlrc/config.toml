@@ -4,6 +4,7 @@
 [cache]
 auto_update = true
 defer_auto_update = false
+languages = ["en"]
 
 [output]
 show_title = true

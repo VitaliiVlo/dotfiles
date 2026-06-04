@@ -85,4 +85,9 @@ defaults write com.apple.dock wvous-br-corner         -int    14
 defaults write com.apple.dock wvous-br-modifier       -int    1048576
 killall Dock >/dev/null 2>&1 || true
 
+# Power: intentionally not scripted. `pmset` writes require sudo (no non-interactive
+# install path); on-demand sleep prevention is covered by the `keepingyouawake` cask
+# (Brewfile) and `caffeinate` shell helper. Linux counterpart sets
+# `org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type = 'nothing'`.
+
 heading "Finished applying defaults."

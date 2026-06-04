@@ -27,6 +27,7 @@
   "base_keymap": "VSCode",
   "cursor_shape": "bar",
   "cursor_blink": true,
+  "hide_mouse": "on_typing_and_action",
   "current_line_highlight": "all",
   "show_whitespaces": "selection",
   "semantic_tokens": "combined",

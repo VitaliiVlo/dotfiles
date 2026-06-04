@@ -16,6 +16,7 @@ Shared-behavior rules across every tool in this repo: theme, font, tab size, hid
 | Line height | `editor.lineHeight: 1.5` | `buffer_line_height: "comfortable"` (1.618) | — | — | — | — | — |
 | Cursor | `cursorStyle: "line"`, width 2 | `cursor_shape: "bar"` (buffer + terminal) | — | `cursor-style = bar`, thickness 2 | — | — | — |
 | Cursor blink | `cursorBlinking: "smooth"` | `cursor_blink: true`, terminal: `blinking: "on"` | — | `cursor-style-blink = true` | — | — | — |
+| Hide mouse on type | — | `hide_mouse: "on_typing_and_action"` | — | `mouse-hide-while-typing = true` | — | — | — |
 | Font | JetBrains Mono 14pt + fallbacks (editor + terminal) | Same chain (buffer + terminal) | (terminal font) | Same chain | — | — | — |
 | Ligatures | `editor.fontLigatures: true` | `buffer_font_features: null` (all on) | — | (default: on) | — | — | — |
 | Theme (dark) | Catppuccin Macchiato | Catppuccin Macchiato | — | Catppuccin Macchiato | Catppuccin Macchiato | Catppuccin Macchiato | — |
@@ -73,6 +74,7 @@ Minimize across all tools:
 | Zed | `telemetry.diagnostics` / `metrics` | `true` / `false` |
 | Claude Code | `feedbackSurveyRate` | `0` |
 | Codex | `analytics.enabled` / `feedback.enabled` | `false` / `false` |
+| gh | `telemetry` | `disabled` |
 
 ## File search/listing tools
 

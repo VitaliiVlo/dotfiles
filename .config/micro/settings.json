@@ -7,6 +7,7 @@
     "rmtrailingws": true,
     "eofnewline": true,
     "fileformat": "unix",
+    "mkparents": true,
 
     "syntax": true,
     "cursorline": true,
@@ -17,6 +18,7 @@
     "diffgutter": true,
     "basename": true,
     "hlsearch": true,
+    "hltrailingws": true,
     "savecursor": true,
     "wordwrap": false,
 
