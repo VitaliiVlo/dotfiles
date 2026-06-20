@@ -120,6 +120,7 @@ When adding or editing config files, follow this style across all of them:
 - **Drop tautology** — `# Enable completion` above `compinit`, `# Aliases` above an alias block where every line is `alias x=...` is fluff.
 - **JSONC comment style** — use `// Name` (single-line) for section dividers in `.config/vscodium/settings.json` and `.config/zed/settings.json`. Do not use `/* Name */` block-style.
 - **Trim verbose schema docs** — when a tool emits its config with full per-key docstrings (e.g. `gh config init`), strip them; keys are self-documenting.
+- **Keep explicit default-restatement** — a value that matches the tool's current upstream default is an intentional baseline, not noise: the `defaults/` snapshots exist to make conscious-keep visible and to guard against an upstream default flip silently changing behavior. Drop a restated default only when it is genuinely inert (e.g. a light/dark split with both sides equal).
 - **Plain JSON files (no comments allowed)** — micro's `settings.json` is parsed by Go's strict `encoding/json`, which rejects `//` and `/* */`. Use **blank lines** between key clusters for visual grouping; document the cluster meaning in this file. Current micro grouping: `tabsize`/`tabstospaces`/`autoindent`/`smartpaste` (indentation) → `rmtrailingws`/`eofnewline`/`fileformat`/`mkparents` (whitespace & save) → `syntax`/`cursorline`/`matchbrace`/`colorcolumn`/`scrollbar`/`scrollmargin`/`diffgutter`/`basename`/`hlsearch`/`hltrailingws`/`savecursor`/`wordwrap` (display) → `encoding` (encoding).
 
 ## Script behavior
@@ -145,8 +146,8 @@ When adding or editing config files, follow this style across all of them:
 - Single source of truth: `.local/source.toml` (gitignored). Schema example committed at `.local.example.toml`.
 - First run with no `.local/source.toml` copies the example and exits, prompting the user to fill it in.
 - Each run reads the clean base for each tracked target from `git show HEAD:<path>` so overrides apply to a known starting point and never compound across runs.
-- Writes back to four tracked files (same paths users' tools read via existing symlinks). Target enumeration in [README "Local overrides"](README.md#local-overrides).
-- Working-tree diff on those four files after a run is intentional. The user keeps it uncommitted. A fresh `git pull` followed by `make local-overrides` restores the same state.
+- Writes back to the tracked files enumerated in [README "Local overrides"](README.md#local-overrides) (same paths users' tools read via existing symlinks).
+- Working-tree diff on those files after a run is intentional. The user keeps it uncommitted. A fresh `git pull` followed by `make local-overrides` restores the same state.
 - Idempotent: re-running with the same `.local/source.toml` produces byte-identical output.
 - Tracked configs ship with neutral placeholders (`your.email@example.com`, `github.com/your-org/*`, no team plugins, no trusted projects). Overrides upgrade them.
 - **Schema asymmetry (intentional):** Claude has marketplace + plugin overrides (`[claude.marketplaces.<key>]` + `[claude].plugins`); Codex has only `[codex].trusted_projects`. Codex marketplaces and plugins must be added directly to `.config/codex/config.toml` (or registered via `codex plugin marketplace add` / `codex plugin install`) because the Codex CLI fixes the marketplace key at add-time and cannot rename it, so the shared-key model used for Claude does not map cleanly. Revisit if a second user needs per-machine Codex plugin overrides.
@@ -272,7 +273,7 @@ Run `make validate` (delegates to `scripts/validate.sh`). Covers:
 
 When adding a new tool, extend the matching block in `scripts/validate.sh`.
 
-**Web verification rule:** when a config key looks suspect (unfamiliar value, version-specific), confirm against the tool's official docs before flagging it as invalid. Examples that look wrong but are valid: Codex `model = "gpt-5.5"`/`gpt-5.4`/`gpt-5.4-mini`, Codex `personality = "friendly"`, Codex `[features].fast_mode`/`prevent_idle_sleep`/`personality` (the `[features].personality = true` gate pairs with the top-level `personality = "friendly"` value above), Codex `commit_attribution = ""` (empty disables the AI-attribution commit trailer), Claude `effortLevel = "xhigh"`, Claude `model = "opus[1m]"`, atuin `inline_height_shell_up_key_binding`, atuin `enter_accept = false` (intentional default-flip: Enter selects/edits, doesn't auto-execute), atuin `keymap_mode = "auto"` (default is `emacs`; `auto` follows the shell keymap), ghostty `cursor-opacity`/`adjust-cursor-thickness`. All confirmed valid via vendor docs.
+**Web verification rule:** when a config key looks suspect (unfamiliar value, version-specific), confirm against the tool's official docs before flagging it as invalid. Examples that look wrong but are valid: Codex `model = "gpt-5.5"`/`gpt-5.4`/`gpt-5.4-mini`, Codex `personality = "friendly"`, Codex `[features].fast_mode`/`prevent_idle_sleep`/`personality` (the `[features].personality = true` gate pairs with the top-level `personality = "friendly"` value above), Codex `commit_attribution = ""` (empty disables the AI-attribution commit trailer), Codex `model_reasoning_effort`/`plan_mode_reasoning_effort = "xhigh"` (valid range, parallels Claude's `effortLevel`), Claude `effortLevel = "xhigh"`, Claude `model = "opus[1m]"`, atuin `inline_height_shell_up_key_binding`, atuin `enter_accept = false` (intentional default-flip: Enter selects/edits, doesn't auto-execute), atuin `keymap_mode = "auto"` (default is `emacs`; `auto` follows the shell keymap), ghostty `cursor-opacity`/`adjust-cursor-thickness`. All confirmed valid via vendor docs.
 
 ## VSCodium settings
 
@@ -307,7 +308,7 @@ When updating the Applications table in `docs/applications.md`, see the selectio
 
 - Tools in **bold** are primary recommendations (one per category)
 - GUI apps go in Applications section, text-based/TUI tools go in CLI tools section
-- Include 2-5 apps per category when possible
+- Include 2-5 apps per platform column when possible (the Utilities catch-all row is exempt)
 - Verify apps are actively maintained before adding
 - Research community sentiment (Reddit, GitHub issues, HN) before adding new tools
 
@@ -329,7 +330,7 @@ The `.config/claude/settings.json` configures permissions and plugins:
 - **Sensitive-data protection:** No path-based deny in `settings.json` (removed for parity with Codex, which has no `deny_rule` mechanism in its schema). See trust-boundary note below.
 - **Requires approval:** Arbitrary package install (`brew install`, `npm install`, `uv add`), direct code execution (`python`, `node`, `go run`), git writes, docker mutations
 - **Sensitive-data trust boundary:** No path-based deny rules on either agent. Claude `Read(...)` deny was removed because Codex `prefix_rule` schema has no path-deny equivalent, and JSON-level deny on `Read` never covered the allowed `Bash(...)` readers (`bat`, `head`, `jq`, etc.) anyway. Actual protection on both agents is the model-level `## Sensitive Data` rule: `.config/claude/CLAUDE.md` for Claude, `.config/codex/AGENTS.md` for Codex. Same path set, same enforcement layer.
-- **Enabled plugins:** gopls-lsp, pyright-lsp, typescript-lsp, code-review, feature-dev, code-simplifier, claude-md-management, caveman, context7, slack, atlassian, posthog, datadog, pr-review-toolkit, superpowers, frontend-design, skill-creator, commit-commands, security-guidance
+- **Enabled plugins:** source of truth is `enabledPlugins` in `.config/claude/settings.json`; category and Claude/Codex parity breakdown in [`docs/conventions.md`](docs/conventions.md).
 - **Marketplace:** [caveman](https://github.com/JuliusBrussee/caveman) (auto-update enabled)
 - **Status line:** Custom layout via [`ccstatusline`](https://www.npmjs.com/package/ccstatusline) (model, thinking effort, cwd, git branch, context %, session/weekly usage, cost)
 - **Usage tracking:** [`ccstatusline`](https://www.npmjs.com/package/ccstatusline) surfaces session/weekly usage and cost in the status bar via the [`ccusage`](https://github.com/ryoppippi/ccusage) library it embeds. Run `npx ccusage` for ad-hoc cost reports.
@@ -343,7 +344,7 @@ The `.config/codex/config.toml` configures model selection, sandboxing, plugins,
 - **Default behavior:** On-request approvals, `workspace-write` sandbox, cached web search by default, analytics/feedback disabled
 - **Rules:** `.config/codex/rules/` defines allowed command groups for `git`, `dev`, `shell`, and `infra`
 - **Scratch dir:** `/tmp/codex` (mirrors Claude's `/tmp/claude`; allow-listed in `.config/codex/rules/shell.rules` and mandated by `.config/codex/AGENTS.md` `## Scratch Files`)
-- **Enabled plugins:** caveman, superpowers, slack, atlassian-rovo, datadog, posthog, context7
+- **Enabled plugins:** source of truth is the `[plugins.*]` blocks in `.config/codex/config.toml`; category and Claude/Codex parity breakdown in [`docs/conventions.md`](docs/conventions.md).
 - **Marketplaces:** [caveman-repo](https://github.com/JuliusBrussee/caveman) (source for caveman) and [context7-marketplace](https://github.com/upstash/context7) (source for context7). Both git-backed.
 - **Connectors via plugins:** atlassian-rovo, datadog, posthog use the OpenAI-curated app-connector model (`.app.json` references a hosted connector ID); context7 ships as a Codex plugin from the `context7-marketplace` git source and references the vendor's hosted MCP endpoint at `https://mcp.context7.com/mcp` internally. No `[mcp_servers.*]` blocks needed in `config.toml`; enabling the plugin is the connection.
 - **Web search / fetch asymmetry (vs Claude):** Codex uses a global `web_search = "cached"` toggle in `config.toml` (options: `always` | `cached` | `never`); per-domain fetch allowlists are not in the Codex schema. Claude's per-domain `WebFetch(domain:...)` entries in `settings.json` have no Codex counterpart by design.

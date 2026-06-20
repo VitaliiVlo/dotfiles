@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Each run reads the clean base for the four tracked files from `git show HEAD:<path>`
+"""Each run reads the clean base for each tracked file in `TARGETS` from `git show HEAD:<path>`
 so overrides apply against a known starting point and never compound. The resulting
 working-tree diff is intentional and must stay uncommitted.
 """

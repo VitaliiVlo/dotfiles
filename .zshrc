@@ -19,6 +19,7 @@ setopt hist_verify
 setopt hist_reduce_blanks
 setopt hist_ignore_space
 
+# Directories & globbing
 setopt globdots
 setopt auto_cd
 setopt auto_pushd

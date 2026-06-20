@@ -56,7 +56,7 @@ Bold primary lives in whichever column applies. Within each column, order altern
 | Networking | — | Trayscale (Tailscale GUI) | **Tailscale**, Cloudflare WARP, Proton VPN |
 | File Transfer | **AirDrop** | KDE Connect | LocalSend, syncthing |
 | Medical Imaging | **Horos** | — | Weasis |
-| Utilities | **Rectangle**, BetterDisplay, Keka, KeepingYouAwake, LinearMouse, Maccy, MiddleClick | Extension Manager, File Roller, Flatseal, GNOME Tweaks, Sushi | balenaEtcher |
+| Utilities (catch-all) | **Rectangle**, BetterDisplay, Keka, KeepingYouAwake, LinearMouse, Maccy, MiddleClick | Extension Manager, File Roller, Flatseal, GNOME Tweaks, Sushi | balenaEtcher |
 | Linux Distros | — | **Fedora**, Silverblue, Bluefin, Vanilla OS, Zorin OS, Ubuntu (versions + deltas in [`linux-tips.md`](linux-tips.md#distro-specific-deltas)) | — |
 
 ## VSCodium setup

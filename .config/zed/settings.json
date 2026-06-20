@@ -6,11 +6,7 @@
     "light": "Catppuccin Latte",
     "dark": "Catppuccin Macchiato"
   },
-  "icon_theme": {
-    "mode": "system",
-    "light": "Material Icon Theme",
-    "dark": "Material Icon Theme"
-  },
+  "icon_theme": "Material Icon Theme",
   // Font
   "buffer_font_family": "JetBrains Mono",
   "buffer_font_fallbacks": [

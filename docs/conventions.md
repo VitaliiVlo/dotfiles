@@ -165,6 +165,7 @@ Errors/warnings shown on affected lines:
 
 - VSCodium: `errorlens` extension (installed via Brewfile)
 - Zed: `diagnostics.inline.enabled: true` (built-in, matches ErrorLens behavior)
+- Both cap at `warning`: VSCodium `errorLens.enabledDiagnosticLevels: ["error", "warning"]`, Zed `diagnostics.inline.max_severity: "warning"`
 
 ## Shell linting/formatting
 

@@ -2,7 +2,7 @@
 
 Non-obvious shortcuts and behaviors worth remembering for Fedora, Silverblue, Bluefin, Vanilla OS, Zorin OS, Ubuntu. Default assumption: **GNOME on Wayland** across the set. Atomic-specific notes (rpm-ostree / bootc / ABRoot / apx) live in [Distro-specific deltas](#distro-specific-deltas). `gsettings` recipes already applied by `make linux-defaults` are not repeated here, see `scripts/linux-defaults.sh`. macOS equivalents live in [`macos-tips.md`](macos-tips.md).
 
-Targets (current as of mid-2026):
+Version baselines (snapshot, verify against each distro's releases page for the current version):
 
 | Stack                | Version baseline                                                                |
 | -------------------- | ------------------------------------------------------------------------------- |
@@ -292,7 +292,7 @@ If the laptop has a libfprint-supported reader, enroll a finger (`fprintd-enroll
 
 ### Vanilla OS
 
-Latest: **Vanilla OS 2 "Orchid"** (July 2024, Debian sid base via Vib, GNOME 46, ABRoot atomic). Updates ride on `vso` (vanilla system operator); ABRoot keeps two parallel root images for atomic rollback. Host kept minimal; most user-space packages run inside `apx` subsystems (Distrobox wrapper) rather than on the host root.
+Baseline: **Vanilla OS 2 "Orchid"** (July 2024, Debian sid base via Vib, GNOME 46, ABRoot atomic). Updates ride on `vso` (vanilla system operator); ABRoot keeps two parallel root images for atomic rollback. Host kept minimal; most user-space packages run inside `apx` subsystems (Distrobox wrapper) rather than on the host root.
 
 - Package manager: **`apx`**. `apx install <pkg>` defaults to a managed Distrobox subsystem (`apx list` to inspect). For host-level layering: `apx install --sysprefix vso-core <pkg>` writes into the next ABRoot deployment, reboot to apply. No direct host `apt` by default.
 - Updates: `vso update` (downloads to inactive root), reboot to apply. `vso config` for upgrade scheduling and channel pin. `vso trigger-update` for immediate check.
@@ -302,7 +302,7 @@ Latest: **Vanilla OS 2 "Orchid"** (July 2024, Debian sid base via Vib, GNOME 46,
 
 ### Zorin OS
 
-Latest: **Zorin OS 18.1** (April 2026, Ubuntu 24.04 HWE base, GNOME 46-based with heavy theming, supported through April 2029).
+Baseline: **Zorin OS 18.1** (April 2026, Ubuntu 24.04 HWE base, GNOME 46-based with heavy theming, supported through April 2029).
 
 - GNOME with a polished layout chooser (*Zorin Appearance*) that mimics macOS, Windows 11, Windows Classic, or GNOME. Most GNOME tips above apply.
 - Tray icons work out of the box (AppIndicator extension preinstalled).

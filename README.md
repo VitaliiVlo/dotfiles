@@ -107,7 +107,7 @@ Per-machine data (git identity, `GOPRIVATE`, Claude team marketplaces/plugins, C
    - `.zprofile` — `GOPRIVATE` line replaced
    - `.config/claude/settings.json` — `extraKnownMarketplaces` and `enabledPlugins` extended
    - `.config/codex/config.toml` — `[projects."<path>"]` blocks appended
-3. The resulting working-tree diff on those four files is intentional. **Do not commit it.** Each run reads from HEAD, so overrides never compound and a fresh `git pull` + re-run keeps state consistent.
+3. The resulting working-tree diff on those files is intentional. **Do not commit it.** Each run reads from HEAD, so overrides never compound and a fresh `git pull` + re-run keeps state consistent.
 
 `.local/` is gitignored; `.local.example.toml` is the committed schema source. `make setup` and `make setup-all` chain `local-overrides` after `symlinks` so a clean clone reaches the configured state in one command.
 
@@ -148,7 +148,7 @@ The following files are automatically symlinked by running `make symlinks`:
 
 Used directly from the repo:
 
-- `Brewfile` - Base Brewfile (shell, fonts, daily-driver apps, VSCodium extensions)
+- `Brewfile` - Base Brewfile (shell, fonts, daily-driver apps, VSCodium extensions, go dev tools)
 - `Brewfile.work` - Work Brewfile (work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN, browser; curated manually)
 - `CLAUDE.md` - Repository instructions for Claude Code (auto-discovered in cwd; Codex reads it via `project_doc_fallback_filenames`)
 - `defaults/` - Upstream defaults snapshots for offline comparison (`vscodium-defaults.jsonc`, `zed-defaults.jsonc`, `ghostty-defaults.conf`, `bat-defaults.conf`, `starship-nerd-font-symbols.toml`, `yazi-defaults.toml`, `superfile-defaults.toml`, `atuin-defaults.toml`). Regenerate via `make snapshots`. Curl-fetched snapshots (Zed, Yazi, Superfile, Atuin) track `main` upstream, not the installed version. VSCodium snapshot still needs manual regen via `Preferences: Open Default Settings (JSON)` (no CLI hook); `make snapshots` prints the target path.

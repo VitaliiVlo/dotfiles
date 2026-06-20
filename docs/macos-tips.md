@@ -2,14 +2,13 @@
 
 Non-obvious shortcuts and behaviors worth remembering. `defaults write` recipes already applied by `make macos-defaults` are not repeated here, see `scripts/macos-defaults.sh`. Linux equivalents live in [`linux-tips.md`](linux-tips.md).
 
-Targets (current as of mid-2026):
+Targets: macOS 26 Tahoe and 15 Sequoia. See [Apple macOS](https://www.apple.com/macos/) for the current release.
 
-| Stack            | Version baseline                                                                |
-| ---------------- | ------------------------------------------------------------------------------- |
-| macOS            | **26 Tahoe** (Sept 2025, Liquid Glass UI, Spotlight redesign, clipboard history); 15 Sequoia still supported |
-| Next             | macOS 27 Golden Gate (announced WWDC 2026, ships fall 2026; first Apple Silicon-only release, drops all Intel) |
-| Apple Intelligence | On-device + Private Cloud Compute, gated by M1+ Mac and supported region/language |
-| Xcode CLT        | 16.4+ (Sequoia), 17.x (Tahoe)                                                    |
+| Stack              | Version baseline                                                                  |
+| ------------------ | --------------------------------------------------------------------------------- |
+| macOS              | 26 Tahoe (Liquid Glass UI, Spotlight redesign, clipboard history) and 15 Sequoia  |
+| Apple Intelligence | On-device + Private Cloud Compute, gated by M1+ Mac and supported region/language  |
+| Xcode CLT          | Tracks the active macOS (17.x on Tahoe, 16.4+ on Sequoia)                          |
 
 ## Clipboard and paste
 
@@ -17,7 +16,7 @@ Targets (current as of mid-2026):
 | -------------------------------- | ---------------------------------------------------------------------------------------- |
 | `Option+Shift+Cmd+V`             | Paste and match style (strips formatting; for Slack, Jira, docs)                         |
 | Universal Clipboard              | Copy on iPhone / iPad / Mac, paste on another nearby Apple device                        |
-| `Cmd+Space` then `Cmd+4`         | Spotlight Clipboard History (macOS 26 Tahoe+). Click item to restore to clipboard, or double-click to paste at cursor. Off by default in *Settings → Spotlight*; ~10 items, 8h retention, 16,384-char cap, not synced via Universal Clipboard. 26.1 added retention-duration controls. For unlimited history, hotkey-summoned popup, and fuzzy search install **Maccy** (`brew install --cask maccy`); coexists with Spotlight clipboard. |
+| `Cmd+Space` then `Cmd+4`         | Spotlight Clipboard History (macOS 26 Tahoe+). Click item to restore to clipboard, or double-click to paste at cursor. Off by default in *Settings → Spotlight*; keeps a limited recent history (about 8h), not synced via Universal Clipboard. For unlimited history, hotkey-summoned popup, and fuzzy search install **Maccy** (`brew install --cask maccy`); coexists with Spotlight clipboard. |
 
 ## Screenshots and screen recording
 
