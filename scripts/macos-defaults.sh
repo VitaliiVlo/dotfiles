@@ -15,7 +15,7 @@ mkdir -p "$HOME/Pictures/Screenshots"
 
 heading "→ Configuring system defaults…"
 # Input
-# Skip InitialKeyRepeat / KeyRepeat: inherit OS-default rate (Linux pins 250ms/30ms explicit; see CLAUDE.md "macOS settings").
+# Skip InitialKeyRepeat / KeyRepeat: inherit OS-default rate (Linux pins 250ms/30ms explicit).
 defaults write NSGlobalDomain ApplePressAndHoldEnabled            -bool   false  # Key repeat instead of accent menu
 defaults write NSGlobalDomain com.apple.swipescrolldirection      -bool   true   # Natural scrolling
 # Save dialogs
@@ -92,5 +92,10 @@ killall Dock >/dev/null 2>&1 || true
 # install path); on-demand sleep prevention is covered by the `keepingyouawake` cask
 # (Brewfile) and `caffeinate` shell helper. Linux counterpart sets
 # `org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type = 'nothing'`.
+
+# Menu bar: not scripted. macOS already shows the weekday and hides seconds by
+# default (matches the Linux `clock-show-weekday` / `clock-show-seconds` settings);
+# battery percentage is Control-Center-only since macOS 11 (the old
+# `com.apple.menuextra.battery ShowPercent` key was removed), so it cannot be scripted.
 
 heading "Finished applying defaults."

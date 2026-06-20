@@ -261,7 +261,6 @@
     "material-icon-theme": true,
     "dockerfile": true,
     "git-firefly": true,
-    "html": true,
     "make": true,
     "proto": true,
     "rainbow-csv": true,

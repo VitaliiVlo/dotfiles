@@ -72,7 +72,6 @@ fi
 # fzf
 if command -v fzf &>/dev/null; then
   export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border"
-  export FZF_CTRL_R_OPTS="--no-preview --height=50%"
   if command -v fd &>/dev/null; then
     export FZF_DEFAULT_COMMAND="fd --type f $_FD_OPTS"
     export FZF_CTRL_T_COMMAND="fd --type f $_FD_OPTS"

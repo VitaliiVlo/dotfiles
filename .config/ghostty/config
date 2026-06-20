@@ -55,6 +55,5 @@ copy-on-select = true
 
 # Input
 macos-option-as-alt = true
-focus-follows-mouse = false
 mouse-hide-while-typing = true
 keybind = shift+enter=text:\x1b\r

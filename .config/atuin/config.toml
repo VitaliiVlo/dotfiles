@@ -10,9 +10,7 @@ strip_trailing_whitespace = true
 search_mode = "fuzzy"
 filter_mode = "global"
 keymap_mode = "auto"
-show_preview = true
 enter_accept = false
-ctrl_n_shortcuts = false
 show_numeric_shortcuts = false
 
 # Layout — Ctrl+R full-screen, Up arrow inline (20 lines)

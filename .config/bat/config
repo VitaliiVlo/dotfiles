@@ -6,10 +6,9 @@
 --style="numbers,changes,header,grid"
 --italic-text=always
 --tabs=4
---wrap=auto
 
 # Pager
 --pager="less --RAW-CONTROL-CHARS --quit-if-one-screen"
 
-# Syntax mappings (only entries bat does not map natively)
+# Syntax mappings (catch-all for .env.* suffixes beyond bat's built-in DotENV list)
 --map-syntax ".env*:Dotenv"

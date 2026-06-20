@@ -64,7 +64,7 @@ Run `make help` to list all available targets.
 
 > Targets Fedora, Silverblue, Bluefin, Vanilla OS, Zorin OS, Ubuntu. All GNOME-on-Wayland: `make linux-defaults` writes `gsettings` keys that apply across the set; see [`docs/linux-tips.md`](docs/linux-tips.md) for per-distro deltas. Atomic variants (Bluefin, Silverblue, Vanilla OS) work too, but extra packages must be layered via `rpm-ostree` / `bootc` (Fedora atomics) or `apx` / `vso` (Vanilla OS), or installed inside Distrobox/Toolbox, instead of `dnf` / `apt`. KDE / Sway / headless sessions skip the `gsettings` block but everything else (symlinks, Brewfile, shell) applies. Linuxbrew prefix defaults to `/home/linuxbrew/.linuxbrew` in `.zshrc` / `.zprofile` (override via `BREW_PREFIX` env).
 
-- **Install build prerequisites:** `scripts/local-overrides.py` needs Python 3.11+ (stdlib `tomllib`). Fedora 39+, Ubuntu 24.04+, and recent Debian ship a compatible `python3`. Older distros are out of scope.
+- **Install build prerequisites:** `scripts/local-overrides.py` needs Python 3.11+ (stdlib `tomllib`); any distro shipping `python3` 3.11 or newer works. Older distros are out of scope.
   ```bash
   # Debian/Ubuntu (Zorin OS)
   sudo apt-get update
@@ -303,13 +303,7 @@ Homebrew Cask inventory (base, work, Linux-installable subset): see [`docs/casks
 
 ## Codex
 
-The `.config/codex/config.toml` configures model selection, sandboxing, plugins, and MCP integrations:
-
-- **Default behavior:** On-request approvals, `workspace-write` sandbox, cached web search by default, analytics/feedback disabled
-- **Rules:** `.config/codex/rules/` defines allowed command groups for `git`, `dev`, `shell`, and `infra`
-- **Enabled plugins:** caveman, superpowers, slack, atlassian-rovo, datadog, posthog, context7
-- **Marketplaces:** [caveman-repo](https://github.com/JuliusBrussee/caveman) (source for caveman) and [context7-marketplace](https://github.com/upstash/context7) (source for context7). Both git-backed.
-- **Connectors via plugins:** atlassian-rovo, datadog, posthog use the OpenAI-curated app-connector model (`.app.json` references a hosted connector ID); context7 connects to the vendor-hosted MCP server at `https://mcp.context7.com/mcp`. No `[mcp_servers.*]` blocks needed in `config.toml`; enabling the plugin is the connection.
+`.config/codex/config.toml` configures model selection, sandboxing, plugins, and MCP integrations. Full breakdown (approval/sandbox defaults, command rules, enabled plugins, marketplaces, plugin-based connectors, web-search asymmetry vs Claude) in [`CLAUDE.md` "Codex settings"](CLAUDE.md#codex-settings).
 
 ## Templates
 

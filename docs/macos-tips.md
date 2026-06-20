@@ -7,7 +7,7 @@ Targets (current as of mid-2026):
 | Stack            | Version baseline                                                                |
 | ---------------- | ------------------------------------------------------------------------------- |
 | macOS            | **26 Tahoe** (Sept 2025, Liquid Glass UI, Spotlight redesign, clipboard history); 15 Sequoia still supported |
-| Next             | macOS 27 expected at WWDC 2026 (June 8 keynote), ships fall 2026; M1+ only        |
+| Next             | macOS 27 Golden Gate (announced WWDC 2026, ships fall 2026; first Apple Silicon-only release, drops all Intel) |
 | Apple Intelligence | On-device + Private Cloud Compute, gated by M1+ Mac and supported region/language |
 | Xcode CLT        | 16.4+ (Sequoia), 17.x (Tahoe)                                                    |
 

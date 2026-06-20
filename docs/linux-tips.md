@@ -41,9 +41,9 @@ GNOME 42+ ships a unified capture overlay; the standalone `gnome-screenshot` bin
 | `Print`                        | Screenshot UI (region / window / full, plus screen recording toggle)             |
 | `Shift+Print`                  | Full screen to `~/Pictures/Screenshots` immediately                              |
 | `Alt+Print`                    | Active window to file                                                            |
-| `Ctrl+Print`                   | Full screen to clipboard, skip file                                              |
 | `Ctrl+Alt+Shift+R`             | Start / stop screen recording (built-in, WebM, no audio)                         |
-| `Super+Print`                  | Active window to clipboard                                                       |
+
+The `Print` capture UI copies the shot to the clipboard as well as saving it; there are no default clipboard-only shortcuts, so bind your own in Settings > Keyboard if you want them.
 
 Built-in recorder has no audio and no cursor toggle. For more control use **OBS Studio** (Flatpak `com.obsproject.Studio` everywhere; native `obs-studio` on Fedora-family via RPM Fusion, on Debian-family via apt). **Kooha** (Flatpak `io.github.seadve.Kooha`) is a simpler portal-based alternative.
 
@@ -142,7 +142,7 @@ displays               # opens Settings → Displays
 
 | Shortcut                        | Use                                                              |
 | ------------------------------- | ---------------------------------------------------------------- |
-| `Ctrl+.` then suggestion        | Emoji picker (works in any GTK 4 / libadwaita text field)        |
+| `Ctrl+.` or `Ctrl+;`            | Emoji / symbol picker (any GTK 4 / libadwaita field)             |
 | `Ctrl+Shift+U` then hex + Space | Insert Unicode codepoint by hex (IBus, GTK)                      |
 | `Alt+Backspace`                 | Delete previous word (most GTK fields, terminals)                |
 | `Ctrl+Delete`                   | Delete next word                                                 |
@@ -234,6 +234,7 @@ Mouse-only users: enable *Mouse → Show position on Ctrl press* in **Settings �
 - **Papers** (see [`applications.md`](applications.md)) GTK 4 + libadwaita default PDF reader. PDF / PS / DjVu / Comic Book. `F5` presentation, `Ctrl+F` find, sidebar tabs include annotations + bookmarks.
 - **File Roller** (`file-roller`, see [`applications.md`](applications.md)) double-click any archive (`.zip`, `.tar.*`, `.7z`, `.rar` with `unrar`/`unar`) to browse before extracting.
 - **Loupe + gThumb + Papers** all support drag-out-to-save and inline cropping via *Edit → Crop*.
+- **OCR / text from images** GNOME has no built-in Live Text equivalent. **Frog** (Flatpak `com.github.tenderowl.frog`) extracts text from any image, screenshot, or QR code; the `tesseract` CLI does the same headless.
 
 ## Fingerprint sudo
 

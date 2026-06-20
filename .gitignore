@@ -13,7 +13,7 @@ __pycache__/
 *.pyc
 *.swp
 
-# AI tools (per-project local files; keep tracked dirs like .claude/commands shareable)
+# AI tools: ignore only per-project local files, never the whole .claude/ tree (keeps future tracked .claude/ content shareable)
 .claude/settings.local.json
 CLAUDE.local.md
 AGENTS.local.md

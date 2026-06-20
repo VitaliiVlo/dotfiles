@@ -219,8 +219,8 @@ VSCodium runs bundled `tsserver` (VSCode core); Zed runs bundled `vtsls` (differ
 | Inlay hints (variable types) | `inlayHints.variableTypes.enabled: true` | `inlayHints: { variableTypes: { enabled: true } }` |
 | Inlay hints (property declaration types) | `inlayHints.propertyDeclarationTypes.enabled: true` | `inlayHints: { propertyDeclarationTypes: { enabled: true } }` |
 | Inlay hints (enum member values) | `inlayHints.enumMemberValues.enabled: true` | `inlayHints: { enumMemberValues: { enabled: true } }` |
-| Type-only auto-imports (TS 5.0+) | `js/ts.preferences.preferTypeOnlyAutoImports: true` (unified namespace; `typescript.*` + `javascript.*` variants deprecated since VSCode 1.85) | `preferences: { preferTypeOnlyAutoImports: true }` (vtsls schema keeps typescript + javascript split — pass through tsserver protocol) |
-| tsserver memory ceiling | `js/ts.tsserver.maxMemory: 8192` (renamed from `typescript.tsserver.maxTsServerMemory`, deprecated since VSCode 1.85) | `typescript.tsserver: { maxTsServerMemory: 8192 }` (vtsls passes the legacy tsserver-protocol key through; vtsls did not unify the namespace) |
+| Type-only auto-imports (TS 5.0+) | `js/ts.preferences.preferTypeOnlyAutoImports: true` (unified namespace; supersedes the `typescript.*` + `javascript.*` variants, retained as aliases) | `preferences: { preferTypeOnlyAutoImports: true }` (vtsls schema keeps typescript + javascript split — pass through tsserver protocol) |
+| tsserver memory ceiling | `js/ts.tsserver.maxMemory: 8192` (renamed from `typescript.tsserver.maxTsServerMemory`, retained as an alias) | `typescript.tsserver: { maxTsServerMemory: 8192 }` (vtsls passes the legacy tsserver-protocol key through; vtsls did not unify the namespace) |
 
 vtsls accepts the same dotted-namespace as tsserver under its `settings`; the JS and TS sub-objects mirror each other so `.js` and `.ts` files behave identically. `maxTsServerMemory` raised from the 3072 MB default insures against monorepo TypeScript OOM.
 
