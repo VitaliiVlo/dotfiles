@@ -320,7 +320,7 @@ Shared-behavior tables live in `docs/conventions.md`. Read that file when:
 - Changing a value already covered in any consistency table (must update the table + every other tool's matching setting)
 - Auditing whether a tool drifted from the shared invariants
 
-The doc covers: editor settings matrix (VSCodium/Zed/Micro/Ghostty/Bat/Delta/Yazi), telemetry, file-search defaults (fd/rg/yazi/eza/Finder/Nautilus/superfile), italic rendering, smooth scrolling, AI agent enablement, pager=delta, modified-file indicators, preview line numbers, OS theme follow, inline diagnostics, shell linting pairs, extension management, font icons, shell integration, clipboard whitespace, update channels, exclusion lists, git-settings cross-tool table, `EDITOR` env var, Claude↔Codex command parity, marketplace identifiers, Brewfile maintenance rules.
+The doc holds the shared-behavior tables (theme, font, telemetry, git pager, tab size, scroll margin, cursor, italics, AI enablement, per-language tooling for Go/Python/TypeScript, update channels, exclusion lists, git settings, `EDITOR` env, Claude↔Codex command + plugin parity, marketplace IDs, Brewfile rules, Linux GUI packaging, and more). The `##` section headers in `docs/conventions.md` are the canonical index.
 
 ## Claude Code settings
 
@@ -347,6 +347,6 @@ The `.config/codex/config.toml` configures model selection, sandboxing, plugins,
 - **Enabled plugins:** source of truth is the `[plugins.*]` blocks in `.config/codex/config.toml`; category and Claude/Codex parity breakdown in [`docs/conventions.md`](docs/conventions.md).
 - **Marketplaces:** [caveman-repo](https://github.com/JuliusBrussee/caveman) (source for caveman) and [context7-marketplace](https://github.com/upstash/context7) (source for context7). Both git-backed.
 - **Connectors via plugins:** atlassian-rovo, datadog, posthog use the OpenAI-curated app-connector model (`.app.json` references a hosted connector ID); context7 ships as a Codex plugin from the `context7-marketplace` git source and references the vendor's hosted MCP endpoint at `https://mcp.context7.com/mcp` internally. No `[mcp_servers.*]` blocks needed in `config.toml`; enabling the plugin is the connection.
-- **Web search / fetch asymmetry (vs Claude):** Codex uses a global `web_search = "cached"` toggle in `config.toml` (options: `always` | `cached` | `never`); per-domain fetch allowlists are not in the Codex schema. Claude's per-domain `WebFetch(domain:...)` entries in `settings.json` have no Codex counterpart by design.
+- **Web search / fetch asymmetry (vs Claude):** Codex uses a global `web_search = "cached"` toggle in `config.toml` (options: `disabled` | `cached` | `live`; default `cached`); per-domain fetch allowlists are not in the Codex schema. Claude's per-domain `WebFetch(domain:...)` entries in `settings.json` have no Codex counterpart by design.
 
 See `.config/codex/config.toml` and `.config/codex/rules/` for the full configuration.

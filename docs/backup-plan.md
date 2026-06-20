@@ -36,7 +36,7 @@ Both tiers are vendor-locked: iCloud+ ends with the Apple ID, Google One ends wi
 | Contacts | iCloud | Google Contacts (CardDAV sync) | TM on SSD and HDD |
 | Calendar | iCloud | Google Calendar (CalDAV sync) | TM on SSD and HDD |
 | Notes | Apple Notes (iCloud) | Quarterly Markdown export | TM on SSD and HDD |
-| Reminders | Apple Reminders (iCloud) | Quarterly export | TM on SSD and HDD |
+| Reminders | Apple Reminders (iCloud) | Quarterly Calendar Archive (`.icbu`) | TM on SSD and HDD |
 | Passwords | 1Password | Encrypted `.1pux` on TM (SSD) + Emergency Kit printed (home safe) | Encrypted `.1pux` on TM (HDD, offsite) + Emergency Kit printed (offsite) |
 | Photos originals | Mac (Download Originals) | iCloud Photos | TM on SSD and HDD |
 | Email | Gmail | Apple Mail local cache + quarterly `.mbox` export | TM on SSD and HDD |
@@ -156,11 +156,10 @@ Set calendar reminders for each.
 
 ### Quarterly
 
-- [ ] Gmail archive: Apple Mail → select the Gmail "All Mail" mailbox → Mailbox → Export Mailbox → save `.mbox` to `~/Backups/Mail/YYYY-Qn/`. Contacts / Calendar / Notes / Reminders have their own export steps below.
-- [ ] Notes export: use [Obsidian Importer](https://github.com/obsidianmd/obsidian-importer) (first-party Obsidian plugin → Apple Notes format) → Markdown dump to a quarterly vault at `~/Backups/Notes/YYYY-Qn/`.
-- [ ] Reminders export: Reminders app → File → Export → save `.ics` to `~/Backups/Reminders/YYYY-Qn/`.
+- [ ] Gmail archive: Apple Mail → select the Gmail "All Mail" mailbox → Mailbox → Export Mailbox → save `.mbox` to `~/Backups/Mail/YYYY-Qn/`. Contacts / Calendar / Notes have their own export steps below; Reminders ride the Calendar Archive.
+- [ ] Notes export: use [Obsidian Importer](https://github.com/obsidianmd/obsidian-importer) (first-party Obsidian plugin → Apple Notes format) → Markdown dump to a quarterly vault at `~/Backups/Notes/YYYY-Qn/`. Alternative: [kzaremski/apple-notes-exporter](https://github.com/kzaremski/apple-notes-exporter) (standalone Swift app, bulk Markdown export preserving folder structure + incremental sync, no Obsidian dependency; GitHub release, not Homebrew).
 - [ ] Contacts vCard export: Contacts → File → Export → Contacts Archive → save to `~/Backups/Contacts/YYYY-Qn/`.
-- [ ] Calendar `.ics` export: Calendar → File → Export → Calendar Archive → save to `~/Backups/Calendar/YYYY-Qn/`.
+- [ ] Calendar + Reminders archive: Calendar → File → Export → Calendar Archive → save the `.icbu` (one bundle holds all calendars and reminders) to `~/Backups/Calendar/YYYY-Qn/`.
 - [ ] Restore test: pull 1 random file from Time Machine (home drive) and 1 file from the offsite drive after swap. Open and verify content.
 - [ ] Verify 1Password Emergency Kit Secret Key matches printed copy (read the printout, paste into a verify-only check).
 - [ ] 1Password breakglass export: Disk Utility → File → New Image → Blank Image, format APFS, encryption AES-256, strong passphrase, name `1pw-vault-YYYY-Qn`. Mount it, then 1Password → File → Export → save the `.1pux` into the mounted image (never to the Desktop first). Eject the image and move the `.dmg` to `~/Backups/1Password/YYYY-Qn/` so it rides Time Machine to both drives. Vendor-independent offline copy of the secrets themselves, for a 1Password service outage (the Emergency Kit only restores account access, which is useless if the service is down). The `.1pux` is double-encrypted at rest (your image passphrase plus APFS), so it stays protected even if the drive is unlocked. Store the image passphrase in 1Password and on the Emergency Kit printout. Delete the prior quarter's image after writing the new one.
@@ -225,7 +224,7 @@ The plan is solid at home; a trip is where a single stolen device can cascade in
 1. New Apple ID. Sign in on devices. iCloud Mail address is gone, so switch primary email back to Gmail.
 2. Critical accounts: update recovery email via each service's support flow (bank, brokerage, GitHub, etc.).
 3. Contacts and Calendar: restore from Google sync copy (still live in your Google account).
-4. Notes and Reminders: restore from quarterly Markdown / `.ics` exports.
+4. Notes and Reminders: restore Notes from the quarterly Markdown export, Reminders from the Calendar Archive `.icbu` (double-click to import calendars and reminders).
 5. Photos: restore from the most recent rotated drive (each drive's Time Machine carries the full Photos Library).
 6. Passwords: 1Password unaffected (separate vendor).
 7. iMessage history: restore from the monthly encrypted local iPhone backup (Finder → restore), which holds the full thread history when Messages in iCloud is kept OFF per iPhone backup. New messages bind to the new Apple ID / number going forward.

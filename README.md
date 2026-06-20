@@ -151,7 +151,7 @@ Used directly from the repo:
 - `Brewfile` - Base Brewfile (shell, fonts, daily-driver apps, VSCodium extensions, go dev tools)
 - `Brewfile.work` - Work Brewfile (work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN, browser; curated manually)
 - `CLAUDE.md` - Repository instructions for Claude Code (auto-discovered in cwd; Codex reads it via `project_doc_fallback_filenames`)
-- `defaults/` - Upstream defaults snapshots for offline comparison (`vscodium-defaults.jsonc`, `zed-defaults.jsonc`, `ghostty-defaults.conf`, `bat-defaults.conf`, `starship-nerd-font-symbols.toml`, `yazi-defaults.toml`, `superfile-defaults.toml`, `atuin-defaults.toml`). Regenerate via `make snapshots`. Curl-fetched snapshots (Zed, Yazi, Superfile, Atuin) track `main` upstream, not the installed version. VSCodium snapshot still needs manual regen via `Preferences: Open Default Settings (JSON)` (no CLI hook); `make snapshots` prints the target path.
+- `defaults/` - Upstream defaults snapshots for offline drift comparison. Regenerate via `make snapshots` (curl-fetched snapshots track `main`, not the installed version; the VSCodium one is a manual export). CLAUDE.md "Repository structure" lists each file and its regen path.
 - `.local.example.toml` - Schema for per-machine overrides; copy to `.local/source.toml` (gitignored) and fill in. See [Local overrides](#local-overrides).
 
 ## macOS settings
@@ -282,7 +282,7 @@ After `make setup`, verify everything wired up:
 - `git config --list --show-origin | head -5` — settings come from `~/.config/git/config`
 - `ls -l ~/.config/ghostty/config ~/.zshrc ~/.config/git/config` — symlinks point at this repo
 
-For full audit, run `make validate` (delegates to `scripts/validate.sh`). Covers TOML/JSON/YAML/JSONC parse, `brew bundle list` (parse) + non-fatal `brew bundle check` (install state), `ghostty +validate-config`, `shellcheck`, `shfmt`, `zsh -n` on `.zshrc`/`.zprofile`, `prefix_rule(` sanity grep on `.config/codex/rules/*.rules`, `git config --list` on `.config/git/config`, `--`-prefix sanity grep on `.config/bat/config` and `.config/ripgrep/ripgreprc`, `=`-presence grep on `.config/btop/btop.conf`, `ast.parse` syntax check on `scripts/local-overrides.py`, and symlink resolution. Skips macOS-native symlinks on Linux.
+For full audit, run `make validate` (delegates to `scripts/validate.sh`): it parses every config (TOML/JSON/YAML/JSONC), checks the Brewfiles and ghostty, lints the shell scripts, and verifies symlinks resolve (skipping macOS-native paths on Linux). See CLAUDE.md "Config validation" for the per-check breakdown.
 
 ## Updating
 

@@ -10,8 +10,8 @@ Version baselines (snapshot, verify against each distro's releases page for the 
 | GTK / libadwaita     | GTK 4.18+, libadwaita 1.8+                                                       |
 | Qt / KDE Frameworks  | Qt 6.10+ (Plasma 6.6 Feb 2026, Plasma 6.7 June 2026), KF 6.24+                    |
 | Wayland / portals    | `xdg-desktop-portal` 1.20+, `xdg-desktop-portal-gnome` 50, PipeWire 1.6+         |
-| Fedora Workstation   | 44 (April 2026, GNOME 50, `dnf5` default)                                       |
-| Silverblue    | 44 (April 2026, GNOME 50, atomic via `rpm-ostree` + `bootc`)                    |
+| Fedora Workstation   | 44 (April 28, 2026, GNOME 50, `dnf5` default)                                       |
+| Silverblue    | 44 (April 28, 2026, GNOME 50, atomic via `rpm-ostree` + `bootc`)                    |
 | Bluefin              | Rolling on Fedora 44 base, **bootc**-based image                                 |
 | Vanilla OS           | **2 "Orchid"** (Jul 2024 release, Debian sid base via Vib, GNOME 46 base + `vso update` advances, ABRoot atomic, `apx` subsystems) |
 | Zorin OS             | **18.1** (April 2026, Ubuntu 24.04 HWE base, GNOME 46 themed, Wayland default, supported to April 2029) |

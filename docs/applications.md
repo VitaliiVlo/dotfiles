@@ -47,7 +47,7 @@ Bold primary lives in whichever column applies. Within each column, order altern
 | Image Editor | **Pixelmator Pro**, Affinity | — | Pinta, GIMP, Krita |
 | Video Player | **QuickTime**, IINA | Celluloid | VLC |
 | Music | **Apple Music** | — | Spotify, YouTube Music |
-| Password Manager | **Apple Passwords** | KeePassXC | 1Password, Bitwarden, Proton Pass |
+| Password Manager | Apple Passwords | KeePassXC | **1Password**, Bitwarden, Proton Pass |
 | Office | **iWork** | — | LibreOffice, OnlyOffice, Google Workspace, Microsoft 365, Proton Docs |
 | PDF | **Apple Preview** | Papers | — |
 | Image Viewer | **Apple Preview** | **Loupe** | — |
@@ -90,4 +90,4 @@ Most-used bangs:
 | `!so` | Stack Overflow |
 | `!imdb` | IMDb |
 
-Full catalog: <https://duckduckgo.com/bang> (13k+, inherited by Kagi and Brave). Kagi adds custom user-defined bangs in settings.
+Full catalog: <https://duckduckgo.com/bang> (thousands, inherited by Kagi and Brave). Kagi adds custom user-defined bangs in settings.
