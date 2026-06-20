@@ -1,6 +1,7 @@
 # Defaults
-editor = "code --wait"
-dir_editor = "code --wait"
+editor = "codium --reuse-window --wait --"
+# dir_editor omits --reuse-window (would clobber focused workspace) and --wait (spf would block for the entire VSCodium workspace session, not just a tab edit). Matches lazygit upstream `openDirInEditor` pattern.
+dir_editor = "codium --"
 auto_check_update = false
 cd_on_quit = false
 file_size_use_si = false

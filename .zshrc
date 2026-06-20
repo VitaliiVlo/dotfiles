@@ -19,17 +19,17 @@ setopt hist_verify
 setopt hist_reduce_blanks
 setopt hist_ignore_space
 
-# Shell options
 setopt globdots
 setopt auto_cd
 setopt auto_pushd
 setopt pushd_ignore_dups
 
-# Aliases
 alias kk='kubectl'
 alias c='clear'
 alias kx='kubectx'
 alias kn='kubens'
+alias terraform='tofu'
+alias tf='tofu'
 
 if command -v bat &>/dev/null; then alias cat='bat'; fi
 
@@ -51,7 +51,6 @@ else
   alias ll='ls -lah'
 fi
 
-# Completions
 ZSH_COMP_PATH="$BREW_PREFIX/share/zsh-completions"
 if [[ -d "$ZSH_COMP_PATH" ]]; then
   FPATH="$ZSH_COMP_PATH:$FPATH"

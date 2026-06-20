@@ -1,4 +1,4 @@
-# Theme (follows macOS appearance)
+# Theme (follows system appearance)
 --theme-dark="Catppuccin Macchiato"
 --theme-light="Catppuccin Latte"
 
@@ -12,8 +12,4 @@
 --pager="less --RAW-CONTROL-CHARS --quit-if-one-screen"
 
 # Syntax mappings (only entries bat does not map natively)
---map-syntax ".gitignore:Git Ignore"
---map-syntax ".dockerignore:Git Ignore"
 --map-syntax ".env*:Dotenv"
---map-syntax "Brewfile:Ruby"
---map-syntax "*.conf:INI"

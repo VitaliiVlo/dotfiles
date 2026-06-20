@@ -4,3 +4,4 @@ prefix_rule(pattern=["docker", "compose", ["config", "logs", "ps"]], decision="a
 
 # Kubernetes read-only
 prefix_rule(pattern=["kubectl", ["describe", "get", "logs"]], decision="allow")
+prefix_rule(pattern=[["kubectx", "kubens"]], decision="allow")

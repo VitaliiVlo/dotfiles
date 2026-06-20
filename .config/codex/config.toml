@@ -10,10 +10,11 @@ sandbox_mode = "workspace-write"
 # Behavior
 # `personality` here selects the value; `[features].personality = true` enables the system. Both required.
 personality = "friendly"
-file_opener = "vscode"
+file_opener = "none"
 web_search = "cached"
 project_root_markers = [".git", ".codex-root"]
 project_doc_fallback_filenames = ["CLAUDE.md"]
+# Disable Co-authored-by trailer. Default is "Codex <noreply@openai.com>"; matches CLAUDE.md ## Drafting Prose "no AI attribution".
 commit_attribution = ""
 
 [sandbox_workspace_write]
@@ -35,19 +36,19 @@ notification_method = "auto"
 animations = true
 theme = "catppuccin-macchiato"
 status_line = [
-    "model-with-reasoning",
-    "current-dir",
-    "git-branch",
-    "context-remaining",
-    "five-hour-limit",
-    "weekly-limit",
+  "model-with-reasoning",
+  "current-dir",
+  "git-branch",
+  "context-remaining",
+  "five-hour-limit",
+  "weekly-limit",
 ]
 terminal_title = ["spinner", "thread", "project", "app-name"]
 
 # Data & Telemetry
 [history]
 persistence = "save-all"
-max_bytes = 104857600    # 100 MiB cap
+max_bytes = 104857600  # 100 MiB cap
 
 [analytics]
 enabled = false
@@ -55,35 +56,32 @@ enabled = false
 [feedback]
 enabled = false
 
-# Profiles
-[profiles.quick]
-model = "gpt-5.4-mini"
-model_reasoning_effort = "medium"
-plan_mode_reasoning_effort = "medium"
-
-[profiles.research]
-web_search = "live"
-
 # Integrations
-[mcp_servers.atlassian]
-url = "https://mcp.atlassian.com/v1/mcp"
-
-[mcp_servers.datadog]
-url = "https://mcp.datadoghq.com/api/unstable/mcp-server/mcp"
-
-[mcp_servers.context7]
-command = "npx"
-args = ["-y", "@upstash/context7-mcp"]
-
-[mcp_servers.posthog]
-url = "https://mcp.posthog.com/mcp"
-
 [plugins."caveman@caveman-repo"]
+enabled = true
+
+[plugins."superpowers@openai-curated"]
 enabled = true
 
 [plugins."slack@openai-curated"]
 enabled = true
 
+[plugins."atlassian-rovo@openai-curated"]
+enabled = true
+
+[plugins."datadog@openai-curated"]
+enabled = true
+
+[plugins."posthog@openai-curated"]
+enabled = true
+
+[plugins."context7@context7-marketplace"]
+enabled = true
+
 [marketplaces.caveman-repo]
 source_type = "git"
 source = "https://github.com/JuliusBrussee/caveman.git"
+
+[marketplaces.context7-marketplace]
+source_type = "git"
+source = "https://github.com/upstash/context7.git"

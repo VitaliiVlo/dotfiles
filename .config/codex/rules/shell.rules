@@ -1,8 +1,8 @@
 # Modern CLI tools
-prefix_rule(pattern=[["bat", "eza", "fd", "rg", "tldr"]], decision="allow")
+prefix_rule(pattern=[["bat", "dust", "exiftool", "eza", "fd", "rg", "tldr"]], decision="allow")
 
 # Standard utilities
-prefix_rule(pattern=[["awk", "cd", "cut", "date", "diff", "echo", "file", "find", "grep", "head", "ls", "printf", "ps", "pwd", "readlink", "realpath", "sed", "sleep", "sort", "stat", "tail", "tr", "tree", "uname", "uniq", "wc", "which"]], decision="allow")
+prefix_rule(pattern=[["awk", "basename", "cd", "cut", "date", "diff", "dirname", "echo", "false", "file", "find", "grep", "head", "ls", "printf", "ps", "pwd", "readlink", "realpath", "sed", "sleep", "sort", "stat", "tail", "tr", "tree", "true", "uname", "uniq", "wc", "which"]], decision="allow")
 
 # Structured data
 prefix_rule(pattern=[["jq", "yq"]], decision="allow")

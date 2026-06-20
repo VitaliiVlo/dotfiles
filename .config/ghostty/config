@@ -13,7 +13,8 @@ unfocused-split-opacity = 0.5
 background-opacity = 0.9
 background-blur = true
 bold-color = bright
-selection-invert-fg-bg = true
+selection-foreground = cell-background
+selection-background = cell-foreground
 
 # Font (fallback chain ends with Nerd Font for icons)
 font-family = JetBrains Mono
@@ -23,6 +24,7 @@ font-family = Monaco
 font-family = Symbols Nerd Font Mono
 font-size = 14
 font-thicken = true
+# strength 0 = lightest thickening (NOT off). Range 0-255, higher = heavier. See ghostty.org/docs/config/reference#font-thicken-strength
 font-thicken-strength = 0
 
 # Cursor

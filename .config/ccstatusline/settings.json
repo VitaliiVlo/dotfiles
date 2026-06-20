@@ -44,7 +44,7 @@
         "type": "git-branch",
         "metadata": {
           "hideNoGit": "true",
-          "linkToGitHub": "true"
+          "linkToRepo": "true"
         },
         "rawValue": true,
         "color": "cyan"
@@ -145,12 +145,8 @@
   "globalBold": false,
   "powerline": {
     "enabled": false,
-    "separators": [
-      ""
-    ],
-    "separatorInvertBackground": [
-      false
-    ],
+    "separators": [""],
+    "separatorInvertBackground": [false],
     "startCaps": [],
     "endCaps": [],
     "autoAlign": false

@@ -7,9 +7,9 @@ email = "your.email@example.com"
 name = "your-username"
 
 [go]
-# Module path glob matching your private modules.
-# Empty/unset = keep HEAD default (no override applied).
-private = "github.com/your-org/*"
+# Module path glob matching your private modules. Uncomment and replace with your value.
+# Empty/unset skips the override entirely (leaves .zprofile GOPRIVATE as shipped).
+# private = "github.com/your-org/*"
 
 # Each table key becomes an entry in Claude's `extraKnownMarketplaces`.
 # [claude.marketplaces.<key>]
@@ -32,6 +32,10 @@ plugins = [
 ]
 
 [codex]
+# Only trusted-projects overrides flow through here. Codex marketplaces and plugins live
+# directly in .config/codex/config.toml (CLI fixes the marketplace key at add-time and
+# cannot rename it, so the shared-key model used for [claude] does not map). See
+# CLAUDE.md "Schema asymmetry (intentional)".
 # Each path becomes `[projects."<path>"]` with `trust_level = "trusted"`.
 trusted_projects = [
   # "/Users/you/Projects/foo",

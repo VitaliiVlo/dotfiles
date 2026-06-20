@@ -11,8 +11,16 @@ git:
   disableForcePushing: true
 
 # OS integration
+# Mirrors lazygit's `vscode` preset (pkg/config/editor_presets.go) with `code` → `codium`. No vscodium auto-detection upstream, so templates set explicitly.
+# `--` separator protects against filenames starting with a dash (flag-injection).
+# `openDirInEditor` omits `--reuse-window`: with --reuse-window, opening a directory REPLACES the workspace in the focused VSCodium window.
+# `editInTerminal: false` pins suspend off (GUI editor, lazygit TUI stays rendered).
 os:
-  editPreset: vscode
+  edit: "codium --reuse-window -- {{filename}}"
+  editAtLine: "codium --reuse-window --goto -- {{filename}}:{{line}}"
+  editAtLineAndWait: "codium --reuse-window --goto --wait -- {{filename}}:{{line}}"
+  openDirInEditor: "codium -- {{dir}}"
+  editInTerminal: false
 
 # Updates (Brew owns)
 update:

@@ -44,7 +44,7 @@ symlink ".config/yazi/yazi.toml"      "$HOME/.config/yazi/yazi.toml"
 symlink ".config/micro/settings.json" "$HOME/.config/micro/settings.json"
 symlink ".config/zed/settings.json"   "$HOME/.config/zed/settings.json"
 
-# AI agents (non-XDG, identical on both OSes; ASCII alpha within each tool)
+# AI agents (ccstatusline XDG; .claude/.codex non-XDG; identical on both OSes; ASCII alpha within each tool)
 symlink ".config/ccstatusline/settings.json" "$HOME/.config/ccstatusline/settings.json"
 symlink ".config/claude/CLAUDE.md"           "$HOME/.claude/CLAUDE.md"
 symlink ".config/claude/settings.json"       "$HOME/.claude/settings.json"
@@ -55,20 +55,20 @@ symlink ".config/codex/rules/git.rules"      "$HOME/.codex/rules/git.rules"
 symlink ".config/codex/rules/infra.rules"    "$HOME/.codex/rules/infra.rules"
 symlink ".config/codex/rules/shell.rules"    "$HOME/.codex/rules/shell.rules"
 
-# Platform-native paths: tlrc + vscode ignore $XDG_CONFIG_HOME on macOS
+# Platform-native paths: tlrc + vscodium ignore $XDG_CONFIG_HOME on macOS
 # (Rust dirs crate and Electron userData respectively), so they need the
 # Library path on macOS but XDG ~/.config/* on Linux.
 case "$(uname -s)" in
     Darwin)
         symlink ".config/tlrc/config.toml"     "$HOME/Library/Application Support/tlrc/config.toml"
-        symlink ".config/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
+        symlink ".config/vscodium/settings.json" "$HOME/Library/Application Support/VSCodium/User/settings.json"
         ;;
     Linux)
         symlink ".config/tlrc/config.toml"     "$HOME/.config/tlrc/config.toml"
-        symlink ".config/vscode/settings.json" "$HOME/.config/Code/User/settings.json"
+        symlink ".config/vscodium/settings.json" "$HOME/.config/VSCodium/User/settings.json"
         ;;
     *)
-        echo "Unsupported OS: $(uname -s) — skipping tlrc/vscode symlinks." >&2
+        echo "Unsupported OS: $(uname -s), skipping tlrc/vscodium symlinks." >&2
         ;;
 esac
 

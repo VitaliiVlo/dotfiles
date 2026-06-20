@@ -1,7 +1,7 @@
 cask "beekeeper-studio"
 cask "bruno"
+cask "freelens"
 cask "google-chrome"
-cask "headlamp"
 cask "mongodb-compass"
 cask "orbstack"
 cask "slack"

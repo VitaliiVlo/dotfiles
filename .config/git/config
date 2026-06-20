@@ -8,7 +8,7 @@
 [core]
 	autocrlf = input
 	excludesfile = ~/.config/git/ignore
-	editor = code --wait
+	editor = codium --reuse-window --wait --
 	pager = delta
 
 [init]

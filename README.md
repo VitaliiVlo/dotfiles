@@ -1,6 +1,6 @@
 # Dotfiles
 
-Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** (light) theme and **JetBrains Mono** font (14pt) with **Fira Code**, **Menlo**, **Monaco**, and **Symbols Nerd Font Mono** fallbacks. Configured for **Go 1.26**, **Python** (via `uv`), and **Node.js** (via `fnm`).
+Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** (light) theme and **JetBrains Mono** font (14pt) with **Fira Code**, **Menlo**, **Monaco**, and **Symbols Nerd Font Mono** fallbacks. Configured for **Go** (via Homebrew), **Python** (via `uv`), and **Node.js** (via `fnm`).
 
 ## Contents
 
@@ -12,7 +12,8 @@ Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** 
 - [Linux settings](#linux-settings)
 - [macOS tips](docs/macos-tips.md) — non-obvious shortcuts and behaviors (clipboard, screenshots, Finder, Mission Control, Spotlight, Continuity, shell helpers)
 - [Linux tips](docs/linux-tips.md) — non-obvious shortcuts and behaviors for GNOME-on-Wayland (clipboard, screenshots, Nautilus, workspaces, GNOME search, cross-device sharing, shell helpers, Wayland notes, per-distro deltas)
-- [Applications](docs/applications.md) — curated GUI app picks by category (cross-platform where possible, macOS as tie-breaker lens), VSCode setup, search engine bangs
+- [Applications](docs/applications.md) — curated GUI app picks by category (cross-platform where possible, macOS as tie-breaker lens), VSCodium setup, search engine bangs
+- [Backup plan](docs/backup-plan.md) — personal data protection plan: threat model, data inventory, setup actions, monthly/quarterly/yearly rituals, recovery playbook
 - [CLI tools](#cli-tools)
 - [Validate](#validate)
 - [Updating](#updating)
@@ -57,16 +58,11 @@ Run `make help` to list all available targets.
   ssh-keygen -t ed25519 -C "your_email@example.com"
   pbcopy < ~/.ssh/id_ed25519.pub
   ```
-- **Configure sudo with Touch ID**
-  ```bash
-  sudo cp /etc/pam.d/sudo_local.template /etc/pam.d/sudo_local
-  sudo nano /etc/pam.d/sudo_local
-  # Uncomment: auth sufficient pam_tid.so
-  ```
+- **Configure sudo with Touch ID** — see [`docs/macos-tips.md`](docs/macos-tips.md#sudo-with-touch-id) for the one-time `pam_tid.so` setup.
 
 ### Linux
 
-> Targets Fedora, Fedora Silverblue, Bluefin, Vanilla OS, Zorin OS, Ubuntu. All GNOME-on-Wayland: `make linux-defaults` writes `gsettings` keys that apply across the set; see [`docs/linux-tips.md`](docs/linux-tips.md) for per-distro deltas. Atomic variants (Bluefin, Fedora Silverblue, Vanilla OS) work too, but extra packages must be layered via `rpm-ostree` / `bootc` (Fedora atomics) or `apx` / `vso` (Vanilla OS), or installed inside Distrobox/Toolbox, instead of `dnf` / `apt`. KDE / Sway / headless sessions skip the `gsettings` block but everything else (symlinks, Brewfile, shell) applies. Linuxbrew prefix defaults to `/home/linuxbrew/.linuxbrew` in `.zshrc` / `.zprofile` (override via `BREW_PREFIX` env).
+> Targets Fedora, Silverblue, Bluefin, Vanilla OS, Zorin OS, Ubuntu. All GNOME-on-Wayland: `make linux-defaults` writes `gsettings` keys that apply across the set; see [`docs/linux-tips.md`](docs/linux-tips.md) for per-distro deltas. Atomic variants (Bluefin, Silverblue, Vanilla OS) work too, but extra packages must be layered via `rpm-ostree` / `bootc` (Fedora atomics) or `apx` / `vso` (Vanilla OS), or installed inside Distrobox/Toolbox, instead of `dnf` / `apt`. KDE / Sway / headless sessions skip the `gsettings` block but everything else (symlinks, Brewfile, shell) applies. Linuxbrew prefix defaults to `/home/linuxbrew/.linuxbrew` in `.zshrc` / `.zprofile` (override via `BREW_PREFIX` env).
 
 - **Install build prerequisites:** `scripts/local-overrides.py` needs Python 3.11+ (stdlib `tomllib`). Fedora 39+, Ubuntu 24.04+, and recent Debian ship a compatible `python3`. Older distros are out of scope.
   ```bash
@@ -77,7 +73,7 @@ Run `make help` to list all available targets.
   # Fedora
   sudo dnf install -y @development-tools procps-ng curl file git zsh python3
 
-  # Fedora Silverblue / Bluefin (atomic; layer once, then reboot)
+  # Silverblue / Bluefin (atomic; layer once, then reboot)
   sudo rpm-ostree install zsh
 
   # Vanilla OS (atomic; layer via apx on host subsystem)
@@ -139,7 +135,7 @@ The following files are automatically symlinked by running `make symlinks`:
 - `.config/glow/glow.yml` - Glow Markdown renderer settings (XDG path on both OSes; glow honors `$XDG_CONFIG_HOME` exported by `.zprofile`)
 - `.config/tlrc/config.toml` - tlrc (tldr client) settings (macOS: `~/Library/Application Support/tlrc/config.toml`, Linux: `~/.config/tlrc/config.toml`; tlrc ignores `$XDG_CONFIG_HOME` on Darwin via the Rust `dirs` crate)
 - `.config/superfile/config.toml` - Superfile (`spf`) terminal file manager settings (XDG path on both OSes; spf reads `xdg.ConfigHome` via adrg/xdg, honors `$XDG_CONFIG_HOME`)
-- `.config/vscode/settings.json` - VSCode configuration (macOS: `~/Library/Application Support/Code/User/settings.json`, Linux: `~/.config/Code/User/settings.json`; VSCode hardcodes `app.getPath('userData')` and ignores `$XDG_CONFIG_HOME` on Darwin)
+- `.config/vscodium/settings.json` - VSCodium configuration (macOS: `~/Library/Application Support/VSCodium/User/settings.json`, Linux: `~/.config/VSCodium/User/settings.json`; VSCodium inherits Electron `app.getPath('userData')` from upstream VSCode and ignores `$XDG_CONFIG_HOME` on Darwin)
 - `.config/zed/settings.json` - Zed editor settings
 - `.config/claude/settings.json` - Claude Code permissions
 - `.config/claude/CLAUDE.md` - Claude Code user-level instructions
@@ -152,10 +148,10 @@ The following files are automatically symlinked by running `make symlinks`:
 
 Used directly from the repo:
 
-- `Brewfile` - Base Brewfile (shell, fonts, daily-driver apps, VSCode extensions)
+- `Brewfile` - Base Brewfile (shell, fonts, daily-driver apps, VSCodium extensions)
 - `Brewfile.work` - Work Brewfile (work-specific GUIs — API client, K8s GUI, DB GUI, container runtime, comms, VPN, browser; curated manually)
 - `CLAUDE.md` - Repository instructions for Claude Code (auto-discovered in cwd; Codex reads it via `project_doc_fallback_filenames`)
-- `docs/vscode-defaults.jsonc` - VSCode defaults snapshot for offline comparison (regenerate via `Preferences: Open Default Settings (JSON)`)
+- `defaults/` - Upstream defaults snapshots for offline comparison (`vscodium-defaults.jsonc`, `zed-defaults.jsonc`, `ghostty-defaults.conf`, `bat-defaults.conf`, `starship-nerd-font-symbols.toml`, `yazi-defaults.toml`, `superfile-defaults.toml`, `atuin-defaults.toml`). Regenerate via `make snapshots`. Curl-fetched snapshots (Zed, Yazi, Superfile, Atuin) track `main` upstream, not the installed version. VSCodium snapshot still needs manual regen via `Preferences: Open Default Settings (JSON)` (no CLI hook); `make snapshots` prints the target path.
 - `.local.example.toml` - Schema for per-machine overrides; copy to `.local/source.toml` (gitignored) and fill in. See [Local overrides](#local-overrides).
 
 ## macOS settings
@@ -163,7 +159,7 @@ Used directly from the repo:
 Run `make macos-defaults` to configure (in order applied):
 
 - Folders (~/Projects, ~/Pictures/Screenshots)
-- System defaults (key repeat via `ApplePressAndHoldEnabled=false` at OS-default rate/delay, natural scrolling, save to disk by default). Linux pins explicit 250ms delay / 30ms interval; macOS intentionally inherits OS-default rate to avoid surprising existing users.
+- System defaults (key repeat via `ApplePressAndHoldEnabled=false` at OS-default rate/delay, natural scrolling, save to disk by default, Appearance = Dark). Linux pins explicit 250ms delay / 30ms interval; macOS intentionally inherits OS-default rate to avoid surprising existing users.
 - Screenshots (save to ~/Pictures/Screenshots, no shadow, PNG, floating thumbnail enabled)
 - Finder (list view, path bar, show extensions, folders first, search current folder, suppress DS_Store on network/USB volumes)
 - Dock (autohide, no recents, scale minimize effect, minimized windows in own Dock slot, fixed Spaces order, Cmd-gated hot corners: TL Mission Control / TR Notification Center / BL Desktop / BR Quick Note)
@@ -177,7 +173,7 @@ Run `make linux-defaults` to configure (GNOME via `gsettings`):
 - Folders (~/Projects, ~/Pictures/Screenshots)
 - Input (touchpad + mouse natural scroll, keyboard repeat enabled with 250ms delay / 30ms interval)
 - Files / Nautilus (list view, hidden files, folders-first, search current folder only)
-- Desktop (dash-to-dock click=minimize when extension present, battery %, clock weekday, `prefer-dark` color scheme)
+- Desktop (dash-to-dock click=minimize when extension present, battery %, clock weekday, `prefer-dark` color scheme, hot-corners enabled — single GNOME top-left corner triggers Activities)
 - Power (disable AC auto-suspend)
 
 Guards: skips silently on non-Linux, when `gsettings` missing, or when `XDG_CURRENT_DESKTOP` is not GNOME. KDE / Sway / headless sessions are unaffected.
@@ -194,7 +190,7 @@ Non-obvious shortcuts and behaviors for GNOME-on-Wayland distros (clipboard, scr
 
 ## Applications
 
-Curated GUI app picks by category, VSCode setup, and search engine bangs: see [`docs/applications.md`](docs/applications.md).
+Curated GUI app picks by category, VSCodium setup, and search engine bangs: see [`docs/applications.md`](docs/applications.md).
 
 ## CLI tools
 
@@ -205,10 +201,13 @@ make brew-install       # Install all packages (base + work)
 make brew-install-base  # Install base packages only
 make brew-install-work  # Install work packages only
 make brew-cleanup       # Clean up old versions and cache
-make brew-export        # Export installed packages (incl. VSCode extensions) to Brewfile, then strip Brewfile.work entries; add new work entries to Brewfile.work manually
+make brew-export        # Export installed packages (incl. VSCodium extensions) to Brewfile, then strip Brewfile.work entries; add new work entries to Brewfile.work manually
 make versions           # Show installed Go, Node, Python versions
 make local-overrides    # Re-render per-machine overrides from .local/source.toml; see Local overrides
+make snapshots          # Regenerate defaults/* upstream-defaults snapshots
 ```
+
+CLI binaries shipped via casks (`op` from `1password-cli`, `claude`, `codex`) live in [`docs/casks.md`](docs/casks.md).
 
 | Tool                    | Description                                             |
 | ----------------------- | ------------------------------------------------------- |
@@ -218,7 +217,6 @@ make local-overrides    # Re-render per-machine overrides from .local/source.tom
 | bat                     | `cat` with syntax highlighting                          |
 | btop                    | System monitor TUI (mouse + charts + GPU panels)        |
 | buf                     | Modern Protocol Buffers toolkit (lint, breaking, gen)   |
-| corepack                | Node package-manager bootstrap (yarn/pnpm enabler)      |
 | delve                   | Go debugger (binary: `dlv`)                             |
 | dust                    | Visual `du` tree printer (one-shot disk usage)          |
 | exiftool                | Read/write image/audio/video metadata                   |
@@ -232,10 +230,9 @@ make local-overrides    # Re-render per-machine overrides from .local/source.tom
 | git-delta               | Syntax-highlighting git pager (replaces `less`)         |
 | git-lfs                 | Git Large File Storage extension                        |
 | glow                    | Terminal Markdown renderer                              |
-| go                      | Go toolchain (1.26)                                     |
+| go                      | Go toolchain (via Homebrew)                             |
 | golangci-lint           | Go meta-linter                                          |
 | goose                   | Go database migration tool                              |
-| goplay                  | Go playground CLI client                                |
 | gopls                   | Go language server                                      |
 | gotests                 | Go test boilerplate generator                           |
 | helm                    | Kubernetes package manager                              |
@@ -243,18 +240,21 @@ make local-overrides    # Re-render per-machine overrides from .local/source.tom
 | impl                    | Go interface method stub generator                      |
 | jq                      | Command-line JSON processor                             |
 | k9s                     | Kubernetes TUI                                          |
-| kubectl                 | Kubernetes CLI                                          |
 | kubectx                 | Kubernetes context switcher (ships kubens for namespaces) |
+| kubernetes-cli          | Kubernetes CLI (binary: `kubectl`)                      |
 | kustomize               | Kubernetes manifest overlays/patches                    |
 | lazydocker              | Docker TUI                                              |
 | lazygit                 | Git TUI                                                 |
 | lazysql                 | Multi-engine SQL TUI                                    |
+| libpq                   | PostgreSQL client libs (`psql`, `pg_dump`; pgcli dep)   |
 | litecli                 | SQLite CLI with autocomplete                            |
 | micro                   | Terminal text editor                                    |
 | mockgen                 | Go mock generator (`go.uber.org/mock`)                  |
 | mongosh                 | MongoDB shell                                           |
 | ncdu                    | Interactive disk usage analyzer (classic, Zig)          |
+| opentofu                | Terraform fork (OSS; aliased `terraform → tofu`)        |
 | pgcli                   | PostgreSQL CLI with autocomplete                        |
+| pyright                 | Python static type checker (Microsoft)                  |
 | ripgrep                 | Fast `grep` replacement                                 |
 | ruff                    | Python linter / formatter (Rust)                        |
 | sevenzip                | 7-Zip file archiver                                     |
@@ -282,19 +282,16 @@ After `make setup`, verify everything wired up:
 - `git config --list --show-origin | head -5` — settings come from `~/.config/git/config`
 - `ls -l ~/.config/ghostty/config ~/.zshrc ~/.config/git/config` — symlinks point at this repo
 
-For full audit, run `make validate` (delegates to `scripts/validate.sh`). Covers TOML/JSON/YAML/JSONC parse, `brew bundle list` (parse) + non-fatal `brew bundle check` (install state), `ghostty +validate-config`, `shellcheck`, `shfmt`, `zsh -n` on `.zshrc`/`.zprofile`, `prefix_rule(` sanity grep on `.config/codex/rules/*.rules`, `git config --list` on `.config/git/config`, `--`-prefix sanity grep on `.config/bat/config` and `.config/ripgrep/ripgreprc`, and symlink resolution. Skips macOS-native symlinks on Linux.
+For full audit, run `make validate` (delegates to `scripts/validate.sh`). Covers TOML/JSON/YAML/JSONC parse, `brew bundle list` (parse) + non-fatal `brew bundle check` (install state), `ghostty +validate-config`, `shellcheck`, `shfmt`, `zsh -n` on `.zshrc`/`.zprofile`, `prefix_rule(` sanity grep on `.config/codex/rules/*.rules`, `git config --list` on `.config/git/config`, `--`-prefix sanity grep on `.config/bat/config` and `.config/ripgrep/ripgreprc`, `=`-presence grep on `.config/btop/btop.conf`, `ast.parse` syntax check on `scripts/local-overrides.py`, and symlink resolution. Skips macOS-native symlinks on Linux.
 
 ## Updating
 
 - `brew update && brew upgrade` — update Homebrew formulae and casks
-- `make brew-export` — refresh `Brewfile` from current install state (macOS only; Linuxbrew dump would wipe macOS-only casks). Add new work entries to `Brewfile.work` manually; see `docs/conventions.md` "Brewfile maintenance" for strip step semantics.
+- `make brew-export` — refresh `Brewfile` from current install state (macOS only; Linuxbrew install state would wipe macOS-only casks). Add new work entries to `Brewfile.work` manually; see `docs/conventions.md` "Brewfile maintenance" for strip step semantics.
 - `make brew-cleanup` — prune old versions and cache
-- macOS GUI apps: cask auto-update via `brew upgrade` (VSCode, Brave, Helium, Zen, Ghostty, Zed, Claude Code, Codex, IINA, Telegram, WhatsApp have their own in-app updaters too; cask still authoritative)
-- Linux GUI apps via vendor apt/dnf repo (covered by `sudo apt-get upgrade` / `sudo dnf upgrade`): 1Password, balenaEtcher, Beekeeper Studio (deb only), Brave, Bruno (deb only), Cloudflare WARP, Firefox, Ghostty (Ubuntu universe or Fedora Copr), Google Chrome, Helium, Slack, Tailscale, Telegram (distro `telegram-desktop`), VSCode
-- Linux GUI apps via in-app updater: Obsidian, Zed, Zen (Firefox-based built-in updater)
-- Linux GUI apps via manual GitHub release re-download: Beekeeper Studio (rpm only), Bruno (rpm only), Headlamp, LocalSend
-- Linux GUI apps via manual vendor download re-download: MongoDB Compass (`mongodb.com/try/download/compass`)
-- Go: `brew upgrade go`. Node: `fnm install <version>`. Python: `uv python install <version>`.
+- macOS GUI apps: cask auto-update via `brew upgrade` (for example VSCodium, Brave, Ghostty, Zed, Claude Code, Codex, IINA, Obsidian, Telegram, WhatsApp also have their own in-app updaters; cask still authoritative)
+- Linux GUI apps: per-app update channels (vendor apt/dnf, in-app updater, GitHub release, manual vendor download) covered in [`docs/linux-tips.md` "Per-app update channels"](docs/linux-tips.md#per-app-update-channels).
+- Go: `brew upgrade go`. Node: `fnm install <version> && fnm default <version>` (or rely on per-dir `.node-version`). Python: `uv python install <version>` (uv selects per project).
 
 ## Casks
 
@@ -302,26 +299,17 @@ Homebrew Cask inventory (base, work, Linux-installable subset): see [`docs/casks
 
 ## Claude Code
 
-The `.config/claude/settings.json` configures permissions and plugins:
-
-- **Allowed:** Web search + fetch from dev docs (GitHub, Stack Overflow, MDN, Go/Python/Node/Terraform/Docker/Kubernetes/Claude docs); git/gh/docker/kubectl read-only subcommands; build/test/lint (`shellcheck`, `shfmt`, `pytest`, `mypy`, `pyright`, `pip-audit`, `ruff check/format`, `eslint`, `jest`, `prettier`, `tsc`, `vitest`, `npm test` + `npm run build/format/lint/test/typecheck`, `golangci-lint`, `govulncheck`, `go fmt/vet`, `gofmt`); dependency sync (`go mod tidy/download/graph/verify/why`, `uv sync/lock/build`, `npm ci/audit`) + dep queries (`uv pip list/show`, `uv tree`, `npm ls/list/outdated/view`); ephemeral runners (`uvx`, `uv run`, `npx` wrappers for the test/lint/format tools above); build runner (`make --dry-run`/`make -n`); version probes (`go version`, `uv/python/python3/node/npm --version`, `fnm list/current`); file search and inspection (`fd`, `rg`, `grep`, `find`, `which`, `bat`, `eza`, `head`, `tail`, `ls`, `wc`, `tldr`, `tree`, `file`, `readlink`, `realpath`, `stat`); structured data (`jq`, `yq`); text utils (`awk`, `cut`, `diff`, `echo`, `printf`, `sed`, `sort`, `tr`, `uniq`); system info (`cd`, `date`, `ps`, `pwd`, `sleep`, `uname`); clipboard (`pbcopy`, `wl-copy`). `go env` intentionally excluded (`go env -w` writes persistent config).
-- **Denied:** `.env` files, `.ssh/*`, `.kube/config`, `.git-credentials`, credentials, private keys, `.tfvars` (covers the `Read` tool only; allowed `Bash` readers like `bat`/`head`/`jq` can still target these paths — the model-level `Sensitive Data` rule in user CLAUDE.md is the actual guarantee)
-- **Requires approval:** Arbitrary package install (`brew install`, `npm install`, `uv add`), direct code execution (`python`, `node`, `go run`), git writes, docker mutations
-- **Enabled plugins:** pyright-lsp, gopls-lsp, typescript-lsp, code-review, feature-dev, code-simplifier, claude-md-management, caveman, context7, slack, atlassian, posthog, datadog, pr-review-toolkit
-- **Marketplace:** [caveman](https://github.com/JuliusBrussee/caveman) (auto-update enabled)
-- **Status line:** Custom layout via [`ccstatusline`](https://www.npmjs.com/package/ccstatusline) (model, thinking effort, cwd, git branch, context %, session/weekly usage, cost)
-- **Usage tracking:** [`ccstatusline`](https://www.npmjs.com/package/ccstatusline) surfaces session/weekly usage and cost in the status bar via the [`ccusage`](https://github.com/ryoppippi/ccusage) library it embeds. Run `npx ccusage` for ad-hoc cost reports.
+`.config/claude/settings.json` configures permissions and plugins. Full breakdown (allowed tools, approval policy, sensitive-data trust boundary, enabled plugins, marketplace, status line via [`ccstatusline`](https://www.npmjs.com/package/ccstatusline) and [`ccusage`](https://github.com/ryoppippi/ccusage)) in [`CLAUDE.md` "Claude Code settings"](CLAUDE.md#claude-code-settings).
 
 ## Codex
 
-The `.config/codex/config.toml` configures model selection, sandboxing, profiles, plugins, and MCP integrations:
+The `.config/codex/config.toml` configures model selection, sandboxing, plugins, and MCP integrations:
 
 - **Default behavior:** On-request approvals, `workspace-write` sandbox, cached web search by default, analytics/feedback disabled
-- **Profiles:** `quick` and `research` (`research` enables live web search)
 - **Rules:** `.config/codex/rules/` defines allowed command groups for `git`, `dev`, `shell`, and `infra`
-- **Enabled plugins:** Slack, caveman
-- **Marketplace:** [caveman](https://github.com/JuliusBrussee/caveman)
-- **MCP servers:** Atlassian, Datadog, Context7, PostHog
+- **Enabled plugins:** caveman, superpowers, slack, atlassian-rovo, datadog, posthog, context7
+- **Marketplaces:** [caveman-repo](https://github.com/JuliusBrussee/caveman) (source for caveman) and [context7-marketplace](https://github.com/upstash/context7) (source for context7). Both git-backed.
+- **Connectors via plugins:** atlassian-rovo, datadog, posthog use the OpenAI-curated app-connector model (`.app.json` references a hosted connector ID); context7 connects to the vendor-hosted MCP server at `https://mcp.context7.com/mcp`. No `[mcp_servers.*]` blocks needed in `config.toml`; enabling the plugin is the connection.
 
 ## Templates
 
@@ -329,15 +317,23 @@ One-shot starter files for new projects. Not symlinked — import or copy as nee
 
 | File                       | Format             | Usage                                                |
 | -------------------------- | ------------------ | ---------------------------------------------------- |
-| `docs/bookmarks.template.html` | Netscape bookmarks | Browser Bookmarks Manager → Import. See notes below. |
+| `templates/bookmarks.html` | Netscape bookmarks | Browser Bookmarks Manager → Import. See folder semantics below. |
 
-**`bookmarks.template.html`** ships universal-only URLs (no org-specific subdomains, no project domains). `Services`, `Dev`, `Stage`, `Prod` ship empty — fill with org/project-specific URLs in the browser after import.
+### Bookmarks template
 
-### Folder contents
+One-shot bookmark file for new project setup. Import once per project, rename the `<Employer>` / `<Project>` folders to match the engagement.
+
+**Import flow:**
+
+1. Browser → Bookmarks Manager → Import → select `templates/bookmarks.html`.
+2. Rename `<Employer>` / `<Project>` folders to match the current engagement.
+3. Fill `Services`, `Dev`, `Stage`, `Prod` with org/project URLs (template ships universal URLs only).
+
+**Folder contents:**
 
 - **`<Employer>`** — Employer-wide accounts shared across all client projects. Personal mail, calendar, timetracking, HR portal, employer-wide tools.
-- **`<Project>`** — Client/project-specific daily hits. Project mail/calendar account, Jira board, GitHub PR queues + org repos + code search, planning poker, most-used Confluence docs and pages.
-- **`Services`** — Third-party SaaS dashboards with a single URL (no per-env split). Observability, analytics, feature flags, cloud DB console, payments (e.g. Stripe), IdP, cloud SSO (e.g. AWS), VPN console, code quality, secrets manager.
+- **`<Project>`** — Client/project-specific daily hits. Project mail/calendar, Jira board, GitHub PR queues, planning poker, most-used Confluence pages.
+- **`Services`** — Third-party SaaS dashboards with a single URL (no per-env split). Observability, analytics, feature flags, cloud DB console, payments, IdP, cloud SSO, VPN, secrets manager.
 - **`Dev`** — `*.dev.<domain>` URLs (one entry per env-specific service). Web portal, admin panel, API, GitOps console, mail catcher, broker console, internal tooling.
 - **`Stage`** — `*.staging.<domain>` mirror of `Dev`.
 - **`Prod`** — `*.<domain>` mirror of `Dev`. Read-only / restricted access in practice.

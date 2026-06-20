@@ -15,12 +15,15 @@ mkdir -p "$HOME/Pictures/Screenshots"
 
 heading "→ Configuring system defaults…"
 # Input
+# Skip InitialKeyRepeat / KeyRepeat: inherit OS-default rate (Linux pins 250ms/30ms explicit; see CLAUDE.md "macOS settings").
 defaults write NSGlobalDomain ApplePressAndHoldEnabled            -bool   false  # Key repeat instead of accent menu
 defaults write NSGlobalDomain com.apple.swipescrolldirection      -bool   true   # Natural scrolling
 # Save dialogs
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud   -bool   false  # Save to disk by default
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode  -bool   false
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool   false
+# Appearance (mirrors Linux color-scheme = prefer-dark; flushed by killall SystemUIServer below)
+defaults write NSGlobalDomain AppleInterfaceStyle                 -string "Dark"
 
 heading "→ Setting screenshot location…"
 # Location (XDG-style ~/Pictures/Screenshots, matches GNOME's default user-dir)

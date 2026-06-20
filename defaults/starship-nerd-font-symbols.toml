@@ -1,13 +1,4 @@
-"$schema" = "https://starship.rs/config-schema.json"
-
-add_newline = false
-
-[cmd_duration]
-min_time = 500
-show_milliseconds = true
-
-[username]
-show_always = true
+"$schema" = 'https://starship.rs/config-schema.json'
 
 [aws]
 symbol = " "
@@ -60,7 +51,6 @@ symbol = " "
 
 [directory]
 read_only = " 󰌾"
-truncation_symbol = "…/"
 
 [docker_context]
 symbol = " "
@@ -96,7 +86,7 @@ symbol = " "
 symbol = " "
 
 [git_commit]
-tag_symbol = "  "
+tag_symbol = '  '
 
 [golang]
 symbol = " "

@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""Render local overrides from .local/source.toml into tracked configs.
-
-Each run reads the clean base for the four tracked files from `git show HEAD:<path>`
+"""Each run reads the clean base for the four tracked files from `git show HEAD:<path>`
 so overrides apply against a known starting point and never compound. The resulting
 working-tree diff is intentional and must stay uncommitted.
 """
@@ -29,7 +27,9 @@ TARGETS = {
 
 
 def head_base(path: Path) -> str:
-    """Return the file's content at HEAD, or its current working copy if not yet committed."""
+    """Return the file's content at HEAD. Hard-fail if the path is not tracked,
+    because the working copy may already contain rendered overrides from a prior
+    run, and rendering on top would compound them silently."""
     rel = path.relative_to(REPO).as_posix()
     try:
         return subprocess.check_output(
@@ -39,11 +39,12 @@ def head_base(path: Path) -> str:
         )
     except subprocess.CalledProcessError:
         print(
-            f"local-overrides: HEAD:{rel} missing; using working copy as base. "
-            "Commit the new target path so HEAD-based renders stay clean.",
+            f"local-overrides: HEAD:{rel} missing. "
+            "Commit the new target path before running local-overrides; "
+            "working-copy base would risk compounding overrides.",
             file=sys.stderr,
         )
-        return path.read_text()
+        sys.exit(1)
 
 
 def render_claude(base: str, claude: dict) -> str:
@@ -64,21 +65,53 @@ def render_claude(base: str, claude: dict) -> str:
         data["extraKnownMarketplaces"][key] = entry
 
     data.setdefault("enabledPlugins", {})
+    # claude-plugins-official is the only Anthropic-built-in marketplace today; extend here if more ship.
+    known = (
+        set(data.get("extraKnownMarketplaces", {}))
+        | set(markets)
+        | {"claude-plugins-official"}
+    )
     for pid in plugins:
+        if "@" not in pid:
+            print(
+                f"local-overrides: claude plugin must be 'name@marketplace': {pid!r}",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+        _, market = pid.rsplit("@", 1)
+        if market not in known:
+            print(
+                f"local-overrides: claude plugin {pid!r} references unknown marketplace {market!r}; "
+                f"declare it under [claude.marketplaces.{market}]",
+                file=sys.stderr,
+            )
+            sys.exit(1)
         data["enabledPlugins"][pid] = True
 
     return json.dumps(data, indent=2) + "\n"
 
 
 def render_codex(base: str, codex: dict) -> str:
-    projects = list(dict.fromkeys(codex.get("trusted_projects", []) or []))
+    raw = list(dict.fromkeys(codex.get("trusted_projects", []) or []))
+    projects = []
+    for p in raw:
+        # Codex matches table keys against the cwd's absolute path. Tilde and
+        # relative entries silently never match, so reject them at render time.
+        expanded = str(Path(p).expanduser())
+        if not Path(expanded).is_absolute():
+            print(
+                f"local-overrides: codex.trusted_projects entry must be an absolute path: {p!r}",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+        projects.append(expanded)
     if not projects:
         return base
     block = ["\n# Trusted projects (rendered from .local/source.toml)"]
     for p in projects:
         # json.dumps emits a valid TOML basic string (same escape rules).
         block.append(f"[projects.{json.dumps(p)}]\ntrust_level = \"trusted\"")
-    return base.rstrip() + "\n" + "\n".join(block) + "\n"
+    return base.rstrip() + "\n" + "\n\n".join(block) + "\n"
 
 
 def render_git(base: str, git: dict) -> str:
@@ -92,23 +125,48 @@ def render_git(base: str, git: dict) -> str:
     if name:
         block.append(f"\tname = {name}")
     replacement = "\n".join(block) + "\n\n"
-    # Match `[user]` header through (but not including) the next section header.
+    # Match `[user]` header through (but not including) the next line-anchored
+    # section header. Lookahead-anchored stop boundary survives `[` characters
+    # inside email/name values (e.g. `Foo [bot]`).
     # Lambda replacement so backslash sequences in email/name are not interpreted as regex backrefs.
-    return re.sub(r"^\[user\][^\[]*", lambda _: replacement, base, count=1, flags=re.M)
+    new, n = re.subn(
+        r"^\[user\](?:(?!^\[).)*",
+        lambda _: replacement,
+        base,
+        count=1,
+        flags=re.M | re.S,
+    )
+    if n != 1:
+        print(
+            "local-overrides: .config/git/config has no `[user]` block to replace. "
+            "Restore the placeholder block before running local-overrides.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    return new
 
 
 def render_zprofile(base: str, go: dict) -> str:
     private = go.get("private", "")
     if not private:
         return base
-    # Lambda replacement so backslash sequences in `private` are not interpreted as regex backrefs.
-    return re.sub(
-        r'^export GOPRIVATE=".*?"\s*$',
+    # Match any `export GOPRIVATE=...` form (quoted or not). Lambda replacement
+    # so backslash sequences in `private` are not interpreted as regex backrefs.
+    new, n = re.subn(
+        r"^export GOPRIVATE=.+$",
         lambda _: f'export GOPRIVATE="{private}"',
         base,
         count=1,
         flags=re.M,
     )
+    if n != 1:
+        print(
+            "local-overrides: .zprofile has no `export GOPRIVATE=...` line to replace. "
+            "Restore the placeholder line before running local-overrides.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    return new
 
 
 def main() -> int:

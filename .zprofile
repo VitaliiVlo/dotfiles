@@ -11,17 +11,17 @@ if [[ -z "${BREW_PREFIX:-}" ]]; then
     BREW_PREFIX="/opt/homebrew"
   fi
 fi
-eval "$($BREW_PREFIX/bin/brew shellenv)"
+[[ -x "$BREW_PREFIX/bin/brew" ]] && eval "$("$BREW_PREFIX/bin/brew" shellenv)"
 
-# Core
+# Editor + ripgrep
 # VISUAL covers sudoedit / crontab -e / less +v; EDITOR is the fallback consumer.
-export VISUAL="code --wait --reuse-window"
+export VISUAL="codium --reuse-window --wait --"
 export EDITOR="$VISUAL"
 export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/ripgreprc"
 
 # Go (Go does not honor XDG natively; explicit GOPATH redirects everything)
-export GOPRIVATE="github.com/your-org/*"
 export GOPATH="$XDG_DATA_HOME/go"
+export GOPRIVATE="github.com/your-org/*"
 export PATH="$GOPATH/bin:$PATH"
 
 # uv (global Python CLI tools via `uv tool install`)

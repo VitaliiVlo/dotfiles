@@ -17,7 +17,7 @@ Targets (current as of mid-2026):
 | -------------------------------- | ---------------------------------------------------------------------------------------- |
 | `Option+Shift+Cmd+V`             | Paste and match style (strips formatting; for Slack, Jira, docs)                         |
 | Universal Clipboard              | Copy on iPhone / iPad / Mac, paste on another nearby Apple device                        |
-| `Cmd+Space` then `Cmd+4`         | Spotlight Clipboard History (macOS 26 Tahoe+). Click item to restore to clipboard, or double-click to paste at cursor. Off by default in *Settings → Spotlight*; ~10 items, 8h retention, 16,384-char cap, not synced via Universal Clipboard. 26.1 added retention-duration controls. |
+| `Cmd+Space` then `Cmd+4`         | Spotlight Clipboard History (macOS 26 Tahoe+). Click item to restore to clipboard, or double-click to paste at cursor. Off by default in *Settings → Spotlight*; ~10 items, 8h retention, 16,384-char cap, not synced via Universal Clipboard. 26.1 added retention-duration controls. For unlimited history, hotkey-summoned popup, and fuzzy search install **Maccy** (`brew install --cask maccy`); coexists with Spotlight clipboard. |
 
 ## Screenshots and screen recording
 
@@ -112,7 +112,7 @@ focus
 timer 10 minutes
 ```
 
-**macOS 26 Tahoe redesign**: results unified and intelligently ranked across apps / files / messages / mail / calendar via Apple Intelligence. New chip filters (`PDFs`, `Emails`, ...) narrow scope. **Quick Keys**: type a short letter sequence to trigger an app action (e.g. `nn` = New Note, `sm` = Send Message); discover yours in *Settings → Spotlight → Quick Keys*. Third-party apps expose actions via the App Intents API. Clipboard History tile lives behind `Cmd+4` once Spotlight is open (see Clipboard section).
+**macOS 26 Tahoe redesign**: results unified and intelligently ranked across apps / files / messages / mail / calendar via Apple Intelligence. New chip filters (`PDFs`, `Emails`, ...) narrow scope. **Quick Keys**: type a short letter sequence to trigger an app action (e.g. `nn` = New Note, `sm` = Send Message); toggle the feature in *Settings → Spotlight*, then browse and assign keys in Spotlight via `Cmd+3` (Actions view) using the `Add Quick Keys` chip next to each entry. Third-party apps expose actions via the App Intents API. Clipboard History tile lives behind `Cmd+4` once Spotlight is open (see Clipboard section).
 
 ## Text input
 
@@ -133,7 +133,19 @@ Text Replacements (System Settings → Keyboard → Text Replacements) sync via 
 ;sig    → Slack / Jira signature
 ```
 
-## Live Text
+## Reload and refresh
+
+| Shortcut         | Use                                                                     |
+| ---------------- | ----------------------------------------------------------------------- |
+| `Cmd+R`          | Reload page (Safari, Chrome, Firefox, Brave); refresh view (App Store)  |
+| `Cmd+Shift+R`    | Hard reload, bypass cache (browsers)                                    |
+| `Cmd+Option+R`   | Reload all (some apps); reload unpacked extension (Chromium browsers)   |
+| `Cmd+Option+I`   | Open browser dev tools (Safari needs *Develop* menu enabled first)      |
+| `Cmd+Option+J`   | Dev tools console focus (Chromium browsers)                             |
+
+Finder updates views live (no manual refresh needed); `Cmd+R` in Finder shows the original of an alias instead.
+
+## Live Text (OCR)
 
 Hover over any image (Safari, Photos, Preview, screenshots, PDFs) → cursor turns into text selector → select / copy / lookup the text inside the image. Works on photos of receipts, code on whiteboards, error messages in screenshots. No OCR app needed.
 
@@ -164,12 +176,29 @@ Hover over any image (Safari, Photos, Preview, screenshots, PDFs) → cursor tur
 
 Set in System Settings → Desktop & Dock → Hot Corners with a modifier (`Cmd`, `Ctrl`, `Option`, `Shift`) so the action only fires on intent. Example: bottom-right + `Ctrl` = Lock Screen.
 
+## Touchpad gestures
+
+Configure in *System Settings → Trackpad*. Defaults worth knowing:
+
+| Gesture                     | Action                                                                |
+| --------------------------- | --------------------------------------------------------------------- |
+| Three-finger swipe up       | Mission Control                                                       |
+| Three-finger swipe down     | App Exposé (windows of current app)                                   |
+| Three-finger swipe ← / →    | Switch Space (between full-screen apps + desktops)                    |
+| Four-finger pinch in        | Applications view (replaced Launchpad in macOS 26 Tahoe)              |
+| Four-finger spread out      | Show Desktop                                                          |
+| Two-finger swipe ← (in app) | Browser back / Finder back                                            |
+| Two-finger double-tap       | Smart zoom (Safari, Preview)                                          |
+| Two-finger rotate           | Rotate selection (Preview, Photos)                                    |
+| Three-finger drag           | Move windows / select text (enable: *Accessibility → Pointer Control → Trackpad Options*) |
+| Force Touch (pressure)      | Look up word, preview link, deeper menus in supported apps            |
+
 ## Quick Actions and Shortcuts
 
 Build a Shortcut in the Shortcuts app, then surface it via Finder right-click, Share Sheet, Services, Dock, Control Center, or assign a keyboard shortcut. Useful custom ones:
 
 - Copy POSIX file path of selected Finder item
-- Open folder in VSCode / Zed / Cursor
+- Open folder in VSCodium / Zed / Cursor
 - Convert image to JPEG / PNG / WebP
 - Resize image to 1600px (Jira / Slack uploads)
 - New terminal here
@@ -197,6 +226,18 @@ Built-in PDF / image powerhouse:
 | `xattr -d com.apple.quarantine <bin>`         | Un-quarantine a downloaded binary that Gatekeeper blocks                         |
 | `pmset -g batt`                               | Battery state and history from CLI                                               |
 | `networksetup -listallhardwareports`          | All network interfaces and MAC addresses                                         |
+
+## sudo with Touch ID
+
+One-time setup, survives macOS upgrades:
+
+```bash
+sudo cp /etc/pam.d/sudo_local.template /etc/pam.d/sudo_local
+sudo nano /etc/pam.d/sudo_local
+# Uncomment: auth sufficient pam_tid.so
+```
+
+After this, `sudo` prompts in Terminal / Ghostty / tmux accept Touch ID instead of password. The `sudo_local` file is `/etc/pam.d/` so it's preserved across `softwareupdate` runs (legacy edits to `/etc/pam.d/sudo` were clobbered every OS update).
 
 ## Hold Option everywhere
 

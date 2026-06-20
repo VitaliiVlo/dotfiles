@@ -1,7 +1,7 @@
 # Go
 prefix_rule(pattern=["go", ["build", "doc", "fmt", "generate", "list", "test", "version", "vet"]], decision="allow")
 prefix_rule(pattern=["go", "mod", ["download", "graph", "tidy", "verify", "why"]], decision="allow")
-prefix_rule(pattern=[["gofmt", "golangci-lint", "govulncheck"]], decision="allow")
+prefix_rule(pattern=[["gofmt", "golangci-lint"]], decision="allow")
 
 # Python
 prefix_rule(pattern=[["python", "python3"], "--version"], decision="allow")
@@ -27,5 +27,5 @@ prefix_rule(pattern=["npx", ["eslint", "jest", "prettier", "tsc", "vitest"]], de
 # Build runner
 prefix_rule(pattern=["make", ["--dry-run", "-n"]], decision="allow")
 
-# Shell
+# Shell linting/formatting
 prefix_rule(pattern=[["shellcheck", "shfmt"]], decision="allow")
