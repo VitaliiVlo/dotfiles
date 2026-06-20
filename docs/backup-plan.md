@@ -9,7 +9,7 @@ Scope: macOS + iPhone + Apple Watch user, Gmail for personal email via Apple Mai
 Risks the plan covers, ranked by impact:
 
 1. **Apple ID lockout.** Loses iCloud copies of Contacts/Calendar/Notes/Reminders/Photos/iPhone Backup (iMessage history stays in the local encrypted iPhone backup, since Messages in iCloud is kept off). Passwords protected by being in 1Password instead of Keychain.
-2. **Google account ban.** Loses Gmail address and Google Drive copies. Mail history preserved by Apple Mail local cache; address change handled by switching to pre-positioned `@icloud.com` fallback.
+2. **Google account ban.** Loses the Gmail address and the Google Contacts/Calendar mirror. Mail history preserved by Apple Mail local cache; Contacts/Calendar survive in iCloud plus local exports; address change handled by switching to pre-positioned `@icloud.com` fallback.
 3. **Single-site disaster** (fire, burglary, flood). Destroys Mac plus the home drive in one event. Monthly-rotated offsite drive survives.
 4. **Hardware failure** (Mac, iPhone, a backup drive individually). Routine recovery from the other copies.
 5. **Account credential compromise.** Mitigated by Apple two-factor authentication via trusted devices (Mac + iPhone + Watch), TOTP codes for Google and all other services stored inside 1Password, and 1Password Secret Key plus master password as the root credential.
@@ -25,7 +25,7 @@ Risks NOT covered:
 Two paid cloud subscriptions are already active. The plan assumes both stay current.
 
 - **iCloud+ 200GB**. Hosts: iCloud Mail (`@icloud.com` address), iCloud Photos copy, iCloud Drive, Contacts / Calendar / Notes / Reminders sync, iPhone iCloud Backup, Hide My Email aliases, Private Relay. Resize up if Photos library plus iPhone backups approach the cap; resize down only if a quarterly check shows persistent free capacity.
-- **Google AI Plus 400GB**. Hosts: Gmail mailbox storage, Google Drive for quarterly Takeout archives plus small exports (Notes Markdown dumps, vCard / `.ics` archives, 1Password Emergency Kit encrypted PDF), Google Photos if used as light secondary photo copy. Includes Google AI Plus features (Gemini + Workspace integrations). If the bundle ends, warm spare migrates to Google One Basic 100GB (mailbox + Takeout typically fit) or a higher AI tier (if Photos secondary copy grows).
+- **Google AI Plus 400GB**. Hosts: Gmail mailbox storage, Contacts / Calendar sync mirror (CardDAV / CalDAV), Google AI Plus features (Gemini + Workspace integrations). Photos and Drive backup exports intentionally not used: Google is kept to its low-ban-risk surfaces (mail + sync), since the ban risk concentrates in content surfaces (Photos ML scanning, Drive content), not in sync. Notes / vCard / `.ics` exports ride Time Machine to the drives instead. An independent online photo copy is TBD (candidate: Ente). If the bundle ends, warm spare migrates to Google One Basic 100GB (mailbox typically fits).
 
 Both tiers are vendor-locked: iCloud+ ends with the Apple ID, Google One ends with the Google account. Same accounts the plan is hardening, not independent. Treat them as the primary slot for each vendor, not as cross-vendor backup.
 
@@ -37,12 +37,11 @@ Both tiers are vendor-locked: iCloud+ ends with the Apple ID, Google One ends wi
 | Calendar | iCloud | Google Calendar (CalDAV sync) | TM on SSD and HDD |
 | Notes | Apple Notes (iCloud) | Quarterly Markdown export | TM on SSD and HDD |
 | Reminders | Apple Reminders (iCloud) | Quarterly export | TM on SSD and HDD |
-| Passwords | 1Password | Emergency Kit printed (home safe) | Emergency Kit printed (offsite copy) |
+| Passwords | 1Password | Encrypted `.1pux` on TM (SSD) + Emergency Kit printed (home safe) | Encrypted `.1pux` on TM (HDD, offsite) + Emergency Kit printed (offsite) |
 | Photos originals | Mac (Download Originals) | iCloud Photos | TM on SSD and HDD |
-| Email | Gmail | Apple Mail local cache + quarterly Takeout | TM + Drive |
+| Email | Gmail | Apple Mail local cache + quarterly `.mbox` export | TM on SSD and HDD |
 | Mac files | Mac internal SSD | TM on SSD (home) | TM on HDD (offsite, monthly rotation) |
 | Dotfiles | Mac | GitHub | TM on SSD and HDD |
-| `.local/source.toml` | Mac | 1Password attachment | TM on SSD and HDD |
 | iPhone | iCloud Backup | Monthly encrypted local backup to Mac | TM on SSD and HDD |
 | Apple Watch | Paired iPhone backup | (covered via iPhone) | (covered via iPhone) |
 
@@ -83,7 +82,16 @@ Note: enabling Recovery Key disables Apple-support-driven account recovery. Reco
 6. Verify 20 random logins work via 1Password autofill.
 7. System Settings → Apple Account → iCloud → Passwords → Off. (Disables iCloud Keychain entirely; passwords now single-source in 1Password.)
 8. System Settings → General → AutoFill & Passwords → set 1Password as autofill provider; turn off Apple Passwords autofill.
-9. Attach `.local/source.toml` as encrypted file attachment to a 1Password item named `dotfiles overrides`.
+
+### Backup codes and credential tiers
+
+Where each recovery credential lives, layered so nothing is stored inside the thing it unlocks and no credential sits in a loop:
+
+- **In 1Password:** every account's password and TOTP seed (except Apple, which is device-based, and 1Password itself), plus each account's backup codes as a secure note on its login item. Also the drive-encryption passwords, the iPhone-backup password, and the breakglass `.dmg` passphrase.
+- **On paper (Emergency Kit printouts + travel card), home safe + offsite:** the 1Password Secret Key and master password, the Apple Recovery Key, the backup codes for the accounts that recover everything (Google / recovery email at minimum, bank + brokerage ideally), and the drive-encryption passwords plus the breakglass `.dmg` passphrase. The recovery-anchor codes are duplicated here because both their TOTP and their codes otherwise live only in 1Password; the drive and `.dmg` passphrases are here so the drives and the breakglass export still open during a 1Password outage. An offline copy is the only breakglass if 1Password is unavailable.
+- **Memorized only:** the 1Password master password. Never stored digitally, never in any cloud, never inside 1Password.
+
+Do not enable a separate TOTP second factor on the 1Password account itself: the Secret Key already serves as the possession factor, and a third required factor only deepens lockout risk in the all-devices-lost case (see 1Password setup step 3).
 
 ### Apple Mail local cache for Gmail
 
@@ -148,14 +156,14 @@ Set calendar reminders for each.
 
 ### Quarterly
 
-- [ ] Gmail Takeout: takeout.google.com → select Mail (`.mbox`) + Contacts + Calendar + Drive → save `.zip` to `~/Backups/Takeout/YYYY-Qn/`.
+- [ ] Gmail archive: Apple Mail → select the Gmail "All Mail" mailbox → Mailbox → Export Mailbox → save `.mbox` to `~/Backups/Mail/YYYY-Qn/`. Contacts / Calendar / Notes / Reminders have their own export steps below.
 - [ ] Notes export: use [Obsidian Importer](https://github.com/obsidianmd/obsidian-importer) (first-party Obsidian plugin → Apple Notes format) → Markdown dump to a quarterly vault at `~/Backups/Notes/YYYY-Qn/`.
 - [ ] Reminders export: Reminders app → File → Export → save `.ics` to `~/Backups/Reminders/YYYY-Qn/`.
-- [ ] Contacts vCard export: Contacts → File → Export → Contacts Archive.
-- [ ] Calendar `.ics` export: Calendar → File → Export → Calendar Archive.
+- [ ] Contacts vCard export: Contacts → File → Export → Contacts Archive → save to `~/Backups/Contacts/YYYY-Qn/`.
+- [ ] Calendar `.ics` export: Calendar → File → Export → Calendar Archive → save to `~/Backups/Calendar/YYYY-Qn/`.
 - [ ] Restore test: pull 1 random file from Time Machine (home drive) and 1 file from the offsite drive after swap. Open and verify content.
 - [ ] Verify 1Password Emergency Kit Secret Key matches printed copy (read the printout, paste into a verify-only check).
-- [ ] 1Password breakglass export: 1Password → File → Export → save the `.1pux` export to `~/Backups/1Password/YYYY-Qn/` so it rides Time Machine to both drives. Vendor-independent offline copy of the secrets themselves, for a 1Password service outage (the Emergency Kit only restores account access, which is useless if the service is down). The export is plaintext inside the APFS-encrypted drive, so the drive password is its only guard; that password is on the Emergency Kit printout per Local drive setup. Delete the prior quarter's export after writing the new one.
+- [ ] 1Password breakglass export: Disk Utility → File → New Image → Blank Image, format APFS, encryption AES-256, strong passphrase, name `1pw-vault-YYYY-Qn`. Mount it, then 1Password → File → Export → save the `.1pux` into the mounted image (never to the Desktop first). Eject the image and move the `.dmg` to `~/Backups/1Password/YYYY-Qn/` so it rides Time Machine to both drives. Vendor-independent offline copy of the secrets themselves, for a 1Password service outage (the Emergency Kit only restores account access, which is useless if the service is down). The `.1pux` is double-encrypted at rest (your image passphrase plus APFS), so it stays protected even if the drive is unlocked. Store the image passphrase in 1Password and on the Emergency Kit printout. Delete the prior quarter's image after writing the new one.
 - [ ] Confirm Apple Recovery Contacts are reachable (text them) and Recovery Key printouts are findable.
 
 ### Yearly (first weekend of January)
@@ -163,6 +171,16 @@ Set calendar reminders for each.
 - [ ] Review registered 2FA services on Apple ID, Google, 1Password, GitHub, bank, brokerage. Open each TOTP entry in 1Password and confirm it generates a code accepted by the service. Remove stale services.
 - [ ] Confirm Recovery Contact phone numbers / addresses still current.
 - [ ] Rotate critical-account passwords: bank, brokerage, 1Password master, Apple ID.
+
+## Travel hardening
+
+The plan is solid at home; a trip is where a single stolen device can cascade into a multi-week lockout, since the phone may be the only trusted Apple device and the only signed-in 1Password device present. Before any trip:
+
+- [ ] Sign 1Password into two devices carried separately (iPhone + iPad, or iPhone + Mac). Losing one device is then an inconvenience, not a lockout.
+- [ ] Bring a second Apple device signed into the Apple ID. It serves as a second trusted device for Apple two-factor and a second 1Password device at once.
+- [ ] Carry a sealed paper card, stored apart from the devices (money belt / hotel safe, never the phone case): 1Password Secret Key, Google backup codes, Apple Recovery Key. The master password stays memorized only, never written on the card, so the card alone is useless to a thief.
+- [ ] Confirm a second trusted phone number on the Apple ID (family member or travel eSIM) so an SMS factor survives losing the phone.
+- [ ] Confirm Contacts and Calendar are reachable from a browser (icloud.com and Google) in case a device must be borrowed.
 
 ## Recovery playbook
 
@@ -193,7 +211,7 @@ Set calendar reminders for each.
 1. New hardware.
 2. Retrieve the offsite drive from its location.
 3. Migration Assistant from the offsite drive. Worst case ~1 month stale (since last swap).
-4. Recent data delta = anything created since last swap. For synced data (Mail / Contacts / Calendar / Notes / iCloud Drive) iCloud has live copies. For local-only files modified in the last month: lost.
+4. Recent data delta = anything created since last swap. For synced data the cloud has live copies (Contacts / Calendar / Notes / iCloud Drive in iCloud, Mail in Gmail). For local-only files modified in the last month: lost.
 
 ### Apple ID temporarily locked
 
@@ -217,7 +235,7 @@ Set calendar reminders for each.
 1. Read Apple Mail local cache (`~/Library/Mail/`) to preserve historical context.
 2. Within 24-48 hours: switch primary email on critical accounts to `@icloud.com`: 1Password, Apple, bank, brokerage, GitHub, primary work tools.
 3. Over next 4 weeks: long tail of service logins. Triage by importance.
-4. For historical Gmail content: use most recent Takeout `.mbox` (loadable in Apple Mail via File → Import Mailboxes).
+4. For historical Gmail content: use the most recent quarterly `.mbox` export, or read the live Apple Mail local cache (the `.mbox` is reloadable via File → Import Mailboxes).
 5. New mail going forward: Apple Mail on `@icloud.com`. Risk note: this consolidates more into Apple, so Apple ID hardening becomes more load-bearing.
 
 ### 1Password lockout (forgot master password OR Secret Key lost)
