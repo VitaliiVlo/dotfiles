@@ -159,7 +159,7 @@ Used directly from the repo:
 Run `make macos-defaults` to configure (in order applied):
 
 - Folders (~/Projects, ~/Pictures/Screenshots)
-- System defaults (key repeat via `ApplePressAndHoldEnabled=false` at OS-default rate/delay, natural scrolling, save to disk by default, Appearance = Dark). Linux pins explicit 250ms delay / 30ms interval; macOS intentionally inherits OS-default rate to avoid surprising existing users.
+- System defaults (key repeat via `ApplePressAndHoldEnabled=false` at OS-default rate/delay, natural scrolling, save to disk by default, Appearance = Dark). macOS intentionally inherits the OS-default repeat rate to avoid surprising existing users; Linux pins an explicit rate (see Linux settings below).
 - Screenshots (save to ~/Pictures/Screenshots, no shadow, PNG, floating thumbnail enabled)
 - Finder (list view, path bar, show extensions, folders first, search current folder, suppress DS_Store on network/USB volumes)
 - Dock (autohide, no recents, scale minimize effect, minimized windows in own Dock slot, fixed Spaces order, Cmd-gated hot corners: TL Mission Control / TR Notification Center / BL Desktop / BR Quick Note)
@@ -289,7 +289,7 @@ For full audit, run `make validate` (delegates to `scripts/validate.sh`): it par
 - `brew update && brew upgrade` — update Homebrew formulae and casks
 - `make brew-export` — refresh `Brewfile` from current install state (macOS only; Linuxbrew install state would wipe macOS-only casks). Add new work entries to `Brewfile.work` manually; see `docs/conventions.md` "Brewfile maintenance" for strip step semantics.
 - `make brew-cleanup` — prune old versions and cache
-- macOS GUI apps: cask auto-update via `brew upgrade` (for example VSCodium, Brave, Ghostty, Zed, Claude Code, Codex, IINA, Obsidian, Telegram, WhatsApp also have their own in-app updaters; cask still authoritative)
+- macOS GUI apps: cask auto-update via `brew upgrade` (some apps also self-update in-app, but the cask stays authoritative; run `brew upgrade` even for self-updaters to keep cask versions in sync)
 - Linux GUI apps: per-app update channels (vendor apt/dnf, in-app updater, GitHub release, manual vendor download) covered in [`docs/linux-tips.md` "Per-app update channels"](docs/linux-tips.md#per-app-update-channels).
 - Go: `brew upgrade go`. Node: `fnm install <version> && fnm default <version>` (or rely on per-dir `.node-version`). Python: `uv python install <version>` (uv selects per project).
 

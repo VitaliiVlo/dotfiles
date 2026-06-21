@@ -49,7 +49,7 @@ Homebrew Cask inventory: GUI applications, CLIs, and fonts. Split into a base se
 
 ## Linux-installable casks
 
-Recent Homebrew ships Linux cask support for `binary` and `font` artifacts. A small subset of `Brewfile` casks installs via `brew install --cask <name>` on Linuxbrew because the cask source declares either an `os macos: ..., linux: ...` block with `x86_64_linux` / `arm64_linux` sha256 entries (binary CLIs), or a `font` artifact (font files install to the platform font dir). All other casks are macOS-only by artifact (`app`, `pkg`, `darwin` arch) and skipped on Linux with a warning.
+Homebrew ships Linux cask support for `binary` and `font` artifacts. A subset of `Brewfile` casks installs via `brew install --cask <name>` on Linuxbrew because the cask source declares either an `os macos: ..., linux: ...` block with `x86_64_linux` / `arm64_linux` sha256 entries (binary CLIs), or a `font` artifact (font files install to the platform font dir). All other casks are macOS-only by artifact (`app`, `pkg`, `darwin` arch) and skipped on Linux with a warning.
 
 | Cask                        | Why Linux works                                  |
 | --------------------------- | ------------------------------------------------ |
