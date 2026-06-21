@@ -22,7 +22,7 @@ defaults write NSGlobalDomain com.apple.swipescrolldirection      -bool   true  
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud   -bool   false  # Save to disk by default
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode  -bool   false
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool   false
-# Appearance (mirrors Linux color-scheme = prefer-dark; flushed by killall SystemUIServer below)
+# Appearance (mirrors Linux color-scheme = prefer-dark)
 defaults write NSGlobalDomain AppleInterfaceStyle                 -string "Dark"
 
 heading "→ Setting screenshot location…"

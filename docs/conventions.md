@@ -20,7 +20,7 @@ Nested JSON / TOML keys are written in dotted-path shorthand (e.g. `tabs.git_sta
 | Cursor blink | `cursorBlinking: "smooth"` | `cursor_blink: true`, terminal: `blinking: "on"` | — | `cursor-style-blink = true` | — | — | — |
 | Hide mouse on type | — | `hide_mouse: "on_typing_and_action"` | — | `mouse-hide-while-typing = true` | — | — | — |
 | Font | JetBrains Mono 14pt + fallbacks (editor + terminal) | Same chain (buffer + terminal) | (terminal font) | Same chain | — | — | — |
-| Ligatures | `editor.fontLigatures: true` | `buffer_font_features: null` (all on) | — | (default: on) | — | — | — |
+| Ligatures | `editor.fontLigatures: true` | `buffer_font_features` unset (default `{}`, on) | — | (default: on) | — | — | — |
 | Theme (dark) | Catppuccin Macchiato | Catppuccin Macchiato | — | Catppuccin Macchiato | Catppuccin Macchiato | Catppuccin Macchiato | — |
 | Theme (light) | Catppuccin Latte | Catppuccin Latte | — | Catppuccin Latte | Catppuccin Latte | — | — |
 | Indent guides | `editor.guides.indentation: true` | `indent_guides.enabled: true` | — | — | — | — | — |
@@ -238,11 +238,11 @@ Reproducible across machines:
 
 **TOML LSP:** `tombi-toml.tombi` (Brewfile) on VSCodium ↔ `tombi` in `auto_install_extensions` on Zed. Same upstream LSP both sides; chosen over `tamasfe.even-better-toml` (taplo upstream stalled).
 
-**Prettier formatter parity:** Both editors run Prettier for the same language set so save-on-format is byte-identical across editors. VSCodium pins `esbenp.prettier-vscode` as `[lang] editor.defaultFormatter` for JS/JSX/TS/TSX/JSON/JSONC/JSON5/YAML/Markdown/MDX/HTML/CSS/SCSS/Less. Zed pins `languages.<Lang>.formatter = "prettier"` for the same set; JSONC/JSON5/YAML/Markdown/MDX already use bundled Prettier by Zed default and need no explicit pin. `.prettierrc` in a project is honored on both sides.
+**Prettier formatter parity:** Both editors run Prettier on save for the same language set. VSCodium pins `esbenp.prettier-vscode` as `[lang] editor.defaultFormatter` for JS/JSX/TS/TSX/JSON/JSONC/JSON5/YAML/Markdown/MDX/HTML/CSS/SCSS/Less (global `editor.formatOnSave: true`). Zed pins `languages.<Lang>.formatter = "prettier"` for the JS/TS/JSON/HTML/CSS family; JSONC/JSON5/YAML format on save via Zed defaults; Markdown needs an explicit `format_on_save: "on"` + `formatter: "prettier"` pin because Zed defaults Markdown to `format_on_save: "off"`. MDX is the one residual gap: Zed ships no MDX language, so `.mdx` is not formatted on save in Zed (manual format unaffected on both). `.prettierrc` in a project is honored on both sides.
 
 **ESLint:** both editors auto-activate ESLint when the project ships `node_modules/eslint`. VSCodium via `dbaeumer.vscode-eslint` extension; Zed via the bundled `eslint` LSP exposed under `lsp.eslint.settings`. No global enable needed; activation is per-project on both sides.
 
-**Protobuf parity gap:** VSCodium runs `bufbuild.vscode-buf` for buf-backed lint, format, and breaking-change checks on `.proto` files. Zed has no equivalent extension (no `buf` entry in `zed-industries/extensions`); the `proto` extension covers tree-sitter syntax highlighting only. Fallback on Zed: run `buf lint`, `buf format`, `buf breaking` via CLI (`brew "buf"`).
+**Protobuf parity gap:** VSCodium runs `bufbuild.vscode-buf` for buf-backed lint, format, and breaking-change checks on `.proto` files. Zed's `proto` extension ships tree-sitter highlighting plus configurable Proto language servers (`buf`, `protobuf-language-server`, `protols`; binaries not bundled, `brew "buf"` supplies `buf`), so `buf lsp` covers lint + format in-editor. Residual gap: breaking-change detection isn't an LSP feature, so `buf breaking` runs via CLI on Zed (all three also available as CLI: `buf lint` / `buf format` / `buf breaking`).
 
 **Occurrence-highlight parity gap:** VSCodium pins `editor.occurrencesHighlight: "multiFile"` (highlight a symbol's occurrences across files; VSCode default is `"singleFile"`). Zed has no multi-file occurrence-highlight setting; `selection_highlight` (default on) highlights the current selection within the active buffer only. Divergence is inherent to the editors, not config drift.
 
@@ -331,7 +331,7 @@ Must stay consistent across: `.config/git/config` (authoritative), VSCodium, Zed
 
 Zed delegates git workflow (rebase, autostash, prune, SSH) to `.config/git/config` — consistent by inheritance. Two known gaps: no auto-fetch, no branch protection.
 
-`.config/git/config` authoritative settings: `core.autocrlf = input`, `init.defaultBranch = main`, `merge.conflictstyle = zdiff3`, `rerere.enabled = true`, `rerere.autoupdate = true`, `push.autoSetupRemote = true`, `diff.algorithm = histogram`, `diff.colorMoved = default`, `diff.renames = true`, `diff.mnemonicPrefix = true`, `log.date = relative`, `branch.sort = -committerdate`. Delta config: `dark = true`, `line-numbers = true`, `side-by-side = true`, `hyperlinks = true`, `navigate = true`. `[filter "lfs"]` block pre-configured for git-lfs — no need to run `git lfs install`.
+`.config/git/config` authoritative settings: `core.autocrlf = input`, `init.defaultBranch = main`, `merge.conflictstyle = zdiff3`, `rerere.enabled = true`, `rerere.autoupdate = true`, `push.autoSetupRemote = true`, `diff.algorithm = histogram`, `diff.colorMoved = default`, `diff.renames = true`, `diff.mnemonicPrefix = true`, `log.date = relative`, `branch.sort = -committerdate`. Delta config: `dark = true`, `line-numbers = true`, `side-by-side = true`, `hyperlinks = true`, `navigate = true`, `tabs = 4`, `syntax-theme = Catppuccin Macchiato`. `[filter "lfs"]` block pre-configured for git-lfs — no need to run `git lfs install`.
 
 **VSCodium uses the same `git.blame.*` split** as VSCode (Code OSS heritage): `git.blame.editorDecoration.enabled` (inline editor decoration) and `git.blame.statusBarItem.enabled` (status bar item), each with its own `template`. Do not use the legacy flat `git.blame.enabled` key — it is silently ignored.
 

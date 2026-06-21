@@ -27,6 +27,8 @@ Targets: macOS 26 Tahoe and 15 Sequoia. See [Apple macOS](https://www.apple.com/
 | `Cmd+Shift+4` then `Space`              | Window screenshot (no shadow if `disable-shadow=true`, applied by `make macos-defaults`)       |
 | `Cmd+Shift+5`                           | Screenshot + screen recording UI (region / window / full, mic select, timer)             |
 
+Captures save to `~/Pictures/Screenshots` (set by `make macos-defaults`; the macOS default is the Desktop).
+
 After capture, the floating thumbnail at bottom-right is draggable: drop it directly into Slack / Mail / a chat without saving to disk first.
 
 ## Finder and Save / Open dialogs

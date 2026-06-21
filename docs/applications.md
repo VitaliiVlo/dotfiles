@@ -44,7 +44,7 @@ Bold primary lives in whichever column applies. Within each column, order altern
 | Communication (Work) | — | — | **Slack**, Microsoft Teams, Google Meet |
 | Communication (Home) | — | — | **Telegram**, WhatsApp, Signal |
 | Photos | **Apple Photos** | gThumb | Google Photos |
-| Image Editor | **Pixelmator Pro**, Affinity | — | Pinta, GIMP, Krita |
+| Image Editor | **Affinity**, Pixelmator Pro | — | Pinta, GIMP, Krita |
 | Video Player | **QuickTime**, IINA | Celluloid | VLC |
 | Music | **Apple Music** | — | Spotify, YouTube Music |
 | Password Manager | Apple Passwords | KeePassXC | **1Password**, Bitwarden, Proton Pass |

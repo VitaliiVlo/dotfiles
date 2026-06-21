@@ -35,13 +35,17 @@ toml_files=(
 if [[ -f .local/source.toml ]]; then
     toml_files+=(.local/source.toml)
 fi
-for f in "${toml_files[@]}"; do
-    if out=$(python3 -c "import tomllib,sys; tomllib.loads(open(sys.argv[1]).read())" "$f" 2>&1); then
-        ok "$f"
-    else
-        bad "$f" "$out"
-    fi
-done
+if python3 -c "import tomllib" >/dev/null 2>&1; then
+    for f in "${toml_files[@]}"; do
+        if out=$(python3 -c "import tomllib,sys; tomllib.loads(open(sys.argv[1]).read())" "$f" 2>&1); then
+            ok "$f"
+        else
+            bad "$f" "$out"
+        fi
+    done
+else
+    echo "SKIP (needs python3 3.11+ for stdlib tomllib)"
+fi
 
 # 2. Parse every plain JSON
 heading "JSON"

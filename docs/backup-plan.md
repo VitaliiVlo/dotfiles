@@ -245,6 +245,14 @@ The plan is solid at home; a trip is where a single stolen device can cascade in
 2. Sign in on a new device using Secret Key + master password slot from Emergency Kit.
 3. If both printed copies lost AND device cache empty: account is unrecoverable by design. Reset, rebuild from browser-saved logins and per-service password reset via email.
 
+### Credential compromised (password or session leaked)
+
+1. From a trusted device, change that service's password in 1Password; re-enroll its TOTP if the service supports it.
+2. Sign out all other sessions (Security → revoke active sessions / "sign out everywhere").
+3. Audit the account's recovery email / phone, mail forwarding rules, and connected OAuth / app grants; revoke anything you didn't add.
+4. Run 1Password Watchtower; rotate any reused copies of the leaked password.
+5. If the compromised credential is the Apple ID or Google account itself, change it first (it gates the rest), then re-verify trusted devices + 2FA, then work the list above.
+
 ## Trust boundary notes
 
 - Cloudflare custom domain and cloud backup providers (Backblaze, Fastmail, Proton) intentionally excluded. Reduces vendor surface, accepts the tradeoff of (a) manual offsite discipline via drive rotation and (b) address-change exposure if Gmail bans the account.

@@ -30,7 +30,7 @@ Wayland clipboard is per-session and per-MIME. Use the Wayland tools, not the X1
 | `wl-paste -p`                     | Read the primary selection (middle-click buffer)                             |
 | Middle-click                      | Paste primary selection (highlight = copy, no shortcut needed)               |
 
-Primary selection and the Ctrl+C clipboard are independent buffers; both survive across Wayland clients but die with the session. For persistent history install the **Clipboard Indicator** GNOME extension (one-click via *Extension Manager* or extensions.gnome.org) — search bar in dropdown, image support, pinning, private mode.
+Primary selection and the Ctrl+C clipboard are independent buffers; both survive across Wayland clients but die with the session. For persistent history install the **Clipboard Indicator** GNOME extension (one-click via *Extension Manager* or extensions.gnome.org): search bar in dropdown, image support, pinning, private mode.
 
 ## Screenshots and screen recording
 

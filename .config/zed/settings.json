@@ -187,7 +187,7 @@
   "remove_trailing_whitespace_on_save": true,
   "ensure_final_newline_on_save": true,
   "autosave": "off",
-  // Per-language formatter pins — Prettier owns its main + common supported langs (parity with VSCodium prettier-vscode); JSONC/JSON5/YAML/Markdown/MDX already use bundled Prettier by Zed default.
+  // Per-language formatter pins: Prettier owns its main + common supported langs (parity with VSCodium prettier-vscode). JSONC/JSON5/YAML format on save via Zed default; Markdown needs an explicit pin because Zed defaults Markdown to format_on_save "off". MDX has no Zed language (VSCodium-only).
   "languages": {
     "JavaScript": { "formatter": "prettier" },
     "JSX": { "formatter": "prettier" },
@@ -197,7 +197,8 @@
     "HTML": { "formatter": "prettier" },
     "CSS": { "formatter": "prettier" },
     "SCSS": { "formatter": "prettier" },
-    "Less": { "formatter": "prettier" }
+    "Less": { "formatter": "prettier" },
+    "Markdown": { "format_on_save": "on", "formatter": "prettier" }
   },
   // Search
   "use_smartcase_search": true,

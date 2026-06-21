@@ -53,22 +53,26 @@ snapshots: ## Regenerate upstream defaults snapshots in defaults/ (ghostty + sta
 	@printf '\n%s\n' "==> zed (upstream main, NOT installed version)"
 	@if command -v curl >/dev/null 2>&1; then \
 		curl -fsSL https://raw.githubusercontent.com/zed-industries/zed/main/assets/settings/default.json -o defaults/zed-defaults.jsonc && \
-		echo "    wrote defaults/zed-defaults.jsonc (tracks zed-industries/zed@main)"; \
+		echo "    wrote defaults/zed-defaults.jsonc (tracks zed-industries/zed@main)" || \
+		echo "    WARN: fetch failed, upstream path may have moved"; \
 	else echo "    SKIP (curl not installed)"; fi
 	@printf '\n%s\n' "==> yazi (upstream main, NOT installed version)"
 	@if command -v curl >/dev/null 2>&1; then \
 		curl -fsSL https://raw.githubusercontent.com/sxyazi/yazi/main/yazi-config/preset/yazi-default.toml -o defaults/yazi-defaults.toml && \
-		echo "    wrote defaults/yazi-defaults.toml (tracks sxyazi/yazi@main)"; \
+		echo "    wrote defaults/yazi-defaults.toml (tracks sxyazi/yazi@main)" || \
+		echo "    WARN: fetch failed, upstream path may have moved"; \
 	else echo "    SKIP (curl not installed)"; fi
 	@printf '\n%s\n' "==> superfile (upstream main, NOT installed version)"
 	@if command -v curl >/dev/null 2>&1; then \
 		curl -fsSL https://raw.githubusercontent.com/yorukot/superfile/main/src/superfile_config/config.toml -o defaults/superfile-defaults.toml && \
-		echo "    wrote defaults/superfile-defaults.toml (tracks yorukot/superfile@main)"; \
+		echo "    wrote defaults/superfile-defaults.toml (tracks yorukot/superfile@main)" || \
+		echo "    WARN: fetch failed, upstream path may have moved"; \
 	else echo "    SKIP (curl not installed)"; fi
 	@printf '\n%s\n' "==> atuin (upstream main, NOT installed version)"
 	@if command -v curl >/dev/null 2>&1; then \
 		curl -fsSL https://raw.githubusercontent.com/atuinsh/atuin/main/crates/atuin-client/config.toml -o defaults/atuin-defaults.toml && \
-		echo "    wrote defaults/atuin-defaults.toml (tracks atuinsh/atuin@main)"; \
+		echo "    wrote defaults/atuin-defaults.toml (tracks atuinsh/atuin@main)" || \
+		echo "    WARN: fetch failed, upstream path may have moved"; \
 	else echo "    SKIP (curl not installed)"; fi
 	@printf '\n%s\n' "==> vscodium (manual)"
 	@if command -v brew >/dev/null 2>&1; then \
