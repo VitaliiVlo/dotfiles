@@ -1,5 +1,6 @@
 "$schema" = "https://starship.rs/config-schema.json"
 
+# Local tweaks
 add_newline = false
 
 [cmd_duration]
@@ -9,6 +10,7 @@ show_milliseconds = true
 [username]
 show_always = true
 
+# nerd-font-symbols preset
 [aws]
 symbol = " "
 

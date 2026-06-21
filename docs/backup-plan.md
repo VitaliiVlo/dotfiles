@@ -24,8 +24,8 @@ Risks NOT covered:
 
 Two paid cloud subscriptions are already active. The plan assumes both stay current.
 
-- **iCloud+ 200GB**. Hosts: iCloud Mail (`@icloud.com` address), iCloud Photos copy, iCloud Drive, Contacts / Calendar / Notes / Reminders sync, iPhone iCloud Backup, Hide My Email aliases, Private Relay. Resize up if Photos library plus iPhone backups approach the cap; resize down only if a quarterly check shows persistent free capacity.
-- **Google AI Plus 400GB**. Hosts: Gmail mailbox storage, Contacts / Calendar sync mirror (CardDAV / CalDAV), Google AI Plus features (Gemini + Workspace integrations). Photos and Drive backup exports intentionally not used: Google is kept to its low-ban-risk surfaces (mail + sync), since the ban risk concentrates in content surfaces (Photos ML scanning, Drive content), not in sync. Notes / vCard / `.ics` exports ride Time Machine to the drives instead. An independent online photo copy is TBD (candidate: Ente). If the bundle ends, warm spare migrates to Google One Basic 100GB (mailbox typically fits).
+- **iCloud+**. Hosts: iCloud Mail (`@icloud.com` address), iCloud Photos copy, iCloud Drive, Contacts / Calendar / Notes / Reminders sync, iPhone iCloud Backup, Hide My Email aliases, Private Relay. Resize up if Photos library plus iPhone backups approach the cap; resize down only if a quarterly check shows persistent free capacity.
+- **Google One**. Hosts: Gmail mailbox storage, Contacts / Calendar sync mirror (CardDAV / CalDAV), Google One features (Gemini + Workspace integrations). Photos and Drive backup exports intentionally not used: Google is kept to its low-ban-risk surfaces (mail + sync), since the ban risk concentrates in content surfaces (Photos ML scanning, Drive content), not in sync. Notes / vCard / `.ics` exports ride Time Machine to the drives instead. Photos rely on iCloud + the offsite HDD; the narrow window of an Apple ID lockout and a single-site disaster before the next monthly swap (losing photos since the last swap) is an accepted residual risk. If the bundle ends, warm spare migrates to Google One Basic 100GB (mailbox typically fits).
 
 Both tiers are vendor-locked: iCloud+ ends with the Apple ID, Google One ends with the Google account. Same accounts the plan is hardening, not independent. Treat them as the primary slot for each vendor, not as cross-vendor backup.
 
@@ -155,6 +155,8 @@ Set calendar reminders for each.
 - [ ] Verify Time Machine backup completed successfully on the newly-swapped-in drive (System Settings → General → Time Machine → check timestamp).
 
 ### Quarterly
+
+If short on time, the load-bearing three are the restore test, the 1Password Secret Key verify, and the 1Password breakglass export. The data exports (Gmail / Notes / Contacts / Calendar) can slip a quarter: that data still lives in iCloud + Time Machine, so the export only refreshes the vendor-independent format copy.
 
 - [ ] Gmail archive: Apple Mail → select the Gmail "All Mail" mailbox → Mailbox → Export Mailbox → save `.mbox` to `~/Backups/Mail/YYYY-Qn/`. Contacts / Calendar / Notes have their own export steps below; Reminders ride the Calendar Archive.
 - [ ] Notes export: use [Obsidian Importer](https://github.com/obsidianmd/obsidian-importer) (first-party Obsidian plugin → Apple Notes format) → Markdown dump to a quarterly vault at `~/Backups/Notes/YYYY-Qn/`. Alternative: [kzaremski/apple-notes-exporter](https://github.com/kzaremski/apple-notes-exporter) (standalone Swift app, bulk Markdown export preserving folder structure + incremental sync, no Obsidian dependency; GitHub release, not Homebrew).

@@ -203,7 +203,7 @@ make brew-install-work  # Install work packages only
 make brew-cleanup       # Clean up old versions and cache
 make brew-export        # Export installed packages (incl. VSCodium extensions) to Brewfile, then strip Brewfile.work entries; add new work entries to Brewfile.work manually
 make versions           # Show installed Go, Node, Python versions
-make local-overrides    # Re-render per-machine overrides from .local/source.toml; see Local overrides
+make local-overrides    # Render per-machine overrides from .local/source.toml; see Local overrides
 make snapshots          # Regenerate defaults/* upstream-defaults snapshots
 ```
 

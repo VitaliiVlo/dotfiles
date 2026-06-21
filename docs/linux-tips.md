@@ -6,16 +6,16 @@ Version baselines (snapshot, verify against each distro's releases page for the 
 
 | Stack                | Version baseline                                                                |
 | -------------------- | ------------------------------------------------------------------------------- |
-| GNOME                | **50 "Tokyo"** (March 2026, Wayland-only, stable VRR + fractional scaling) |
+| GNOME                | **50 "Tokyo"** (Wayland-only, stable VRR + fractional scaling) |
 | GTK / libadwaita     | GTK 4.18+, libadwaita 1.8+                                                       |
-| Qt / KDE Frameworks  | Qt 6.10+ (Plasma 6.6 Feb 2026, Plasma 6.7 June 2026), KF 6.24+                    |
+| Qt / KDE Frameworks  | Qt 6.10+ (Plasma 6.x), KF 6.24+ |
 | Wayland / portals    | `xdg-desktop-portal` 1.20+, `xdg-desktop-portal-gnome` 50, PipeWire 1.6+         |
-| Fedora Workstation   | 44 (April 28, 2026, GNOME 50, `dnf5` default)                                       |
-| Silverblue    | 44 (April 28, 2026, GNOME 50, atomic via `rpm-ostree` + `bootc`)                    |
+| Fedora Workstation   | 44 (GNOME 50, `dnf5` default) |
+| Silverblue           | 44 (GNOME 50, atomic via `rpm-ostree` + `bootc`) |
 | Bluefin              | Rolling on Fedora 44 base, **bootc**-based image                                 |
-| Vanilla OS           | **2 "Orchid"** (Jul 2024 release, Debian sid base via Vib, GNOME 46 base + `vso update` advances, ABRoot atomic, `apx` subsystems) |
-| Zorin OS             | **18.1** (April 2026, Ubuntu 24.04 HWE base, GNOME 46 themed, Wayland default, supported to April 2029) |
-| Ubuntu LTS           | **26.04 LTS "Resolute Raccoon"** (April 2026, GNOME 50, Rust coreutils, systemd 259, cgroup v2 mandatory) |
+| Vanilla OS           | **2 "Orchid"** (Debian sid base via Vib, GNOME 46 base + `vso update` advances, ABRoot atomic, `apx` subsystems) |
+| Zorin OS             | **18.1** (Ubuntu 24.04 HWE base, GNOME 46 themed, Wayland default, supported to April 2029) |
+| Ubuntu LTS           | **26.04 LTS "Resolute Raccoon"** (GNOME 50, Rust coreutils, cgroup v2 mandatory) |
 
 ## Clipboard and paste
 
@@ -264,7 +264,7 @@ If the laptop has a libfprint-supported reader, enroll a finger (`fprintd-enroll
 
 ## Wayland-specific notes
 
-- **Per-app HiDPI scaling**: fractional scaling has shipped since GNOME 45 (toggleable on 45-47, on-by-default since GNOME 48, stable defaults in GNOME 50). *Settings → Displays → Scale*. Mixed-DPI multi-monitor works on Wayland, breaks on Xorg.
+- **Per-app HiDPI scaling**: fractional scaling is opt-in *Settings → Displays → Scale* on GNOME 45-49, on-by-default in GNOME 50. Mixed-DPI multi-monitor works on Wayland, breaks on Xorg.
 - **Variable Refresh Rate (VRR)**: opt-in *Settings → Displays → Variable Refresh Rate* on GNOME 46-49, on-by-default for capable displays in GNOME 50.
 - **External monitor brightness (DDC/CI)**: *Settings → Displays* slider drives internal panels only. For DDC-capable external monitors install **ddcutil** from your distro's package manager, add user to `i2c` group (`sudo usermod -aG i2c $USER`, re-login). Adjust: `ddcutil setvcp 10 <0-100>`. GNOME extension *Brightness Control (DDC/CI)* wraps it for top-bar sliders.
 - **Remote desktop**: built-in GNOME RDP server (*Settings → System → Remote Desktop → Enable Remote Desktop + RDP*). Connect from another machine via `xfreerdp` (package: `freerdp` on Fedora-family, `freerdp2-x11` on Debian-family) or **Remmina** (Flatpak `org.remmina.Remmina` everywhere). SSH still works exactly as on macOS.
@@ -275,7 +275,7 @@ If the laptop has a libfprint-supported reader, enroll a finger (`fprintd-enroll
 
 ### Fedora Workstation / Silverblue / Bluefin
 
-- Fedora 44 (April 28, 2026) ships GNOME 50, KDE Plasma 6.6, kernel 6.19, glibc 2.43 across all variants.
+- Fedora 44 ships GNOME 50 and KDE Plasma 6.x across all variants.
 - Workstation package manager: `dnf5` (default since Fedora 41, Nov 2024). `dnf5 search`, `dnf5 install`, `dnf5 history`. Group install: `dnf5 group install "Development Tools"`.
 - Codecs: enable **RPM Fusion** (`free` + `nonfree`) for h264, ffmpeg, Intel VAAPI drivers. One-liner: `dnf5 install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm`. On Silverblue / Bluefin, layer the same RPMs via `rpm-ostree install <url>` then reboot.
 - Silverblue (atomic): root image immutable. `rpm-ostree install <pkg>` layers packages onto the next deployment (reboot to apply); `rpm-ostree status` shows current + pending deployments; `rpm-ostree rollback` reverts to the previous one. Prefer **Flatpak** (`flatpak install flathub <app.id>`) or **Toolbox / Distrobox** (`toolbox create`, `distrobox create`) for everything user-space; layer only what must touch the host.
@@ -286,13 +286,13 @@ If the laptop has a libfprint-supported reader, enroll a finger (`fprintd-enroll
 ### Ubuntu (26.04 LTS "Resolute Raccoon")
 
 - Package manager: `apt`. `apt update`, `apt install`, `apt full-upgrade`. `apt list --installed`, `apt-mark hold <pkg>` to pin.
-- Ships GNOME 50 on a Wayland-only session (XWayland kept for legacy apps). systemd 259 with mandatory cgroup v2. Memory-safe **Rust-based core utilities** (uutils 0.8.0) replace GNU coreutils for ~80 binaries (`ls`, `cat`, `tr`, `sort`, `wc`, `head`, ...); `cp`, `mv`, `rm` remain GNU. Behavior is GNU-compatible but stricter on a few edge cases (locale handling, exit codes on malformed flags).
+- Ships GNOME 50 on a Wayland-only session (XWayland kept for legacy apps). systemd with mandatory cgroup v2. Memory-safe **Rust-based core utilities** (uutils) replace GNU coreutils for ~80 binaries (`ls`, `cat`, `tr`, `sort`, `wc`, `head`, ...); `cp`, `mv`, `rm` remain GNU. Behavior is GNU-compatible but stricter on a few edge cases (locale handling, exit codes on malformed flags). **sudo-rs** (Rust) is likewise the default `sudo` (drop-in: same `/etc/sudoers`, same CLI); GNU sudo stays installed as `sudo.ws` via `update-alternatives`. sudo-rs has a narrower feature set, so unusual `sudoers` rules or plugins may need GNU `sudo`.
 - Snaps preinstalled (Firefox, snap-store, Thunderbird is back to deb on 26.04). Disable / replace with deb / Flatpak by removing `snapd` if you prefer.
 - NVIDIA Wayland performance noticeably improved (explicit-sync protocol, GBM by default). `ubuntu-drivers devices` + `ubuntu-drivers autoinstall` for NVIDIA / Broadcom.
 
 ### Vanilla OS
 
-Baseline: **Vanilla OS 2 "Orchid"** (July 2024, Debian sid base via Vib, GNOME 46, ABRoot atomic). Updates ride on `vso` (vanilla system operator); ABRoot keeps two parallel root images for atomic rollback. Host kept minimal; most user-space packages run inside `apx` subsystems (Distrobox wrapper) rather than on the host root.
+Baseline: **Vanilla OS 2 "Orchid"** (Debian sid base via Vib, GNOME 46, ABRoot atomic). Updates ride on `vso` (vanilla system operator); ABRoot keeps two parallel root images for atomic rollback. Host kept minimal; most user-space packages run inside `apx` subsystems (Distrobox wrapper) rather than on the host root.
 
 - Package manager: **`apx`**. `apx install <pkg>` defaults to a managed Distrobox subsystem (`apx list` to inspect). For host-level layering: `apx install --sysprefix vso-core <pkg>` writes into the next ABRoot deployment, reboot to apply. No direct host `apt` by default.
 - Updates: `vso update` (downloads to inactive root), reboot to apply. `vso config` for upgrade scheduling and channel pin. `vso trigger-update` for immediate check.

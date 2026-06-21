@@ -58,7 +58,7 @@ Linux GUI apps install via vendor deb/rpm. Flatpak is avoided for any app whose 
 - `.config/micro/settings.json` - Terminal text editor
 - `.config/yazi/yazi.toml` - Terminal file manager settings
 - `.config/atuin/config.toml` - Atuin shell history (filter parity with `hist_ignore_space`)
-- `.config/btop/btop.conf` - btop system monitor (Catppuccin Macchiato theme, transparent background, `save_config_on_exit = false` to prevent btop's default behavior of rewriting the file with all ~500 expanded defaults on quit)
+- `.config/btop/btop.conf` - btop system monitor (Catppuccin Macchiato theme, transparent background, `save_config_on_exit = false` to prevent btop's default behavior of rewriting the file with all expanded defaults on quit)
 - `.config/btop/themes/catppuccin_{macchiato,latte,frappe,mocha}.theme` - upstream Catppuccin btop themes from `catppuccin/btop` (btop ships no Catppuccin themes by default; auto-discovered from `$XDG_CONFIG_HOME/btop/themes/`)
 - `.config/glow/glow.yml` - Glow Markdown renderer (auto theme, pager on, line numbers in TUI; XDG on both OSes because glow honors `$XDG_CONFIG_HOME` explicitly in `main.go`)
 - `.config/tlrc/config.toml` - tlrc (tldr client) — show platform title, short+long flags (non-XDG on macOS, XDG on Linux; tlrc uses Rust `dirs::config_dir()` and ignores `$XDG_CONFIG_HOME` on Darwin)
@@ -258,10 +258,10 @@ uv python list --only-installed             # Should show installed Python versi
 
 Run `make validate` (delegates to `scripts/validate.sh`). Covers:
 
-1. Parse every TOML (`.config/codex/config.toml`, atuin, yazi, starship, tlrc, superfile, `.local.example.toml`, `.local/source.toml` if present, and snapshot TOMLs `defaults/{starship-nerd-font-symbols,atuin-defaults,yazi-defaults,superfile-defaults}.toml`)
+1. Parse every TOML (`.config/codex/config.toml`, atuin, yazi, starship, tlrc, superfile, `.local.example.toml`, `.local/source.toml` if present, and the snapshot TOMLs under `defaults/`)
 2. Parse every plain JSON (claude/settings, micro, ccstatusline)
 3. Parse every YAML (gh, lazygit, glow) — needs `yq`
-4. Parse JSONC (zed, vscodium, `defaults/vscodium-defaults.jsonc`, `defaults/zed-defaults.jsonc`) — needs `node`
+4. Parse JSONC (zed, vscodium, and the snapshot JSONC under `defaults/`) — needs `node`
 5. `brew bundle list --file=Brewfile{,.work}` (parse-only; install state reported separately as non-fatal warning) — needs `brew`
 6. `ghostty +validate-config --config-file=.config/ghostty/config` — needs `ghostty`
 7. `shellcheck` + `shfmt` on the `*.sh` scripts in `scripts/`, plus `ast.parse` syntax check on `scripts/local-overrides.py`

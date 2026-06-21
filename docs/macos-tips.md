@@ -8,7 +8,7 @@ Targets: macOS 26 Tahoe and 15 Sequoia. See [Apple macOS](https://www.apple.com/
 | ------------------ | --------------------------------------------------------------------------------- |
 | macOS              | 26 Tahoe (Liquid Glass UI, Spotlight redesign, clipboard history) and 15 Sequoia  |
 | Apple Intelligence | On-device + Private Cloud Compute, gated by M1+ Mac and supported region/language  |
-| Xcode CLT          | Tracks the active macOS (17.x on Tahoe, 16.4+ on Sequoia)                          |
+| Xcode CLT          | Tracks the active macOS                                                            |
 
 ## Clipboard and paste
 
@@ -16,7 +16,7 @@ Targets: macOS 26 Tahoe and 15 Sequoia. See [Apple macOS](https://www.apple.com/
 | -------------------------------- | ---------------------------------------------------------------------------------------- |
 | `Option+Shift+Cmd+V`             | Paste and match style (strips formatting; for Slack, Jira, docs)                         |
 | Universal Clipboard              | Copy on iPhone / iPad / Mac, paste on another nearby Apple device                        |
-| `Cmd+Space` then `Cmd+4`         | Spotlight Clipboard History (macOS 26 Tahoe+). Click item to restore to clipboard, or double-click to paste at cursor. Off by default in *Settings → Spotlight*; keeps a limited recent history (about 8h), not synced via Universal Clipboard. For unlimited history, hotkey-summoned popup, and fuzzy search install **Maccy** (`brew install --cask maccy`); coexists with Spotlight clipboard. |
+| `Cmd+Space` then `Cmd+4`         | Spotlight Clipboard History (macOS 26 Tahoe+). Click item to restore to clipboard, or double-click to paste at cursor. Off by default in *Settings → Spotlight*; retention is configurable (30 min / 8h / 7 days, default 8h) with a Clear Clipboard History button since macOS 26.1, and is not synced via Universal Clipboard. For a global-hotkey popup with fuzzy search and persistent history install **Maccy** (`brew install --cask maccy`); coexists with Spotlight clipboard. |
 
 ## Screenshots and screen recording
 

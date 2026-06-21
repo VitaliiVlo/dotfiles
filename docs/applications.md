@@ -24,7 +24,7 @@ Bold primary lives in whichever column applies. Within each column, order altern
 |---|---|---|---|
 | Editor | — | — | **VSCodium**, Zed, Cursor |
 | Terminal | — | — | **Ghostty**, Kitty, Alacritty |
-| AI | — | — | **Claude Code**, Codex, Antigravity CLI, Copilot CLI |
+| AI | — | — | **Claude Code**, Codex, Antigravity CLI |
 | Containers | **OrbStack**, Colima | Docker Engine, Pods | Podman Desktop |
 | Kubernetes | — | — | **Freelens**, Aptakube, Headlamp |
 | Database | Postico | — | **Beekeeper Studio**, DBeaver, TablePlus, MongoDB Compass |

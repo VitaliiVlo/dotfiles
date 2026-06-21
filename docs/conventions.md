@@ -331,7 +331,7 @@ Must stay consistent across: `.config/git/config` (authoritative), VSCodium, Zed
 
 Zed delegates git workflow (rebase, autostash, prune, SSH) to `.config/git/config` — consistent by inheritance. Two known gaps: no auto-fetch, no branch protection.
 
-`.config/git/config` authoritative settings: `init.defaultBranch = main`, `merge.conflictstyle = zdiff3`, `rerere.enabled = true`, `rerere.autoupdate = true`, `push.autoSetupRemote = true`, `diff.algorithm = histogram`, `diff.colorMoved = default`, `diff.renames = true`, `diff.mnemonicPrefix = true`, `log.date = relative`, `branch.sort = -committerdate`. Delta config: `dark = true`, `line-numbers = true`, `side-by-side = true`, `hyperlinks = true`, `navigate = true`. `[filter "lfs"]` block pre-configured for git-lfs — no need to run `git lfs install`.
+`.config/git/config` authoritative settings: `core.autocrlf = input`, `init.defaultBranch = main`, `merge.conflictstyle = zdiff3`, `rerere.enabled = true`, `rerere.autoupdate = true`, `push.autoSetupRemote = true`, `diff.algorithm = histogram`, `diff.colorMoved = default`, `diff.renames = true`, `diff.mnemonicPrefix = true`, `log.date = relative`, `branch.sort = -committerdate`. Delta config: `dark = true`, `line-numbers = true`, `side-by-side = true`, `hyperlinks = true`, `navigate = true`. `[filter "lfs"]` block pre-configured for git-lfs — no need to run `git lfs install`.
 
 **VSCodium uses the same `git.blame.*` split** as VSCode (Code OSS heritage): `git.blame.editorDecoration.enabled` (inline editor decoration) and `git.blame.statusBarItem.enabled` (status bar item), each with its own `template`. Do not use the legacy flat `git.blame.enabled` key — it is silently ignored.
 
@@ -388,7 +388,7 @@ Do not attempt to rename the Codex side to `caveman` — Codex will treat it as 
 Plugin sets are intentionally asymmetric:
 
 - Shared: caveman, context7, slack, posthog, datadog, superpowers, atlassian (Codex side: `atlassian-rovo`).
-- Claude-only: LSP plugins (gopls-lsp, pyright-lsp, typescript-lsp) and Anthropic-first-party plugins (code-review, feature-dev, code-simplifier, claude-md-management, pr-review-toolkit, frontend-design, skill-creator, commit-commands, security-guidance). Codex Marketplace registers no equivalents; LSPs are bundled in the Codex CLI itself.
+- Claude-only: LSP plugins (Go, Python, TypeScript) and Anthropic first-party plugins. The live list is `enabledPlugins` in `.config/claude/settings.json`; this doc covers only the category split. Codex Marketplace registers no equivalents; LSPs are bundled in the Codex CLI itself.
 
 ## Brewfile maintenance
 
