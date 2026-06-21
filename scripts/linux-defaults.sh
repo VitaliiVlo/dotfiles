@@ -35,6 +35,7 @@ heading "→ Creating folders…"
 mkdir -p "$HOME/Projects"
 # XDG user-dir convention; GNOME Screenshot UI defaults to this path.
 mkdir -p "$HOME/Pictures/Screenshots"
+# macOS disables screenshot drop-shadow here; GNOME screenshots have none, so no counterpart needed.
 
 heading "→ Configuring input…"
 # Natural scrolling (touchpad + mouse)

@@ -64,7 +64,7 @@ Run `make help` to list all available targets.
 
 > Targets Fedora, Silverblue, Bluefin, Vanilla OS, Zorin OS, Ubuntu. All GNOME-on-Wayland: `make linux-defaults` writes `gsettings` keys that apply across the set; see [`docs/linux-tips.md`](docs/linux-tips.md) for per-distro deltas. Atomic variants (Bluefin, Silverblue, Vanilla OS) work too, but extra packages must be layered via `rpm-ostree` / `bootc` (Fedora atomics) or `apx` / `vso` (Vanilla OS), or installed inside Distrobox/Toolbox, instead of `dnf` / `apt`. KDE / Sway / headless sessions skip the `gsettings` block but everything else (symlinks, Brewfile, shell) applies. Linuxbrew prefix defaults to `/home/linuxbrew/.linuxbrew` in `.zshrc` / `.zprofile` (override via `BREW_PREFIX` env).
 
-- **Install build prerequisites:** `scripts/local-overrides.py` needs Python 3.11+ (stdlib `tomllib`); any distro shipping `python3` 3.11 or newer works. Older distros are out of scope.
+- **Install build prerequisites:** `scripts/local-overrides.py` needs Python 3.11+ (stdlib `tomllib`); older distros are out of scope.
   ```bash
   # Debian/Ubuntu (Zorin OS)
   sudo apt-get update
@@ -201,7 +201,7 @@ make brew-install       # Install all packages (base + work)
 make brew-install-base  # Install base packages only
 make brew-install-work  # Install work packages only
 make brew-cleanup       # Clean up old versions and cache
-make brew-export        # Export installed packages (incl. VSCodium extensions) to Brewfile, then strip Brewfile.work entries; add new work entries to Brewfile.work manually
+make brew-export        # Export installed packages (incl. VSCodium extensions) to Brewfile (macOS only), then strip Brewfile.work entries; add new work entries to Brewfile.work manually
 make versions           # Show installed Go, Node, Python versions
 make local-overrides    # Render per-machine overrides from .local/source.toml; see Local overrides
 make snapshots          # Regenerate defaults/* upstream-defaults snapshots

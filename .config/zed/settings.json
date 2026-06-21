@@ -270,7 +270,7 @@
   "auto_update": true,
   // Telemetry
   "telemetry": {
-    "diagnostics": true,
+    "diagnostics": false,
     "metrics": false
   }
 }

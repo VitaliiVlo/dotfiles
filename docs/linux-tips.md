@@ -15,7 +15,7 @@ Version baselines (snapshot, verify against each distro's releases page for the 
 | Bluefin              | Rolling on Fedora 44 base, **bootc**-based image                                 |
 | Vanilla OS           | **2 "Orchid"** (Debian sid base via Vib, GNOME 46 base + `vso update` advances, ABRoot atomic, `apx` subsystems) |
 | Zorin OS             | **18.1** (Ubuntu 24.04 HWE base, GNOME 46 themed, Wayland default, supported to April 2029) |
-| Ubuntu LTS           | **26.04 LTS "Resolute Raccoon"** (GNOME 50, Rust coreutils, cgroup v2 mandatory) |
+| Ubuntu LTS           | **26.04 LTS "Resolute Raccoon"** (GNOME 50, Rust coreutils (uutils, partial; cp/mv/rm stay GNU), cgroup v2 mandatory) |
 
 ## Clipboard and paste
 

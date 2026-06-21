@@ -268,7 +268,7 @@
   "extensions.autoUpdate": true,
   "extensions.autoCheckUpdates": true,
   // Telemetry
-  "telemetry.telemetryLevel": "crash",
+  "telemetry.telemetryLevel": "off",
   "redhat.telemetry.enabled": false,
   // Workspace trust
   "security.workspace.trust.untrustedFiles": "open"

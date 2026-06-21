@@ -78,7 +78,7 @@ Note: enabling Recovery Key disables Apple-support-driven account recovery. Reco
 2. Strong master password (long passphrase, store in 1Password Emergency Kit only).
 3. Do not enable separate TOTP for the 1Password account itself. The Secret Key plus master password are the design-level credentials, and storing 1Password's own TOTP inside 1Password creates a chicken-and-egg lockout on new devices. The Emergency Kit printout is the recovery path for new-device sign-in.
 4. Download Emergency Kit PDF (Settings → Account → Save Emergency Kit). Print 2 copies. Same storage locations as Apple Recovery Key.
-5. Import from Apple Passwords: 1Password 8 → File → Import → Apple Passwords (macOS 15+).
+5. Import from Apple Passwords: 1Password 8 → File → Import → Apple Passwords.
 6. Verify 20 random logins work via 1Password autofill.
 7. System Settings → Apple Account → iCloud → Passwords → Off. (Disables iCloud Keychain entirely; passwords now single-source in 1Password.)
 8. System Settings → General → AutoFill & Passwords → set 1Password as autofill provider; turn off Apple Passwords autofill.

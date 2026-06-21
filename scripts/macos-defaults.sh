@@ -27,7 +27,7 @@ defaults write NSGlobalDomain AppleInterfaceStyle                 -string "Dark"
 
 heading "→ Setting screenshot location…"
 # Location (XDG-style ~/Pictures/Screenshots, matches GNOME's default user-dir)
-defaults write com.apple.screencapture location       "$HOME/Pictures/Screenshots"
+defaults write com.apple.screencapture location       -string "$HOME/Pictures/Screenshots"
 # Capture options
 defaults write com.apple.screencapture disable-shadow -bool   true
 defaults write com.apple.screencapture show-thumbnail -bool   true

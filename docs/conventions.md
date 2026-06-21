@@ -70,9 +70,9 @@ Minimize across all tools:
 
 | Tool | Setting | Value |
 |---|---|---|
-| VSCodium | `telemetry.telemetryLevel` | `"crash"` |
+| VSCodium | `telemetry.telemetryLevel` | `"off"` |
 | VSCodium | `redhat.telemetry.enabled` | `false` |
-| Zed | `telemetry.diagnostics` / `metrics` | `true` / `false` |
+| Zed | `telemetry.diagnostics` / `metrics` | `false` / `false` |
 | Claude Code | `feedbackSurveyRate` | `0` |
 | Codex | `analytics.enabled` / `feedback.enabled` | `false` / `false` |
 | gh | `telemetry` | `disabled` |
@@ -232,7 +232,7 @@ Reproducible across machines:
 - VSCodium: `vscode` entries in `Brewfile` (managed by `brew bundle dump` / `brew bundle install`). Auto-installed VSCodium extensions (e.g. `ms-vscode.js-debug`, via `product.json` `builtInExtensions`) are not enumerated by `codium --list-extensions`, so they never appear in the Brewfile and must not be added by hand: `brew bundle dump` strips them on the next export.
 - Zed: `auto_install_extensions` in `.config/zed/settings.json` (auto-installed on launch)
 
-**Zed overrides from defaults:** `auto_signature_help: true` (Zed default is `false`, set to match VSCodium `parameterHints.enabled`); `close_on_file_delete: true` (Zed default is `false`, set to match VSCodium `closeOnFileDelete`).
+**Zed overrides from defaults:** Zed pins several keys to non-defaults to match VSCodium behavior; the live `.config/zed/settings.json`, diffed against `defaults/zed-defaults.jsonc`, is the source of truth for the current set.
 
 **Per-extension parity:** Zed's `auto_install_extensions` is intentionally narrower than VSCodium's `vscode "..."` list. Zed bundles language servers (gopls, basedpyright, tsserver) and ships ruff/prettier-style formatting via `formatter: "auto"`, so most VSCodium language/lint/format extensions have no Zed counterpart by design.
 
@@ -319,7 +319,7 @@ Must stay consistent across: `.config/git/config` (authoritative), VSCodium, Zed
 | Setting | `.config/git/config` | VSCodium | gh CLI | lazygit | Zed |
 |---|---|---|---|---|---|
 | Protocol | `url.insteadOf` (SSH) | `gitProtocol: "ssh"` | `git_protocol: ssh` | (uses git) | (uses git) |
-| Auto fetch | — | `autofetch: true` (300s) | — | `autoFetch: true` (default 60s) | no setting (gap) |
+| Auto fetch | — | `autofetch: true` (300s) | — | `autoFetch: true` (upstream default 60s, not pinned) | no setting (gap) |
 | Prune on fetch | `fetch.prune = true` | `pruneOnFetch: true` | — | — | (uses git) |
 | Rebase on pull | `pull.rebase = true` | `rebaseWhenSync: true` | — | — | (uses git) |
 | Autostash | `rebase.autostash = true` | `autoStash: true` | — | — | (uses git) |
