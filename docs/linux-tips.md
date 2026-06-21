@@ -275,7 +275,7 @@ If the laptop has a libfprint-supported reader, enroll a finger (`fprintd-enroll
 
 ### Fedora Workstation / Silverblue / Bluefin
 
-- Fedora 44 ships GNOME 50 and KDE Plasma 6.x across all variants.
+- GNOME (default) and KDE Plasma spins are available across all variants.
 - Workstation package manager: `dnf5` (default since Fedora 41, Nov 2024). `dnf5 search`, `dnf5 install`, `dnf5 history`. Group install: `dnf5 group install "Development Tools"`.
 - Codecs: enable **RPM Fusion** (`free` + `nonfree`) for h264, ffmpeg, Intel VAAPI drivers. One-liner: `dnf5 install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm`. On Silverblue / Bluefin, layer the same RPMs via `rpm-ostree install <url>` then reboot.
 - Silverblue (atomic): root image immutable. `rpm-ostree install <pkg>` layers packages onto the next deployment (reboot to apply); `rpm-ostree status` shows current + pending deployments; `rpm-ostree rollback` reverts to the previous one. Prefer **Flatpak** (`flatpak install flathub <app.id>`) or **Toolbox / Distrobox** (`toolbox create`, `distrobox create`) for everything user-space; layer only what must touch the host.
@@ -283,26 +283,24 @@ If the laptop has a libfprint-supported reader, enroll a finger (`fprintd-enroll
 - Bluefin tasks via `ujust`: `ujust` (menu), `ujust toggle-pop-shell`, `ujust install-system-flatpaks`, `ujust setup-luks-tpm-unlock`, `ujust install-coding-extras`. Self-documenting; run with no args to browse.
 - SELinux enforcing by default on all three. If an app refuses to read a file with no obvious permission issue, check `journalctl -t setroubleshoot` or `ausearch -m avc -ts recent`.
 
-### Ubuntu (26.04 LTS "Resolute Raccoon")
+### Ubuntu
 
 - Package manager: `apt`. `apt update`, `apt install`, `apt full-upgrade`. `apt list --installed`, `apt-mark hold <pkg>` to pin.
-- Ships GNOME 50 on a Wayland-only session (XWayland kept for legacy apps). systemd with mandatory cgroup v2. Memory-safe **Rust-based core utilities** (uutils) replace GNU coreutils for ~80 binaries (`ls`, `cat`, `tr`, `sort`, `wc`, `head`, ...); `cp`, `mv`, `rm` remain GNU. Behavior is GNU-compatible but stricter on a few edge cases (locale handling, exit codes on malformed flags). **sudo-rs** (Rust) is likewise the default `sudo` (drop-in: same `/etc/sudoers`, same CLI); GNU sudo stays installed as `sudo.ws` via `update-alternatives`. sudo-rs has a narrower feature set, so unusual `sudoers` rules or plugins may need GNU `sudo`.
+- Ships GNOME on a Wayland-only session (XWayland kept for legacy apps). systemd with mandatory cgroup v2. Memory-safe **Rust-based core utilities** (uutils) replace GNU coreutils for ~80 binaries (`ls`, `cat`, `tr`, `sort`, `wc`, `head`, ...); `cp`, `mv`, `rm` remain GNU. Behavior is GNU-compatible but stricter on a few edge cases (locale handling, exit codes on malformed flags). **sudo-rs** (Rust) is likewise the default `sudo` (drop-in: same `/etc/sudoers`, same CLI); GNU sudo stays installed as `sudo.ws` via `update-alternatives`. sudo-rs has a narrower feature set, so unusual `sudoers` rules or plugins may need GNU `sudo`.
 - Snaps preinstalled (Firefox, snap-store, Thunderbird is back to deb on 26.04). Disable / replace with deb / Flatpak by removing `snapd` if you prefer.
 - NVIDIA Wayland performance noticeably improved (explicit-sync protocol, GBM by default). `ubuntu-drivers devices` + `ubuntu-drivers autoinstall` for NVIDIA / Broadcom.
 
 ### Vanilla OS
 
-Baseline: **Vanilla OS 2 "Orchid"** (Debian sid base via Vib, GNOME 46, ABRoot atomic). Updates ride on `vso` (vanilla system operator); ABRoot keeps two parallel root images for atomic rollback. Host kept minimal; most user-space packages run inside `apx` subsystems (Distrobox wrapper) rather than on the host root.
+Updates ride on `vso` (vanilla system operator); ABRoot keeps two parallel root images for atomic rollback. Host kept minimal; most user-space packages run inside `apx` subsystems (Distrobox wrapper) rather than on the host root.
 
 - Package manager: **`apx`**. `apx install <pkg>` defaults to a managed Distrobox subsystem (`apx list` to inspect). For host-level layering: `apx install --sysprefix vso-core <pkg>` writes into the next ABRoot deployment, reboot to apply. No direct host `apt` by default.
 - Updates: `vso update` (downloads to inactive root), reboot to apply. `vso config` for upgrade scheduling and channel pin. `vso trigger-update` for immediate check.
 - Wayland session ships default. NVIDIA users: prefer the **`vanilla-exp`** image variant for a newer driver stack.
-- GNOME 46 base lags GNOME 50 on Fedora 44 / Ubuntu 26.04; `vso update` may advance the host GNOME as the Vib pipeline cuts new Orchid images, so the gap depends on channel + update cadence rather than a fixed cycle count. Trade is atomic rollback safety + Debian package depth, not bleeding-edge GNOME features (HDR maturity, GNOME 50 Tokyo polish).
+- GNOME 46 base lags the newer GNOME 50 on Fedora / Ubuntu; `vso update` may advance the host GNOME as the Vib pipeline cuts new Orchid images, so the gap depends on channel + update cadence rather than a fixed cycle count. Trade is atomic rollback safety + Debian package depth, not bleeding-edge GNOME features (HDR maturity, Tokyo polish).
 - Configs in this repo apply unchanged: XDG paths honored, `flatpak` + `brew` recommended for user-space tools.
 
 ### Zorin OS
-
-Baseline: **Zorin OS 18.1** (April 2026, Ubuntu 24.04 HWE base, GNOME 46-based with heavy theming, supported through April 2029).
 
 - GNOME with a polished layout chooser (*Zorin Appearance*) that mimics macOS, Windows 11, Windows Classic, or GNOME. Most GNOME tips above apply.
 - Tray icons work out of the box (AppIndicator extension preinstalled).

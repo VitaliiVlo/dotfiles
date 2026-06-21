@@ -21,6 +21,8 @@
   "workbench.layoutControl.type": "menu",
   "workbench.activityBar.location": "bottom",
   "workbench.secondarySideBar.defaultVisibility": "hidden",
+  "workbench.notifications.position": "top-right",
+  "workbench.notifications.showInTitleBar": true,
   // Window
   "window.autoDetectColorScheme": true,
   "window.commandCenter": false,
@@ -214,7 +216,7 @@
   // Python
   // pinned (default): forces basedpyright (detachhead.basedpyright) to own LSP; prevents ms-python from re-enabling Jedi/Pylance on extension update
   "python.languageServer": "None",
-  // ms-python.vscode-python-envs auto-discovers interpreter (uv venvs, conda, system PATH); no python.defaultInterpreterPath — bare "python3" can't be resolved by the env extension's validator, absolute paths are per-machine fragile across mac/Linux.
+  // ms-python.vscode-python-envs auto-discovers interpreter (uv venvs, conda, system PATH); no python.defaultInterpreterPath: bare "python3" can't be resolved by the env extension's validator, absolute paths are per-machine fragile across mac/Linux.
   "python.terminal.activateEnvironment": true,
   "basedpyright.analysis.typeCheckingMode": "standard",
   "basedpyright.analysis.autoImportCompletions": true,
@@ -224,7 +226,7 @@
   "basedpyright.analysis.inlayHints.variableTypes": true,
   "basedpyright.analysis.inlayHints.functionReturnTypes": true,
   "basedpyright.analysis.inlayHints.genericTypes": true,
-  // Per-language formatter pins — Prettier owns its main + common supported langs; Python pinned to ruff per ruff-vscode README so format-on-save survives any future Python formatter install.
+  // Per-language formatter pins: Prettier owns its main + common supported langs; Python pinned to ruff per ruff-vscode README so format-on-save survives any future Python formatter install.
   "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "[javascriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },

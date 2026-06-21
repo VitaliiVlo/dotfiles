@@ -1,5 +1,5 @@
 # History
-# Skip space-prefixed cmds — parity with zsh `setopt hist_ignore_space`
+# Skip space-prefixed cmds: parity with zsh `setopt hist_ignore_space`
 history_filter = [
   "^ ",
 ]
@@ -13,7 +13,7 @@ keymap_mode = "auto"
 enter_accept = false
 show_numeric_shortcuts = false
 
-# Layout — Ctrl+R full-screen, Up arrow inline (20 lines)
+# Layout: Ctrl+R full-screen, Up arrow inline (20 lines)
 inline_height = 0
 inline_height_shell_up_key_binding = 20
 

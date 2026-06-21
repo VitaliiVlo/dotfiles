@@ -2,7 +2,7 @@
 
 Non-obvious shortcuts and behaviors worth remembering. `defaults write` recipes already applied by `make macos-defaults` are not repeated here, see `scripts/macos-defaults.sh`. Linux equivalents live in [`linux-tips.md`](linux-tips.md).
 
-Targets: macOS 26 Tahoe and 15 Sequoia. See [Apple macOS](https://www.apple.com/macos/) for the current release.
+Version baselines (snapshot, verify against [Apple macOS](https://www.apple.com/macos/) for the current release):
 
 | Stack              | Version baseline                                                                  |
 | ------------------ | --------------------------------------------------------------------------------- |
