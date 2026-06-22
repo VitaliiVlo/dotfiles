@@ -333,14 +333,15 @@
 
   // Defines a default formatter which takes precedence over all other formatter settings. Must be the identifier of an extension contributing a formatter.
   //  - null: None
+  //  - vscode.json-language-features: Provides rich language support for JSON files.
   //  - esbenp.prettier-vscode: Code formatter using prettier
   //  - charliermarsh.ruff: A Visual Studio Code extension with support for the Ruff linter and formatter for Python.
   //  - tombi-toml.tombi: TOML Language Server
+  //  - mads-hartmann.bash-ide-vscode: A language server for Bash
   //  - detachhead.basedpyright: VS Code static type checking for Python (but based)
   //  - vscode.css-language-features: Provides rich language support for CSS, LESS and SCSS files.
   //  - golang.go: Rich Go language support for Visual Studio Code
   //  - vscode.html-language-features: Provides rich language support for HTML and Handlebar files
-  //  - vscode.json-language-features: Provides rich language support for JSON files.
   //  - vscode.markdown-language-features: Provides rich language support for Markdown.
   //  - vscode.markdown-math: Adds math support to Markdown in notebooks.
   //  - vscode.php-language-features: Provides rich language support for PHP files.
@@ -352,7 +353,6 @@
   //  - dbaeumer.vscode-eslint: Integrates ESLint JavaScript into VS Code.
   //  - opentofu.vscode-opentofu: Syntax highlighting and autocompletion for OpenTofu
   //  - redhat.vscode-yaml: YAML Language Support by Red Hat, with built-in Kubernetes syntax support
-  //  - mads-hartmann.bash-ide-vscode: A language server for Bash
   //  - alefragnani.Bookmarks: Mark lines and jump to them
   //  - Catppuccin.catppuccin-vsc: 🦌 Soothing pastel theme for VSCode
   //  - Catppuccin.catppuccin-vsc-icons: 🦊 Soothing pastel icon theme for VSCode
@@ -5790,14 +5790,15 @@
 
   // Defines a default notebook formatter which takes precedence over all other formatter settings. Must be the identifier of an extension contributing a formatter.
   //  - null: None
+  //  - vscode.json-language-features: Provides rich language support for JSON files.
   //  - esbenp.prettier-vscode: Code formatter using prettier
   //  - charliermarsh.ruff: A Visual Studio Code extension with support for the Ruff linter and formatter for Python.
   //  - tombi-toml.tombi: TOML Language Server
+  //  - mads-hartmann.bash-ide-vscode: A language server for Bash
   //  - detachhead.basedpyright: VS Code static type checking for Python (but based)
   //  - vscode.css-language-features: Provides rich language support for CSS, LESS and SCSS files.
   //  - golang.go: Rich Go language support for Visual Studio Code
   //  - vscode.html-language-features: Provides rich language support for HTML and Handlebar files
-  //  - vscode.json-language-features: Provides rich language support for JSON files.
   //  - vscode.markdown-language-features: Provides rich language support for Markdown.
   //  - vscode.markdown-math: Adds math support to Markdown in notebooks.
   //  - vscode.php-language-features: Provides rich language support for PHP files.
@@ -5809,7 +5810,6 @@
   //  - dbaeumer.vscode-eslint: Integrates ESLint JavaScript into VS Code.
   //  - opentofu.vscode-opentofu: Syntax highlighting and autocompletion for OpenTofu
   //  - redhat.vscode-yaml: YAML Language Support by Red Hat, with built-in Kubernetes syntax support
-  //  - mads-hartmann.bash-ide-vscode: A language server for Bash
   //  - alefragnani.Bookmarks: Mark lines and jump to them
   //  - Catppuccin.catppuccin-vsc: 🦌 Soothing pastel theme for VSCode
   //  - Catppuccin.catppuccin-vsc-icons: 🦊 Soothing pastel icon theme for VSCode
