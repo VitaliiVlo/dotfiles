@@ -18,45 +18,86 @@ Plus factors (not required): reasonable price or free, open source, enterprise b
 
 Install via official installers or Homebrew Cask.
 
-Bold primary lives in whichever column applies. Within each column, order alternatives by polish, popularity, or cross-platform reach as fits the category. `—` means no pick in that column.
+Bold primaries (one or more per category) come first in each column, then non-bold alternatives ordered by polish, popularity, or cross-platform reach as fits the category. `—` means no pick in that column.
+
+### Development
 
 | Category | Apple-only | Linux-only | Cross-platform |
 |---|---|---|---|
-| Editor | — | — | **VSCodium**, Zed, Cursor |
+| Editor | — | — | **VSCodium**, **Zed**, Cursor |
 | Terminal | — | — | **Ghostty**, Kitty, Alacritty |
-| AI | — | — | **Claude Code**, Codex, Antigravity CLI |
+| AI | — | — | **Claude Code**, **Codex**, Antigravity CLI |
 | Containers | **OrbStack**, Colima | Docker Engine, Pods | Podman Desktop |
 | Kubernetes | — | — | **Freelens**, Aptakube, Headlamp |
-| Database | Postico | — | **Beekeeper Studio**, DBeaver, TablePlus, MongoDB Compass |
+| Database | Postico | — | **Beekeeper Studio**, **MongoDB Compass**, DBeaver, TablePlus |
 | API Testing | — | — | **Bruno**, Yaak, Hoppscotch |
-| Browser (Gecko) | — | — | **Firefox**, Zen, LibreWolf + **uBlock Origin** |
-| Browser (Chromium) | — | — | **Brave**, Helium, Chrome + **uBlock Origin Lite** |
-| Browser (WebKit) | **Safari**, Orion + **wBlock** | — | — |
-| Search Engine | — | — | **DuckDuckGo**, Kagi, Brave Search, Google Search |
-| Maps | Apple Maps | GNOME Maps | **Google Maps**, Waze, Organic Maps, Mapy.com |
 | Diagrams | — | — | **Excalidraw**, tldraw |
 | Diagram as Code | — | — | **Mermaid**, D2 |
-| Notes | **Apple Notes**, Bear | Iotas | Obsidian, Joplin, Logseq, Standard Notes |
+
+### Web & search
+
+| Category | Apple-only | Linux-only | Cross-platform |
+|---|---|---|---|
+| Browser (Gecko) | — | — | **Firefox**, LibreWolf, Zen + **uBlock Origin** |
+| Browser (Chromium) | — | — | **Brave**, **Chrome**, Helium + **uBlock Origin Lite** |
+| Browser (WebKit) | **Safari**, Orion + **wBlock** | — | — |
+| Search Engine | — | — | **DuckDuckGo**, Kagi, Brave, Google |
+| Maps | Apple Maps | GNOME Maps | **Google Maps**, Waze, Organic Maps, Mapy.com |
+
+### Mail, calendar & contacts
+
+| Category | Apple-only | Linux-only | Cross-platform |
+|---|---|---|---|
+| Mail/Calendar/Contacts provider | **iCloud** | — | **Google**, Proton, Fastmail, Outlook |
+| Mail app | **Apple Mail**, Mimestream | Geary, Evolution | Thunderbird |
+| Calendar app | **Apple Calendar**, Fantastical | GNOME Calendar, Evolution | Thunderbird |
+| Contacts app | **Apple Contacts**, Cardhop | GNOME Contacts, Evolution | Thunderbird |
+
+**Mail/Calendar/Contacts** split into provider (account/backend) and app (client). Apple iCloud, Google, and Fastmail speak open protocols (IMAP/CalDAV/CardDAV), so any app works. Proton is E2EE: mail needs the paid Bridge, and calendar/contacts work only in Proton's own app. Tuta is excluded: no IMAP/CalDAV at all, it locks you into its own apps.
+
+### Notes, docs & productivity
+
+| Category | Apple-only | Linux-only | Cross-platform |
+|---|---|---|---|
+| Notes | **Apple Notes**, Bear | Iotas | **Obsidian**, Joplin, Logseq |
+| Markdown Editor | iA Writer | Apostrophe, Ghostwriter | **Typora**, Zettlr |
 | Todo | **Apple Reminders**, Things 3 | Planify, Errands | Todoist |
-| Calendar | **Apple Calendar**, Fantastical | GNOME Calendar, Evolution | Google Calendar, Proton Calendar, Thunderbird |
-| Mail | **Apple Mail**, Mimestream | Geary, Evolution | Thunderbird, Gmail, Outlook, Proton Mail |
-| Contacts | **Apple Contacts**, Cardhop | GNOME Contacts, Evolution | Google Contacts, Thunderbird |
-| Communication (Work) | — | — | **Slack**, Microsoft Teams, Google Meet |
-| Communication (Home) | — | — | **Telegram**, WhatsApp, Signal |
-| Photos | **Apple Photos** | gThumb | Google Photos |
-| Image Editor | **Affinity**, Pixelmator Pro | — | Pinta, GIMP, Krita |
-| Video Player | **QuickTime**, IINA | Celluloid | VLC |
-| Music | **Apple Music** | — | Spotify, YouTube Music |
-| Password Manager | Apple Passwords | KeePassXC | **1Password**, Bitwarden, Proton Pass |
 | Office | **iWork** | — | LibreOffice, OnlyOffice, Google Workspace, Microsoft 365, Proton Docs |
 | PDF | **Apple Preview** | Papers | — |
+
+### Communication
+
+| Category | Apple-only | Linux-only | Cross-platform |
+|---|---|---|---|
+| Communication (Work) | — | — | **Slack**, **Google Meet**, Microsoft Teams |
+| Communication (Home) | Messages, FaceTime | — | **Telegram**, **WhatsApp**, Signal, Discord |
+
+### Media & creative
+
+| Category | Apple-only | Linux-only | Cross-platform |
+|---|---|---|---|
+| Photos | **Apple Photos** | gThumb | Google Photos, Ente |
+| Image Editor | **Affinity**, Pixelmator Pro | — | Pinta, GIMP, Krita |
 | Image Viewer | **Apple Preview** | **Loupe** | — |
-| Backup | **Time Machine** | Déjà Dup, Timeshift, Pika Backup | — |
-| Cloud Storage | **iCloud Drive** | — | Dropbox, Google Drive, OneDrive, Proton Drive |
-| Networking | — | Trayscale (Tailscale GUI) | **Tailscale**, Cloudflare WARP, Proton VPN |
+| Video Player | **IINA**, QuickTime | Celluloid | VLC |
+| Music | **Apple Music** | — | Spotify, YouTube Music |
+
+### Files, security & network
+
+| Category | Apple-only | Linux-only | Cross-platform |
+|---|---|---|---|
+| Password Manager | Apple Passwords | KeePassXC | **1Password**, Bitwarden, Proton Pass |
+| Cloud Storage | **iCloud Drive** | — | Dropbox, Google Drive, Proton Drive |
 | File Transfer | **AirDrop** | KDE Connect | LocalSend, syncthing |
+| Backup | **Time Machine** | Déjà Dup, Timeshift, Pika Backup | — |
+| Networking | — | Trayscale (Tailscale GUI) | **Tailscale**, **Cloudflare WARP**, Proton VPN, Mullvad VPN |
+
+### System & other
+
+| Category | Apple-only | Linux-only | Cross-platform |
+|---|---|---|---|
+| Utilities (catch-all) | Rectangle, BetterDisplay, Keka, KeepingYouAwake, LinearMouse, Maccy, MiddleClick | Extension Manager, File Roller, Flatseal, GNOME Tweaks, Sushi | balenaEtcher |
 | Medical Imaging | **Horos** | — | Weasis |
-| Utilities (catch-all) | **Rectangle**, BetterDisplay, Keka, KeepingYouAwake, LinearMouse, Maccy, MiddleClick | Extension Manager, File Roller, Flatseal, GNOME Tweaks, Sushi | balenaEtcher |
 | Linux Distros | — | **Fedora**, Silverblue, Bluefin, Vanilla OS, Zorin OS, Ubuntu (versions + deltas in [`linux-tips.md`](linux-tips.md#distro-specific-deltas)) | — |
 
 ## VSCodium setup

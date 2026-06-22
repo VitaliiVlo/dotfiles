@@ -8,6 +8,7 @@ file_size_use_si = false
 default_open_file_preview = true
 show_image_preview = true
 show_panel_footer_info = true
+# config is intentionally partial; without this, superfile warns about every key we don't set
 ignore_missing_fields = true
 
 # Sort & display

@@ -41,7 +41,7 @@ heading "→ Configuring input…"
 # Natural scrolling (touchpad + mouse)
 set_if_exists org.gnome.desktop.peripherals.touchpad natural-scroll true
 set_if_exists org.gnome.desktop.peripherals.mouse natural-scroll true
-# Key repeat (mirror macOS ApplePressAndHoldEnabled=false behavior)
+# Key repeat: repeat=true mirrors macOS ApplePressAndHoldEnabled=false. delay/interval pinned explicit (GNOME has no inherited default; macOS inherits its OS-default rate).
 set_if_exists org.gnome.desktop.peripherals.keyboard repeat true
 set_if_exists org.gnome.desktop.peripherals.keyboard delay 'uint32 250'
 set_if_exists org.gnome.desktop.peripherals.keyboard repeat-interval 'uint32 30'

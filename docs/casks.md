@@ -1,6 +1,6 @@
 # Casks
 
-Homebrew Cask inventory: GUI applications, CLIs, and fonts. Split into a base set installed by `make brew-install-base` and a work set installed by `make brew-install-work`. A subset is cross-platform via Linuxbrew; the rest install on Linux via vendor deb/rpm.
+Homebrew Cask inventory: GUI applications, CLIs, and fonts. Split into a base set installed by `make brew-install` and a work set added by `make brew-install-all`. A subset is cross-platform via Linuxbrew; the rest install on Linux via vendor deb/rpm.
 
 ## Base casks
 

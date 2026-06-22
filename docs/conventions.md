@@ -54,7 +54,7 @@ Nested JSON / TOML keys are written in dotted-path shorthand (e.g. `tabs.git_sta
 | Encoding | — | — | `encoding: "utf-8"` | — | — | — | — |
 | Param hints | `parameterHints.enabled: true` | `auto_signature_help: true` | — | — | — | — | — |
 | Completion docs | `editor.suggest.preview: true` | `show_completion_documentation: true` | — | — | — | — | — |
-| Git gutter | (default: on) | `git.git_gutter: "tracked_files"` | `diffgutter: true` | — | `--style=changes` | — | — |
+| Git gutter | (default: on) | `git.git_gutter: "tracked_files"` | `diffgutter: true` | — | `changes` (in `--style`) | — | — |
 | Diff ignore WS | `diffEditor.ignoreTrimWhitespace: false` | — | — | — | — | (default: show) | — |
 | Trim final NLs | `files.trimFinalNewlines: true` | (no equivalent — gap) | — | — | — | — | — |
 | Auto indent | `editor.autoIndent: "full"` | — | `autoindent: true` | — | — | — | — |
@@ -163,8 +163,8 @@ Consistent with editors showing line numbers:
 
 Errors/warnings shown on affected lines:
 
-- VSCodium: `errorlens` extension (installed via Brewfile)
-- Zed: `diagnostics.inline.enabled: true` (built-in, matches ErrorLens behavior)
+- VSCodium: `errorlens` extension (Brewfile), quiet mode: gutter letter icon on the active line only, no inline text (`errorLens.messageEnabled: false`, `gutterIconsEnabled: true`, `followCursor: "activeLine"`)
+- Zed: `diagnostics.inline.enabled: true` (built-in), inline message text at end of line, all lines
 - Both cap at `warning`: VSCodium `errorLens.enabledDiagnosticLevels: ["error", "warning"]`, Zed `diagnostics.inline.max_severity: "warning"`
 
 ## Shell linting/formatting

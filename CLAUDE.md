@@ -18,9 +18,8 @@ make linux-defaults     # Configure Linux/GNOME defaults: folders, input, Nautil
 make versions           # Show installed Go, Node, Python versions
 make validate           # Full audit: parse configs, brew bundle, ghostty, shellcheck, shfmt, zsh -n, codex rules, git config, CLI flag configs, symlinks
 make snapshots          # Regenerate defaults/* (ghostty + starship + bat: local CLI; zed/yazi/superfile/atuin: curl upstream main; vscodium: manual)
-make brew-install       # Install all packages (base + work)
-make brew-install-base  # Install base packages only
-make brew-install-work  # Install work packages only
+make brew-install       # Install base packages only
+make brew-install-all   # Install all packages (base + work)
 make brew-cleanup       # Clean up old versions and cache
 make brew-export        # Export installed packages (incl. VSCodium extensions) to Brewfile, then strip Brewfile.work entries; add new work entries to Brewfile.work manually (macOS only; Linuxbrew install state would wipe macOS-only casks)
 ```
@@ -36,6 +35,7 @@ Linux GUI apps install via vendor deb/rpm. Flatpak is avoided for any app whose 
 - `scripts/macos-defaults.sh` - macOS defaults via `defaults write` (non-interactive, idempotent; guards `uname -s == Darwin`, no-op on Linux)
 - `scripts/linux-defaults.sh` - Linux/GNOME defaults via `gsettings` (non-interactive, idempotent; guards `uname -s == Linux`, requires `gsettings` + `XDG_CURRENT_DESKTOP=*GNOME*`, no-op on macOS / KDE / headless)
 - `scripts/validate.sh` - Full audit runner (parses every TOML/JSON/YAML/JSONC, `brew bundle list --all` for Brewfile parse plus non-fatal `brew bundle check` for install state, ghostty validate, shellcheck, shfmt, `zsh -n` on `.zshrc`/`.zprofile`, codex/rules sanity grep, symlink verification). Backs `make validate`. Skips macOS-native symlinks on Linux.
+- `scripts/snapshots.sh` - Regenerates `defaults/*` upstream snapshots (ghostty + starship + bat: local CLI; zed/yazi/superfile/atuin: curl upstream `main`; vscodium: manual). Each step guards on the tool being present and skips with a message otherwise. Backs `make snapshots`.
 - `.local.example.toml` - Schema template for per-machine overrides (committed). Copy to `.local/source.toml` (gitignored) and fill in.
 - `.gitignore` - Repo-root gitignore. Excludes `.local/` (per-machine override data + rendered scratch) plus a subset of the global `.config/git/ignore` entries (`.DS_Store`, `.env`, `.env.*`, `.idea/`, `.vscode/`, `__pycache__/`, `*.pyc`, `*.swp`) and AI tool per-project local files (`.claude/settings.local.json`, `CLAUDE.local.md`, `AGENTS.local.md`; whole `.claude/` is intentionally NOT ignored so any future tracked `.claude/` content stays shareable) so the repo stays protected on fresh clones before `make symlinks` wires the global ignore, and for outside contributors who don't share this dotfiles setup.
 - `docs/applications.md` - Curated GUI app picks per category (cross-platform where possible, macOS as tie-breaker lens), VSCodium setup, search-engine bangs
@@ -71,7 +71,7 @@ Linux GUI apps install via vendor deb/rpm. Flatpak is avoided for any app whose 
 - `.config/codex/AGENTS.md` - Codex user-level instructions (symlinked to `~/.codex/AGENTS.md`)
 - `.config/codex/config.toml` - Codex CLI config (model, sandbox, plugins)
 - `.config/codex/rules/{git,dev,shell,infra}.rules` - Codex permission rules (symlinked per file to `~/.codex/rules/`; new rule files require entries in both `scripts/symlinks.sh` and `scripts/validate.sh`)
-- `defaults/` - Upstream defaults snapshots for offline comparison. Regenerate via `make snapshots` (local CLI: Ghostty + Starship + Bat; curl upstream `main`: Zed + Yazi + Superfile + Atuin; manual UI: VSCodium). Contents:
+- `defaults/` - Upstream defaults snapshots for offline comparison. Regenerate via `make snapshots`; each entry below notes its source. Contents:
   - `vscodium-defaults.jsonc` - VSCodium defaults (identical to upstream VSCode, same Code OSS source; manual regen via `Preferences: Open Default Settings (JSON)`)
   - `zed-defaults.jsonc` - Zed defaults from upstream `zed-industries/zed@main` (NOT pinned to installed version; drift check approximate)
   - `ghostty-defaults.conf` - Ghostty annotated defaults (from `ghostty +show-config --default --docs`)
@@ -101,10 +101,11 @@ When adding a new tool, config file, cask, or formula, update all of these in lo
 - **README "Configuration files" list** — add bullet under `## Configuration files` if a config file is symlinked
 - **README "CLI tools" table** — add row if user-facing CLI tool. **`docs/casks.md`** — add row if user-facing GUI cask.
 - **README "Templates" table** — add row if introducing a new template file; describe folder semantics if introducing a new category
-- **`docs/applications.md` table** — add row if GUI app fits an existing category, or add new category row
+- **`docs/applications.md` tables** — add row under the matching `###` group if a GUI app fits an existing category; add a new category row (or a new group heading) when none fits
 - **CLAUDE.md "Repository structure" list** — add bullet describing the file's purpose
 - **`docs/conventions.md` tables** — add row(s) if the tool shares behavior (theme, font, tab size, hidden files, telemetry, auto-update, git pager, etc.) with existing tools
 - **`scripts/validate.sh`** — extend the matching block (TOML/JSON/YAML/JSONC parse list, or symlink list) so `make validate` covers the new config
+- **`scripts/snapshots.sh`** — if the new tool ships a snapshot under `defaults/`, add a regen step (local CLI, or `curl` upstream `main`) so `make snapshots` can refresh it
 - **`.local.example.toml`** + **`scripts/local-overrides.py`** — if the tool grows a per-machine override (identity, private namespace, team marketplace, trusted path, etc.), extend the schema and the renderer. Tracked file stays neutral; real value lives in `.local/source.toml`.
 - **`.gitignore`** (repo-root) — add path if the new tool spawns per-project local files (`.<tool>/settings.local.json`, `<TOOL>.local.md`, scratch-output dirs, etc.) that must stay out of the tracked tree on fresh clones, before `make symlinks` wires the global ignore. Mirror in `.config/git/ignore` only if the entry is also useful for unrelated projects.
 
@@ -304,11 +305,11 @@ When modifying `.config/vscodium/settings.json` (live target is `VSCodium/User/s
 
 ## Applications list maintenance
 
-When updating the Applications table in `docs/applications.md`, see the selection criteria documented there. Key guidelines:
+When updating the Applications tables in `docs/applications.md` (grouped into `###` sections: Development; Web & search; Mail, calendar & contacts; Notes, docs & productivity; Communication; Media & creative; Files, security & network; System & other), see the selection criteria documented there. Key guidelines:
 
-- Tools in **bold** are primary recommendations (one per category)
+- Tools in **bold** are primary recommendations (one or more per category)
 - GUI apps go in Applications section, text-based/TUI tools go in CLI tools section
-- Include 2-5 apps per platform column when possible (the Utilities catch-all row is exempt)
+- Include 2-6 picks per row total (counted across all columns combined, not per column) when possible (the Utilities catch-all row is exempt)
 - Verify apps are actively maintained before adding
 - Research community sentiment (Reddit, GitHub issues, HN) before adding new tools
 

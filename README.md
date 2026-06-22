@@ -28,13 +28,13 @@ Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** 
 
 1. Complete [Prerequisites → macOS](#macos).
 2. Clone this repository.
-3. Run `make setup` (base) or `make setup-all` (base + work). `setup` chains `macos-defaults` → `linux-defaults` (no-op) → `symlinks` → `local-overrides` → `brew-install-base` → `versions`. `setup-all` swaps in `brew-install` for the base+work superset.
+3. Run `make setup` (base) or `make setup-all` (base + work). `setup` chains `macos-defaults` → `linux-defaults` (no-op) → `symlinks` → `local-overrides` → `brew-install` → `versions`. `setup-all` swaps in `brew-install-all` for the base+work superset.
 
 ### Linux (GNOME)
 
 1. Complete [Prerequisites → Linux](#linux).
 2. Clone this repository.
-3. Run `make setup` (base) or `make setup-all` (base + work). Same chain as macOS: `macos-defaults` (no-op on Linux) → `linux-defaults` applies GNOME `gsettings` → `symlinks` → `local-overrides` → `brew-install-base` installs formulae + the Linux-installable cask subset (`docs/casks.md`) → `versions`. `setup-all` swaps in `brew-install` for the base+work superset. Every `Brewfile.work` cask lacks a Linuxbrew build, so on Linux `brew-install-work` is effectively a no-op for casks; install work GUIs via vendor deb/rpm.
+3. Run `make setup` (base) or `make setup-all` (base + work). Same chain as macOS: `macos-defaults` (no-op on Linux) → `linux-defaults` applies GNOME `gsettings` → `symlinks` → `local-overrides` → `brew-install` installs formulae + the Linux-installable cask subset (`docs/casks.md`) → `versions`. `setup-all` swaps in `brew-install-all` for the base+work superset. Every `Brewfile.work` cask lacks a Linuxbrew build, so on Linux the `Brewfile.work` step of `brew-install-all` is effectively a no-op for casks; install work GUIs via vendor deb/rpm.
 4. Install GUI apps via vendor `.deb` / `.rpm`.
 
 Run `make help` to list all available targets.
@@ -101,7 +101,7 @@ Run `make help` to list all available targets.
 
 Per-machine data (git identity, `GOPRIVATE`, Claude team marketplaces/plugins, Codex trusted projects) is kept in a single gitignored file and rendered into the tracked configs by a setup-time script. Tracked configs ship with neutral placeholders; the script injects real values on each `make setup` (or standalone `make local-overrides`).
 
-1. First run inside `make setup` creates `.local/source.toml` from `.local.example.toml`, prints a fill-in prompt to stderr, and returns 0 so the rest of the chain (`brew-install-base`, `versions`) continues with neutral placeholders. Edit `.local/source.toml` with your values, then re-run `make local-overrides` to inject them. Schema sections: `[git]`, `[go]`, `[claude.marketplaces.<key>]`, `[claude].plugins`, `[codex].trusted_projects`.
+1. First run inside `make setup` creates `.local/source.toml` from `.local.example.toml`, prints a fill-in prompt to stderr, and returns 0 so the rest of the chain (`brew-install`, `versions`) continues with neutral placeholders. Edit `.local/source.toml` with your values, then re-run `make local-overrides` to inject them. Schema sections: `[git]`, `[go]`, `[claude.marketplaces.<key>]`, `[claude].plugins`, `[codex].trusted_projects`.
 2. Re-run `make local-overrides`. The script reads the clean base from `git show HEAD:<path>` for each tracked target, applies the overrides, and writes back to:
    - `.config/git/config` — `[user]` block replaced
    - `.zprofile` — `GOPRIVATE` line replaced
@@ -197,9 +197,8 @@ Curated GUI app picks by category, VSCodium setup, and search engine bangs: see 
 Installed via Homebrew formulae and casks (see `Brewfile` and `Brewfile.work`):
 
 ```bash
-make brew-install       # Install all packages (base + work)
-make brew-install-base  # Install base packages only
-make brew-install-work  # Install work packages only
+make brew-install       # Install base packages only
+make brew-install-all   # Install all packages (base + work)
 make brew-cleanup       # Clean up old versions and cache
 make brew-export        # Export installed packages (incl. VSCodium extensions) to Brewfile (macOS only), then strip Brewfile.work entries; add new work entries to Brewfile.work manually
 make versions           # Show installed Go, Node, Python versions
@@ -279,7 +278,7 @@ CLI binaries shipped via casks (`op` from `1password-cli`, `claude`, `codex`) li
 After `make setup`, verify everything wired up:
 
 - `make versions` — Go / Node / Python toolchains print
-- `git config --list --show-origin | head -5` — settings come from `~/.config/git/config`
+- `git config --list --show-origin | grep config/git/config` — settings come from `~/.config/git/config`
 - `ls -l ~/.config/ghostty/config ~/.zshrc ~/.config/git/config` — symlinks point at this repo
 
 For full audit, run `make validate` (delegates to `scripts/validate.sh`): it parses every config (TOML/JSON/YAML/JSONC), checks the Brewfiles and ghostty, lints the shell scripts, and verifies symlinks resolve (skipping macOS-native paths on Linux). See CLAUDE.md "Config validation" for the per-check breakdown.
