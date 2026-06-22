@@ -223,7 +223,7 @@ VSCodium runs bundled `tsserver` (VSCode core); Zed runs bundled `vtsls` (differ
 | Type-only auto-imports (TS 5.0+) | `js/ts.preferences.preferTypeOnlyAutoImports: true` (unified namespace; supersedes the `typescript.*` + `javascript.*` variants, retained as aliases) | `preferences: { preferTypeOnlyAutoImports: true }` (vtsls schema keeps typescript + javascript split — pass through tsserver protocol) |
 | tsserver memory ceiling | `js/ts.tsserver.maxMemory: 8192` (renamed from `typescript.tsserver.maxTsServerMemory`, retained as an alias) | `typescript.tsserver: { maxTsServerMemory: 8192 }` (vtsls passes the legacy tsserver-protocol key through; vtsls did not unify the namespace) |
 
-vtsls accepts the same dotted-namespace as tsserver under its `settings`; the JS and TS sub-objects mirror each other so `.js` and `.ts` files behave identically. `maxTsServerMemory` raised from the 3072 MB default insures against monorepo TypeScript OOM.
+vtsls accepts the same dotted-namespace as tsserver under its `settings`; the JS and TS sub-objects mirror each other so `.js` and `.ts` files behave identically. `maxTsServerMemory` raised above the tsserver default insures against monorepo TypeScript OOM.
 
 ## Extension management
 

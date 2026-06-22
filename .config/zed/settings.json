@@ -45,7 +45,6 @@
     "enabled": true
   },
   "wrap_guides": [120],
-  "show_wrap_guides": true,
   "soft_wrap": "none",
   "inlay_hints": {
     "enabled": true

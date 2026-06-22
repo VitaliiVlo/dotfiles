@@ -9,6 +9,3 @@
 
 # Pager
 --pager="less --RAW-CONTROL-CHARS --quit-if-one-screen"
-
-# Syntax mappings (catch-all for .env.* suffixes beyond bat's built-in DotENV list)
---map-syntax ".env*:Dotenv"
