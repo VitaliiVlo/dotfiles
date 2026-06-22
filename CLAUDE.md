@@ -263,7 +263,7 @@ Run `make validate` (delegates to `scripts/validate.sh`). Covers:
 2. Parse every plain JSON (claude/settings, micro, ccstatusline)
 3. Parse every YAML (gh, lazygit, glow) — needs `yq`
 4. Parse JSONC (zed, vscodium, and the snapshot JSONC under `defaults/`) — needs `node`
-5. `brew bundle list --file=Brewfile{,.work}` (parse-only; install state reported separately as non-fatal warning) — needs `brew`
+5. `brew bundle list --file=Brewfile{,.work} --all` (parse-only; install state reported separately as non-fatal warning) — needs `brew`
 6. `ghostty +validate-config --config-file=.config/ghostty/config` — needs `ghostty`
 7. `shellcheck` + `shfmt` on the `*.sh` scripts in `scripts/`, plus `ast.parse` syntax check on `scripts/local-overrides.py`
 8. `zsh -n` on `.zshrc` and `.zprofile` (syntax-only; needs `zsh`)
