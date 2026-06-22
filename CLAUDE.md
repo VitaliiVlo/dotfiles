@@ -17,7 +17,7 @@ make macos-defaults     # Configure macOS defaults: folders, system, screenshots
 make linux-defaults     # Configure Linux/GNOME defaults: folders, input, Nautilus, desktop (no-op on macOS / non-GNOME)
 make versions           # Show installed Go, Node, Python versions
 make validate           # Full audit: parse configs, brew bundle, ghostty, shellcheck, shfmt, zsh -n, codex rules, git config, CLI flag configs, symlinks
-make snapshots          # Regenerate defaults/* (ghostty + starship + bat: local CLI; zed/yazi/superfile/atuin: curl upstream main; vscodium: manual)
+make snapshots          # Regenerate defaults/* (ghostty/starship/bat: local CLI; zed/yazi/superfile/atuin: curl upstream main; vscodium: manual)
 make brew-install       # Install base packages only
 make brew-install-all   # Install all packages (base + work)
 make brew-cleanup       # Clean up old versions and cache
@@ -35,7 +35,7 @@ Linux GUI apps install via vendor deb/rpm. Flatpak is avoided for any app whose 
 - `scripts/macos-defaults.sh` - macOS defaults via `defaults write` (non-interactive, idempotent; guards `uname -s == Darwin`, no-op on Linux)
 - `scripts/linux-defaults.sh` - Linux/GNOME defaults via `gsettings` (non-interactive, idempotent; guards `uname -s == Linux`, requires `gsettings` + `XDG_CURRENT_DESKTOP=*GNOME*`, no-op on macOS / KDE / headless)
 - `scripts/validate.sh` - Full audit runner (parses every TOML/JSON/YAML/JSONC, `brew bundle list --file=Brewfile{,.work} --all` for Brewfile parse plus non-fatal `brew bundle check` for install state, ghostty validate, shellcheck, shfmt, `zsh -n` on `.zshrc`/`.zprofile`, codex/rules sanity grep, symlink verification). Backs `make validate`. Skips macOS-native symlinks on Linux.
-- `scripts/snapshots.sh` - Regenerates `defaults/*` upstream snapshots (ghostty + starship + bat: local CLI; zed/yazi/superfile/atuin: curl upstream `main`; vscodium: manual). Each step guards on the tool being present and skips with a message otherwise. Backs `make snapshots`.
+- `scripts/snapshots.sh` - Regenerates `defaults/*` upstream snapshots (ghostty/starship/bat: local CLI; zed/yazi/superfile/atuin: curl upstream `main`; vscodium: manual). Each step guards on the tool being present and skips with a message otherwise. Backs `make snapshots`.
 - `.local.example.toml` - Schema template for per-machine overrides (committed). Copy to `.local/source.toml` (gitignored) and fill in.
 - `.gitignore` - Repo-root gitignore. Excludes `.local/` (per-machine override data + rendered scratch) plus a subset of the global `.config/git/ignore` entries (`.DS_Store`, `.env`, `.env.*`, `.idea/`, `.vscode/`, `__pycache__/`, `*.pyc`, `*.swp`) and AI tool per-project local files (`.claude/settings.local.json`, `CLAUDE.local.md`, `AGENTS.local.md`; whole `.claude/` is intentionally NOT ignored so any future tracked `.claude/` content stays shareable) so the repo stays protected on fresh clones before `make symlinks` wires the global ignore, and for outside contributors who don't share this dotfiles setup.
 - `docs/applications.md` - Curated GUI app picks per category (cross-platform where possible, macOS as tie-breaker lens), VSCodium setup, search-engine bangs
