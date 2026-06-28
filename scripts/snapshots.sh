@@ -10,20 +10,23 @@ mkdir -p defaults
 printf '%s\n' "==> ghostty"
 if command -v ghostty >/dev/null 2>&1; then
     ghostty +show-config --default --docs >defaults/ghostty-defaults.conf &&
-        echo "    wrote defaults/ghostty-defaults.conf"
+        echo "    wrote defaults/ghostty-defaults.conf" ||
+        echo "    WARN: regen failed, CLI flags may have changed"
 else echo "    SKIP (ghostty not installed)"; fi
 
 printf '\n%s\n' "==> starship (nerd-font-symbols preset)"
 if command -v starship >/dev/null 2>&1; then
     starship preset nerd-font-symbols -o defaults/starship-nerd-font-symbols.toml &&
-        echo "    wrote defaults/starship-nerd-font-symbols.toml"
+        echo "    wrote defaults/starship-nerd-font-symbols.toml" ||
+        echo "    WARN: regen failed, CLI flags may have changed"
 else echo "    SKIP (starship not installed)"; fi
 
 printf '\n%s\n' "==> bat (BAT_CONFIG_PATH override to avoid clobbering ~/.config/bat/config)"
 if command -v bat >/dev/null 2>&1; then
     rm -f defaults/bat-defaults.conf &&
         BAT_CONFIG_PATH=defaults/bat-defaults.conf bat --generate-config-file >/dev/null &&
-        echo "    wrote defaults/bat-defaults.conf"
+        echo "    wrote defaults/bat-defaults.conf" ||
+        echo "    WARN: regen failed, CLI flags may have changed"
 else echo "    SKIP (bat not installed)"; fi
 
 printf '\n%s\n' "==> zed (upstream main, NOT installed version)"

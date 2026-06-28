@@ -1,6 +1,6 @@
 # Dotfiles
 
-Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** (light) theme and **JetBrains Mono** font (14pt) with **Fira Code**, **Menlo**, **Monaco**, and **Symbols Nerd Font Mono** fallbacks. Configured for **Go** (via Homebrew), **Python** (via `uv`), and **Node.js** (via `fnm`).
+Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** (light) theme and **JetBrains Mono** font with **Fira Code** and **Symbols Nerd Font Mono** fallbacks. Configured for **Go** (via Homebrew), **Python** (via `uv`), and **Node.js** (via `fnm`).
 
 ## Contents
 
@@ -13,6 +13,7 @@ Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** 
 - [macOS tips](docs/macos-tips.md) — non-obvious shortcuts and behaviors (clipboard, screenshots, Finder, Mission Control, Spotlight, Continuity, shell helpers)
 - [Linux tips](docs/linux-tips.md) — non-obvious shortcuts and behaviors for GNOME-on-Wayland (clipboard, screenshots, Nautilus, workspaces, GNOME search, cross-device sharing, shell helpers, Wayland notes, per-distro deltas)
 - [Applications](docs/applications.md) — curated GUI app picks by category (cross-platform where possible, macOS as tie-breaker lens), VSCodium setup, search engine bangs
+- [Resources](docs/resources.md) — useful external sites: software and alternative discovery, version/EOL tracking, CLI and dev reference, online tools, theming, privacy
 - [Backup plan](docs/backup-plan.md) — personal data protection plan: threat model, data inventory, setup actions, monthly/quarterly/yearly rituals, recovery playbook
 - [CLI tools](#cli-tools)
 - [Validate](#validate)
@@ -26,7 +27,7 @@ Dotfiles configured with **Catppuccin Macchiato** (dark) / **Catppuccin Latte** 
 
 ### macOS
 
-1. Complete [Prerequisites → macOS](#macos).
+1. Complete [Prerequisites → macOS](#macos-1).
 2. Clone this repository.
 3. Run `make setup` (base) or `make setup-all` (base + work). `setup` chains `macos-defaults` → `linux-defaults` (no-op) → `symlinks` → `local-overrides` → `brew-install` → `versions`. `setup-all` swaps in `brew-install-all` for the base+work superset.
 
@@ -99,14 +100,15 @@ Run `make help` to list all available targets.
 
 ### Local overrides
 
-Per-machine data (git identity, `GOPRIVATE`, Claude team marketplaces/plugins, Codex trusted projects) is kept in a single gitignored file and rendered into the tracked configs by a setup-time script. Tracked configs ship with neutral placeholders; the script injects real values on each `make setup` (or standalone `make local-overrides`).
+Per-machine data (git identity, `GOPRIVATE`, Claude + Codex team marketplaces/plugins, shell aliases) is kept in a single gitignored file and rendered into the tracked configs by a setup-time script. Tracked configs ship with neutral placeholders; the script injects real values on each `make setup` (or standalone `make local-overrides`).
 
-1. First run inside `make setup` creates `.local/source.toml` from `.local.example.toml`, prints a fill-in prompt to stderr, and returns 0 so the rest of the chain (`brew-install`, `versions`) continues with neutral placeholders. Edit `.local/source.toml` with your values, then re-run `make local-overrides` to inject them. Schema sections: `[git]`, `[go]`, `[claude.marketplaces.<key>]`, `[claude].plugins`, `[codex].trusted_projects`.
+1. First run inside `make setup` creates `.local/source.toml` from `.local.example.toml`, prints a fill-in prompt to stderr, and returns 0 so the rest of the chain (`brew-install`, `versions`) continues with neutral placeholders. Edit `.local/source.toml` with your values, then re-run `make local-overrides` to inject them. Schema sections: `[git]`, `[go]`, `[claude.marketplaces.<key>]`, `[claude].plugins`, `[codex.marketplaces.<key>]`, `[codex].plugins`, `[aliases]`.
 2. Re-run `make local-overrides`. The script reads the clean base from `git show HEAD:<path>` for each tracked target, applies the overrides, and writes back to:
    - `.config/git/config` — `[user]` block replaced
    - `.zprofile` — `GOPRIVATE` line replaced
    - `.config/claude/settings.json` — `extraKnownMarketplaces` and `enabledPlugins` extended
-   - `.config/codex/config.toml` — `[projects."<path>"]` blocks appended
+   - `.config/codex/config.toml` — `[marketplaces.<key>]` and `[plugins."<id>"]` blocks appended
+   - `.zshrc` — `alias` lines filled into the local-overrides marker block
 3. The resulting working-tree diff on those files is intentional. **Do not commit it.** Each run reads from HEAD, so overrides never compound and a fresh `git pull` + re-run keeps state consistent.
 
 `.local/` is gitignored; `.local.example.toml` is the committed schema source. `make setup` and `make setup-all` chain `local-overrides` after `symlinks` so a clean clone reaches the configured state in one command.

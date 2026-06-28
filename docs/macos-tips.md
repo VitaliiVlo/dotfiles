@@ -2,7 +2,7 @@
 
 Non-obvious shortcuts and behaviors worth remembering. `defaults write` recipes already applied by `make macos-defaults` are not repeated here, see `scripts/macos-defaults.sh`. Linux equivalents live in [`linux-tips.md`](linux-tips.md).
 
-Version baselines (snapshot, verify against [Apple macOS](https://www.apple.com/macos/) for the current release):
+Version baselines (snapshot, verify against [endoflife.date](https://endoflife.date) or [Apple macOS](https://www.apple.com/macos/) for the current release):
 
 | Stack              | Version baseline                                                                  |
 | ------------------ | --------------------------------------------------------------------------------- |
@@ -16,7 +16,7 @@ Version baselines (snapshot, verify against [Apple macOS](https://www.apple.com/
 | -------------------------------- | ---------------------------------------------------------------------------------------- |
 | `Option+Shift+Cmd+V`             | Paste and match style (strips formatting; for Slack, Jira, docs)                         |
 | Universal Clipboard              | Copy on iPhone / iPad / Mac, paste on another nearby Apple device                        |
-| `Cmd+Space` then `Cmd+4`         | Spotlight Clipboard History (macOS 26 Tahoe+). Click item to restore to clipboard, or double-click to paste at cursor. Off by default in *Settings → Spotlight*; retention is configurable (default 8h), can be cleared on demand, and is not synced via Universal Clipboard. For a global-hotkey popup with fuzzy search and persistent history install **Maccy** (`brew install --cask maccy`); coexists with Spotlight clipboard. |
+| `Cmd+Space` then `Cmd+4`         | Spotlight Clipboard History (macOS 26 Tahoe+). Click item to restore to clipboard, or double-click to paste at cursor. Off by default in *Settings → Spotlight*; retention is configurable, can be cleared on demand, and is not synced via Universal Clipboard. For a global-hotkey popup with fuzzy search and persistent history install **Maccy** (`brew install --cask maccy`); coexists with Spotlight clipboard. |
 
 ## Screenshots and screen recording
 

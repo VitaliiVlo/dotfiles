@@ -84,6 +84,11 @@ fi
 # 4. Parse JSONC (Zed + VSCodium user settings). Strip comments with a
 # string-aware walker, not a regex: `//` and `/* */` inside JSON string
 # values must survive, otherwise the parse silently corrupts the file.
+# The trailing-comma strip below is a plain regex, not string-aware, so it can
+# also rewrite a `,]`/`,}` inside a string value. Harmless: the result only
+# feeds JSON.parse for validation and is never written back, and removing a
+# comma inside a quoted string leaves it a valid string, so the parse can't be
+# corrupted or give a false result.
 heading "JSONC"
 jsonc_files=(
     .config/zed/settings.json

@@ -2,6 +2,8 @@
 
 Curated GUI app picks per category. Cross-platform where possible, with macOS as the primary lens for tie-breakers.
 
+See also [Resources](resources.md) for external discovery and reference sites.
+
 ## Selection criteria
 
 Ranked by priority:
@@ -39,9 +41,9 @@ Bold primaries (one or more per category) come first in each column, then non-bo
 | Category | Apple-only | Linux-only | Cross-platform |
 |---|---|---|---|
 | Browser (Gecko) | — | — | **Firefox**, LibreWolf, Zen + **uBlock Origin** |
-| Browser (Chromium) | — | — | **Brave**, **Chrome**, Helium + **uBlock Origin Lite** |
+| Browser (Chromium) | — | — | **Brave**, Chrome, Helium + **uBlock Origin Lite** |
 | Browser (WebKit) | **Safari**, Orion + **wBlock** | — | — |
-| Search Engine | — | — | **DuckDuckGo**, Kagi, Brave, Google |
+| Search Engine | — | — | **Brave**, DuckDuckGo, Startpage, Kagi, Google |
 | Maps | Apple Maps | GNOME Maps | **Google Maps**, Waze, Organic Maps, Mapy.com |
 
 ### Mail, calendar & contacts
@@ -90,7 +92,7 @@ Bold primaries (one or more per category) come first in each column, then non-bo
 | Cloud Storage | **iCloud Drive** | — | Dropbox, Google Drive, Proton Drive |
 | File Transfer | **AirDrop** | KDE Connect | LocalSend, syncthing |
 | Backup | **Time Machine** | Déjà Dup, Timeshift, Pika Backup | — |
-| Networking | — | Trayscale (Tailscale GUI) | **Tailscale**, **Cloudflare WARP**, Proton VPN, Mullvad VPN |
+| Networking | — | Trayscale (Tailscale GUI) | **Tailscale**, **Cloudflare WARP**, Proton VPN, Mullvad VPN, IVPN |
 
 ### System & other
 
@@ -112,7 +114,7 @@ Bold primaries (one or more per category) come first in each column, then non-bo
 
 ## Search engine setup
 
-Set DuckDuckGo (or Kagi / Brave Search) as browser default. All three support **bangs**: shortcuts that redirect a query to a target site's search. Syntax: `!<bang> <query>` (or `<query> !<bang>`).
+Set Brave Search (or DuckDuckGo / Kagi) as browser default. All three support **bangs**: shortcuts that redirect a query to a target site's search. Syntax: `!<bang> <query>` (or `<query> !<bang>`).
 
 Most-used bangs:
 
@@ -131,4 +133,4 @@ Most-used bangs:
 | `!so` | Stack Overflow |
 | `!imdb` | IMDb |
 
-Full catalog: <https://duckduckgo.com/bang> (thousands, inherited by Kagi and Brave). Kagi adds custom user-defined bangs in settings.
+Full catalog: <https://duckduckgo.com/bang> (thousands; Kagi and Brave ship their own large, overlapping sets). Kagi adds custom user-defined bangs in settings.

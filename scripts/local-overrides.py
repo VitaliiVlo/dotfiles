@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -18,6 +19,7 @@ except ModuleNotFoundError:  # Python < 3.11
     raise SystemExit("local-overrides.py requires Python 3.11+ (stdlib tomllib)")
 
 from pathlib import Path
+from typing import NoReturn
 
 REPO = Path(__file__).resolve().parent.parent
 SOURCE = REPO / ".local/source.toml"
@@ -28,7 +30,22 @@ TARGETS = {
     "codex": REPO / ".config/codex/config.toml",
     "git": REPO / ".config/git/config",
     "zprofile": REPO / ".zprofile",
+    "zshrc": REPO / ".zshrc",
 }
+
+# Marketplaces the CLI binary pre-registers; plugin references resolve through them
+# without an explicit declaration, and re-declaring one is an error.
+CLAUDE_BUILTIN_MARKETS = {"claude-plugins-official"}
+CODEX_BUILTIN_MARKETS = {"openai-curated"}
+
+ALIAS_START = "# >>> local-overrides:aliases >>>"
+ALIAS_END = "# <<< local-overrides:aliases <<<"
+ALIAS_NAME_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_.-]*")
+
+
+def die(msg: str) -> NoReturn:
+    print(f"local-overrides: {msg}", file=sys.stderr)
+    sys.exit(1)
 
 
 def head_base(path: Path) -> str:
@@ -43,13 +60,36 @@ def head_base(path: Path) -> str:
             text=True,
         )
     except subprocess.CalledProcessError:
-        print(
-            f"local-overrides: HEAD:{rel} missing. "
-            "Commit the new target path before running local-overrides; "
-            "working-copy base would risk compounding overrides.",
-            file=sys.stderr,
+        die(
+            f"HEAD:{rel} missing. Commit the new target path before running "
+            "local-overrides; working-copy base would risk compounding overrides."
         )
-        sys.exit(1)
+
+
+def _toml_key(key: str) -> str:
+    """Bare TOML key when safe, else a quoted basic string (json.dumps escape rules match)."""
+    return key if re.fullmatch(r"[A-Za-z0-9_-]+", key) else json.dumps(key)
+
+
+def _market_git_url(key: str, m: dict) -> str:
+    """Resolve a marketplace table to a git URL for Codex's `source_type = "git"` form.
+    Accepts the same `repo` (GitHub) / `url` (raw git) fields as the Claude schema."""
+    if m.get("url"):
+        return m["url"]
+    if m.get("repo"):
+        return f"https://github.com/{m['repo']}.git"
+    die(f"codex.marketplaces.{key} needs 'repo' (github) or 'url' (git)")
+
+
+def _check_plugin_id(pid: str, known: set[str], tool: str) -> None:
+    if "@" not in pid:
+        die(f"{tool} plugin must be 'name@marketplace': {pid!r}")
+    market = pid.rsplit("@", 1)[1]
+    if market not in known:
+        die(
+            f"{tool} plugin {pid!r} references unknown marketplace {market!r}; "
+            f"declare it under [{tool}.marketplaces.{market}]"
+        )
 
 
 def render_claude(base: str, claude: dict) -> str:
@@ -70,53 +110,49 @@ def render_claude(base: str, claude: dict) -> str:
         data["extraKnownMarketplaces"][key] = entry
 
     data.setdefault("enabledPlugins", {})
-    # claude-plugins-official is the only Anthropic-built-in marketplace today; extend here if more ship.
-    known = (
-        set(data.get("extraKnownMarketplaces", {}))
-        | set(markets)
-        | {"claude-plugins-official"}
-    )
+    known = set(data["extraKnownMarketplaces"]) | set(markets) | CLAUDE_BUILTIN_MARKETS
     for pid in plugins:
-        if "@" not in pid:
-            print(
-                f"local-overrides: claude plugin must be 'name@marketplace': {pid!r}",
-                file=sys.stderr,
-            )
-            sys.exit(1)
-        _, market = pid.rsplit("@", 1)
-        if market not in known:
-            print(
-                f"local-overrides: claude plugin {pid!r} references unknown marketplace {market!r}; "
-                f"declare it under [claude.marketplaces.{market}]",
-                file=sys.stderr,
-            )
-            sys.exit(1)
+        _check_plugin_id(pid, known, "claude")
         data["enabledPlugins"][pid] = True
 
     return json.dumps(data, indent=2) + "\n"
 
 
 def render_codex(base: str, codex: dict) -> str:
-    raw = list(dict.fromkeys(codex.get("trusted_projects", []) or []))
-    projects = []
-    for p in raw:
-        # Codex matches table keys against the cwd's absolute path. Tilde and
-        # relative entries silently never match, so reject them at render time.
-        expanded = str(Path(p).expanduser())
-        if not Path(expanded).is_absolute():
-            print(
-                f"local-overrides: codex.trusted_projects entry must be an absolute path: {p!r}",
-                file=sys.stderr,
-            )
-            sys.exit(1)
-        projects.append(expanded)
-    if not projects:
+    markets = codex.get("marketplaces", {}) or {}
+    plugins = list(dict.fromkeys(codex.get("plugins", []) or []))
+    if not markets and not plugins:
         return base
-    block = ["\n# Trusted projects (rendered from .local/source.toml)"]
-    for p in projects:
-        # json.dumps emits a valid TOML basic string (same escape rules).
-        block.append(f"[projects.{json.dumps(p)}]\ntrust_level = \"trusted\"")
-    return base.rstrip() + "\n" + "\n\n".join(block) + "\n"
+
+    try:
+        parsed = tomllib.loads(base)
+    except tomllib.TOMLDecodeError as e:
+        die(f"HEAD:.config/codex/config.toml is not valid TOML: {e}")
+    in_base_markets = set(parsed.get("marketplaces", {}))
+    in_base_plugins = set(parsed.get("plugins", {}))
+    known = in_base_markets | set(markets) | CODEX_BUILTIN_MARKETS
+
+    blocks = []
+    for key, m in markets.items():
+        if key in CODEX_BUILTIN_MARKETS:
+            die(f"codex marketplace {key!r} is a CLI built-in; do not declare it")
+        if key in in_base_markets:
+            continue  # already tracked in config.toml
+        url = _market_git_url(key, m)
+        blocks.append(
+            f"[marketplaces.{_toml_key(key)}]\nsource_type = \"git\"\nsource = {json.dumps(url)}"
+        )
+
+    for pid in plugins:
+        _check_plugin_id(pid, known, "codex")
+        if pid in in_base_plugins:
+            continue  # already enabled in config.toml
+        blocks.append(f"[plugins.{json.dumps(pid)}]\nenabled = true")
+
+    if not blocks:
+        return base
+    header = "\n# Team marketplaces + plugins (rendered from .local/source.toml)"
+    return base.rstrip() + "\n" + header + "\n" + "\n\n".join(blocks) + "\n"
 
 
 def render_git(base: str, git: dict) -> str:
@@ -142,12 +178,10 @@ def render_git(base: str, git: dict) -> str:
         flags=re.M | re.S,
     )
     if n != 1:
-        print(
-            "local-overrides: .config/git/config has no `[user]` block to replace. "
-            "Restore the placeholder block before running local-overrides.",
-            file=sys.stderr,
+        die(
+            ".config/git/config has no `[user]` block to replace. "
+            "Restore the placeholder block before running local-overrides."
         )
-        sys.exit(1)
     return new
 
 
@@ -165,12 +199,36 @@ def render_zprofile(base: str, go: dict) -> str:
         flags=re.M,
     )
     if n != 1:
-        print(
-            "local-overrides: .zprofile has no `export GOPRIVATE=...` line to replace. "
-            "Restore the placeholder line before running local-overrides.",
-            file=sys.stderr,
+        die(
+            ".zprofile has no `export GOPRIVATE=...` line to replace. "
+            "Restore the placeholder line before running local-overrides."
         )
-        sys.exit(1)
+    return new
+
+
+def render_aliases(base: str, aliases: dict) -> str:
+    if not aliases:
+        return base
+    lines = []
+    for name, cmd in aliases.items():
+        if not ALIAS_NAME_RE.fullmatch(name):
+            die(f"alias name {name!r} is not a valid shell alias identifier")
+        if not isinstance(cmd, str):
+            die(f"alias {name!r} value must be a string, got {type(cmd).__name__}")
+        lines.append(f"alias {name}={shlex.quote(cmd)}")
+    replacement = ALIAS_START + "\n" + "\n".join(lines) + "\n" + ALIAS_END
+    new, n = re.subn(
+        re.escape(ALIAS_START) + r".*?" + re.escape(ALIAS_END),
+        lambda _: replacement,
+        base,
+        count=1,
+        flags=re.S,
+    )
+    if n != 1:
+        die(
+            ".zshrc has no local-overrides alias marker block to fill. "
+            f"Restore the `{ALIAS_START}` / `{ALIAS_END}` lines before running local-overrides."
+        )
     return new
 
 
@@ -196,6 +254,7 @@ def main() -> int:
         "codex": render_codex(head_base(TARGETS["codex"]), src.get("codex", {}) or {}),
         "git": render_git(head_base(TARGETS["git"]), src.get("git", {}) or {}),
         "zprofile": render_zprofile(head_base(TARGETS["zprofile"]), src.get("go", {}) or {}),
+        "zshrc": render_aliases(head_base(TARGETS["zshrc"]), src.get("aliases", {}) or {}),
     }
     for key, content in renders.items():
         TARGETS[key].write_text(content)

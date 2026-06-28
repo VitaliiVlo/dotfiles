@@ -85,7 +85,7 @@ Must stay in sync across: `fd` alias in `.zshrc`, `.config/ripgrep/ripgreprc`, y
 
 | Behavior | fd | rg | yazi | eza | Finder | Nautilus | superfile |
 |---|---|---|---|---|---|---|---|
-| Hidden files | `--hidden` | `--hidden` | `show_hidden = true` | `-a` (in `ll`/`lt`) | `AppleShowAllFiles` | `org.gtk.Settings.FileChooser show-hidden` (GTK schema, applies to Nautilus + every GTK file picker; replaces deprecated `org.gnome.nautilus.preferences show-hidden-files`) | runtime toggle only (no config key) |
+| Hidden files | `--hidden` | `--hidden` | `show_hidden = true` | `-a` (in `ll`/`lt`/`lr`) | `AppleShowAllFiles` | `org.gtk.Settings.FileChooser show-hidden` (GTK schema, applies to Nautilus + every GTK file picker; replaces deprecated `org.gnome.nautilus.preferences show-hidden-files`) | runtime toggle only (no config key) |
 | Follow symlinks | `--follow` | `--follow` | `show_symlink = true` | — | — | — | always shown (no config key) |
 | Dirs first | — | — | `sort_dir_first = true` | `--group-directories-first` | `_FXSortFoldersFirst` | `org.gtk.Settings.FileChooser sort-directories-first` + `org.gtk.gtk4.Settings.FileChooser sort-directories-first` | hardcoded behavior (no config key) |
 | Case insensitive | — | `--smart-case` | `sort_sensitive = false` | — | — | — | `case_sensitive_sort = false` |
@@ -153,7 +153,7 @@ Consistent with editors showing line numbers:
 - Ghostty: `window-theme = system` + `theme = light:Catppuccin Latte,dark:Catppuccin Macchiato`
 - Zed: `theme.mode: "system"` (light: Catppuccin Latte, dark: Catppuccin Macchiato)
 - VSCodium: `window.autoDetectColorScheme: true` + `workbench.preferredLightColorTheme: "Catppuccin Latte"` + `workbench.preferredDarkColorTheme: "Catppuccin Macchiato"`
-- bat: `--theme-dark="Catppuccin Macchiato"` + `--theme-light="Catppuccin Latte"` (auto-detects via macOS appearance)
+- bat: `--theme="auto"` + `--theme-dark="Catppuccin Macchiato"` + `--theme-light="Catppuccin Latte"` (auto-detects from terminal background; cross-platform)
 - glow: `style: "auto"` (auto-detects)
 - Codex: `tui.theme = "catppuccin-macchiato"` (TUI only, no light/system mode)
 - Superfile: `theme = "catppuccin-macchiato"` (TUI only, no light/system mode; built-in theme file at `~/.config/superfile/theme/catppuccin-macchiato.toml` on both OSes; spf honors `$XDG_CONFIG_HOME` exported by `.zprofile` via `adrg/xdg`)
@@ -172,7 +172,7 @@ Errors/warnings shown on affected lines:
 Single extension wraps both linter and formatter:
 
 - `shellcheck` (brew) + `shfmt` (brew) ↔ `mads-hartmann.bash-ide-vscode` (VSCodium extension); all three in `Brewfile`. The extension's bundled `bash-language-server` (shipped in the VSIX) auto-discovers `shellcheck` and `shfmt` from `PATH`. Flags pinned in `.config/vscodium/settings.json`: `bashIde.shfmt.caseIndent: true` + `bashIde.shfmt.keepPadding: true` match `make validate`'s `shfmt -ci -kp`; `bashIde.shfmt.simplifyCode: false` prevents shfmt's `-s` from rewriting valid scripts; `bashIde.enableSourceErrorDiagnostics: true` surfaces bash parse errors as diagnostics. `keepPadding` is upstream-deprecated but still the only knob exposing the `-kp` flag.
-- Zed: bundled `bash-language-server` via native shell support; same `shellcheck`/`shfmt` binaries from `PATH`. `simplifyCode: false` + `enableSourceErrorDiagnostics: true` mirrored via `lsp.bash-language-server.settings.bashIde.{shfmt.simplifyCode, enableSourceErrorDiagnostics}`. `caseIndent` and `keepPadding` are not exposed by Zed's bashls integration — see the indent gap below.
+- Zed: bundled `bash-language-server` via native shell support; same `shellcheck`/`shfmt` binaries from `PATH`. `simplifyCode: false` + `enableSourceErrorDiagnostics: true` mirrored via `lsp.bash-language-server.settings.bashIde.{shfmt.simplifyCode, enableSourceErrorDiagnostics}`. `caseIndent` and `keepPadding` would forward through the same `bashIde.shfmt.*` passthrough but are left unset: the indent gap below forces a manual `shfmt -ci -kp` pass that makes editor-side formatting non-authoritative anyway.
 - **Indent gap (known, unclosed):** `make validate` runs `shfmt -d -i 4 -ci -kp` (4-space indent) on `scripts/*.sh`, but bash-language-server exposes no `bashIde.shfmt.indent` knob, so save-on-format from VSCodium and Zed uses shfmt's default tab indent. Scripts in this repo are 4-space, so run a manual `shfmt -w -i 4 -ci -kp` pass before committing any editor-saved `.sh`, or `make validate` will flag it. A repo-root `.editorconfig` with `[*.sh] indent_size = 4` would close the gap (bash-language-server reads `.editorconfig` and forwards `-i 4` to shfmt), but is intentionally not tracked; the manual pass is the workaround.
 
 ## Go tooling
@@ -203,7 +203,7 @@ basedpyright (type LSP) + ruff (lint/format) pinned identically on both editors:
 | Library code → types | `basedpyright.analysis.useLibraryCodeForTypes: true` | `lsp.basedpyright.settings.basedpyright.analysis.useLibraryCodeForTypes: true` |
 | Inlay hints | `basedpyright.analysis.inlayHints.{callArgumentNames, variableTypes, functionReturnTypes, genericTypes: true}` | `lsp.basedpyright.settings.basedpyright.analysis.inlayHints: {…same}` |
 | Ruff as Python formatter | `[python] editor.defaultFormatter: "charliermarsh.ruff"` (global `formatOnSave: true` + `codeActionsOnSave: {organizeImports, fixAll: "explicit"}` already cover format + ruff-aliased actions) | `formatter: "auto"` + `code_actions_on_format` (Zed auto-routes Python to bundled ruff LSP) |
-| Ruff config source priority | `ruff.configurationPreference: "filesystemFirst"` | `lsp.ruff.settings.configurationPreference: "filesystemFirst"` |
+| Ruff config source priority | `ruff.configurationPreference: "filesystemFirst"` | `lsp.ruff.initialization_options.settings.configurationPreference: "filesystemFirst"` |
 | Pylance silenced | `python.languageServer: "None"` (prevents ms-python from re-enabling Jedi/Pylance) | n/a (Zed has no competing Python LSP) |
 
 ## TypeScript tooling
@@ -236,7 +236,7 @@ Reproducible across machines:
 
 **Per-extension parity:** Zed's `auto_install_extensions` is intentionally narrower than VSCodium's `vscode "..."` list. Zed bundles language servers (gopls, basedpyright, tsserver) and ships ruff/prettier-style formatting via `formatter: "auto"`, so most VSCodium language/lint/format extensions have no Zed counterpart by design.
 
-**TOML LSP:** `tombi-toml.tombi` (Brewfile) on VSCodium ↔ `tombi` in `auto_install_extensions` on Zed. Same upstream LSP both sides; chosen over `tamasfe.even-better-toml` (taplo upstream stalled).
+**TOML LSP:** `tombi-toml.tombi` (Brewfile) on VSCodium ↔ `tombi` in `auto_install_extensions` on Zed. Same upstream LSP both sides; chosen over `tamasfe.even-better-toml` (taplo upstream stalled). On Zed, TOML needs both extensions per [Zed's TOML docs](https://zed.dev/docs/languages/toml): `toml` provides the tree-sitter grammar, language registration, and highlight queries; `tombi` provides the language server. Neither is redundant. `tombi` vendors its own `tree-sitter-toml` grammar but registers no TOML language, so the `toml` entry stays required for syntax highlighting.
 
 **Prettier formatter parity:** Both editors run Prettier on save for the same language set. VSCodium pins `esbenp.prettier-vscode` as `[lang] editor.defaultFormatter` for JS/JSX/TS/TSX/JSON/JSONC/JSON5/YAML/Markdown/MDX/HTML/CSS/SCSS/Less (global `editor.formatOnSave: true`). Zed pins `languages.<Lang>.formatter = "prettier"` for the JS/TS/JSON/HTML/CSS family; JSONC/JSON5/YAML format on save via Zed defaults; Markdown needs an explicit `format_on_save: "on"` + `formatter: "prettier"` pin because Zed defaults Markdown to `format_on_save: "off"`. MDX is the one residual gap: Zed ships no MDX language, so `.mdx` is not formatted on save in Zed (manual format unaffected on both). `.prettierrc` in a project is honored on both sides.
 
@@ -308,7 +308,7 @@ Stable everywhere, auto-update enabled:
 
 ## Exclusion lists
 
-**Search-tool core set** (must stay in sync across `.config/ripgrep/ripgreprc`, `fd` alias in `.zshrc`, VSCodium `search.exclude`, Zed `file_scan_exclusions`): `.git`, `node_modules`, `.venv`, `venv`, `__pycache__`, `.pytest_cache`, `.terraform`, `vendor`, `dist`, `build`, `coverage`. Zed `file_scan_exclusions` is a strict superset; it adds VCS-other (`.svn`, `.hg`, `.jj`, `CVS`), OS-junk (`.DS_Store`, `Thumbs.db`), and IDE-junk (`.classpath`, `.settings`).
+**Search-tool core set** (must stay in sync across `.config/ripgrep/ripgreprc`, `fd` alias in `.zshrc`, VSCodium `search.exclude`, Zed `file_scan_exclusions`): `.git`, `node_modules`, `.venv`, `venv`, `__pycache__`, `.pytest_cache`, `.terraform`, `vendor`, `dist`, `build`, `coverage`. Zed `file_scan_exclusions` is a strict superset; it adds VCS-other (`.svn`, `.hg`, `.jj`, `.sl`, `.repo`, `CVS`), OS-junk (`.DS_Store`, `Thumbs.db`), and IDE-junk (`.classpath`, `.settings`).
 
 **Git global ignore** (`.config/git/ignore`) covers the same dependency / build / cache dirs (`node_modules`, `.venv`, `venv`, `__pycache__`, `.pytest_cache`, `.terraform`, `vendor`, `dist`, `build`, `coverage`) but intentionally **omits `.git` itself** (git would otherwise treat any nested `.git` directory as ignored, breaking submodules and worktrees). Do not add `.git` to `.config/git/ignore` for "consistency" with the search-tool list above; the two invariants are separate.
 
@@ -379,9 +379,9 @@ Do not attempt to rename the Codex side to `caveman` — Codex will treat it as 
 
 **Third-party marketplace state fields:** Codex CLI writes `last_updated` and `last_revision` into the `[marketplaces.<name>]` block on every `codex plugin marketplace update`. They are intentionally **not** committed in `.config/codex/config.toml` because each refresh produces a noisy diff. Only `source_type` and `source` are tracked; the timestamp + revision fields repopulate locally after the first update.
 
-**Per-machine team marketplaces:** `scripts/local-overrides.py` injects extra `extraKnownMarketplaces.<key>` entries (Claude) and `[projects."<path>"]` trust blocks (Codex) from `.local/source.toml`. Tracked configs ship with only the shared `caveman` market; team-specific entries land in the working tree on each `make local-overrides` run. See README "Local overrides".
+**Per-machine team marketplaces:** `scripts/local-overrides.py` injects extra marketplaces + plugins from `.local/source.toml` into both tools (Claude `extraKnownMarketplaces.<key>` + `enabledPlugins`; Codex `[marketplaces.<key>]` + `[plugins."<id>"]`), plus shell aliases into `.zshrc`. Tracked configs ship with only the shared `caveman` market; team-specific entries land in the working tree on each `make local-overrides` run. See README "Local overrides".
 
-**Codex marketplace/plugin overrides are intentionally not per-machine.** Codex CLI fixes the marketplace key at `codex plugin marketplace add` time (no rename), so the shared-key model that `local-overrides.py` uses for Claude does not map cleanly. Team-private Codex marketplaces must be added directly to `.config/codex/config.toml` (or registered via the CLI) and kept uncommitted manually. Revisit the schema if a second user ever needs this flow.
+**Per-machine Codex marketplaces/plugins** render into `.config/codex/config.toml` exactly as the Claude side renders into `settings.json`. `local-overrides.py` writes the `[marketplaces.<key>]` block directly, so the key is whatever you set in `.local/source.toml`; do not also run `codex plugin marketplace add` for the same source (the CLI derives its own key and would leave a duplicate block). The render only adds entries missing from the tracked config and never disables one already there; the built-in `openai-curated` market needs no declaration.
 
 ## Claude/Codex plugin set parity
 

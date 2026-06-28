@@ -19,8 +19,6 @@ selection-background = cell-foreground
 # Font (fallback chain ends with Nerd Font for icons)
 font-family = JetBrains Mono
 font-family = Fira Code
-font-family = Menlo
-font-family = Monaco
 font-family = Symbols Nerd Font Mono
 font-size = 14
 font-thicken = true

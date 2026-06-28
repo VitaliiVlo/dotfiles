@@ -11,8 +11,6 @@
   "buffer_font_family": "JetBrains Mono",
   "buffer_font_fallbacks": [
     "Fira Code",
-    "Menlo",
-    "Monaco",
     "Symbols Nerd Font Mono"
   ],
   "buffer_font_size": 14.0,
@@ -206,6 +204,8 @@
     "**/.svn",
     "**/.hg",
     "**/.jj",
+    "**/.sl",
+    "**/.repo",
     "**/CVS",
     "**/.DS_Store",
     "**/Thumbs.db",
@@ -238,8 +238,6 @@
     "font_family": "JetBrains Mono",
     "font_fallbacks": [
       "Fira Code",
-      "Menlo",
-      "Monaco",
       "Symbols Nerd Font Mono"
     ],
     "font_size": 14.0,

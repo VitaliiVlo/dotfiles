@@ -11,32 +11,41 @@ name = "your-username"
 # Empty/unset skips the override entirely (leaves .zprofile GOPRIVATE as shipped).
 # private = "github.com/your-org/*"
 
-# Each table key becomes an entry in Claude's `extraKnownMarketplaces`.
-# [claude.marketplaces.<key>]
+# Marketplace tables (Claude + Codex share the same fields):
 #   source = "github" | "git"
 #   repo   = "<org/repo>"        (when source = "github")
 #   url    = "<git url>"         (when source = "git")
-#   auto_update = true | false   (default true)
+#   auto_update = true | false   (default true; Claude only, Codex ignores it)
+# Each [<tool>.marketplaces.<key>] is rendered into that tool's native config.
+# Plugins are "<plugin-name>@<marketplace-key>"; the marketplace must be declared above
+# or that tool's built-in (Claude: claude-plugins-official, Codex: openai-curated).
 
+# Claude: marketplaces -> extraKnownMarketplaces, plugins -> enabledPlugins[...] = true
 # [claude.marketplaces.example-team]
 # source = "github"
 # repo = "your-org/your-claude-marketplace"
 # auto_update = true
 
 [claude]
-# Each entry becomes `enabledPlugins["<id>"] = true`.
-# Format: "<plugin-name>@<marketplace-key>"
 plugins = [
   # "coding-standards@example-team",
   # "devops@example-team",
 ]
 
+# Codex: marketplaces -> [marketplaces.<key>] (source_type = "git"), plugins -> [plugins."<id>"] enabled = true.
+# Do not declare the openai-curated marketplace (CLI built-in). Override only adds; it
+# never disables a marketplace/plugin already tracked in .config/codex/config.toml.
+# [codex.marketplaces.example-team]
+# source = "github"
+# repo = "your-org/your-codex-marketplace"
+
 [codex]
-# Only trusted-projects overrides flow through here. Codex marketplaces and plugins live
-# directly in .config/codex/config.toml (CLI fixes the marketplace key at add-time and
-# cannot rename it, so the shared-key model used for [claude] does not map). See
-# CLAUDE.md "Schema asymmetry (intentional)".
-# Each path becomes `[projects."<path>"]` with `trust_level = "trusted"`.
-trusted_projects = [
-  # "/Users/you/Projects/foo",
+plugins = [
+  # "coding-standards@example-team",
 ]
+
+[aliases]
+# Per-machine shell aliases rendered into .zshrc between the local-overrides marker block.
+# Key = alias name, value = command run at use time (single-quoted verbatim, so $(...) expands when invoked).
+# prod-ctx = "kubectl config use-context your-prod-context"
+# aws-creds = "eval \"$(aws configure export-credentials --profile your-aws-profile --format env)\""

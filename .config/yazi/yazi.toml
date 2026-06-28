@@ -14,10 +14,10 @@ tab_size = 4
 
 [opener]
 # Single edit opener branches in shell on file-vs-dir, matching lazygit upstream `vscode` preset:
-# file → `codium --reuse-window -- "$0"` (tab attach to focused window)
-# dir  → `codium -- "$0"`               (bare; smart-attach or new workspace, never clobbers)
+# file → `codium --reuse-window -- %s1` (tab attach to focused window)
+# dir  → `codium -- %s1`               (bare; smart-attach or new workspace, never clobbers)
 # orphan = true detaches codium via setsid + null stdio so it survives yazi exit.
 # No `[open] prepend_rules` needed: yazi's default folder rule routes `*/` to the `edit` opener; the shell branch handles dir vs file inside `run`.
 edit = [
-  { run = 'if [ -d "$0" ]; then codium -- "$0"; else codium --reuse-window -- "$0"; fi', desc = "VSCodium", for = "unix", orphan = true },
+  { run = 'if [ -d %s1 ]; then codium -- %s1; else codium --reuse-window -- %s1; fi', desc = "VSCodium", for = "unix", orphan = true },
 ]

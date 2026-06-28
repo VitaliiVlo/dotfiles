@@ -37,7 +37,7 @@ Both tiers are vendor-locked: iCloud+ ends with the Apple ID, Google One ends wi
 | Calendar | iCloud | Google Calendar (CalDAV sync) | TM on SSD and HDD |
 | Notes | Apple Notes (iCloud) | Quarterly Markdown export | TM on SSD and HDD |
 | Reminders | Apple Reminders (iCloud) | Quarterly Calendar Archive (`.icbu`) | TM on SSD and HDD |
-| Passwords | 1Password | Encrypted `.1pux` on TM (SSD) + Emergency Kit printed (home safe) | Encrypted `.1pux` on TM (HDD, offsite) + Emergency Kit printed (offsite) |
+| Passwords | 1Password | Breakglass `.dmg` (AES-256, holds the `.1pux`) on TM (SSD) + Emergency Kit printed (home safe) | Breakglass `.dmg` (AES-256, holds the `.1pux`) on TM (HDD, offsite) + Emergency Kit printed (offsite) |
 | Photos originals | Mac (Download Originals) | iCloud Photos | TM on SSD and HDD |
 | Email | Gmail | Apple Mail local cache + quarterly `.mbox` export | TM on SSD and HDD |
 | Mac files | Mac internal SSD | TM on SSD (home) | TM on HDD (offsite, monthly rotation) |
@@ -75,8 +75,8 @@ Note: enabling Recovery Key disables Apple-support-driven account recovery. Reco
 ### 1Password setup
 
 1. Sign up for 1Password Individual.
-2. Strong master password (long passphrase, store in 1Password Emergency Kit only).
-3. Do not enable separate TOTP for the 1Password account itself. The Secret Key plus master password are the design-level credentials, and storing 1Password's own TOTP inside 1Password creates a chicken-and-egg lockout on new devices. The Emergency Kit printout is the recovery path for new-device sign-in.
+2. Strong master password (long passphrase; memorize it only, never written on any Emergency Kit printout or card).
+3. Do not enable separate TOTP for the 1Password account itself. The Secret Key plus master password are the design-level credentials, and storing 1Password's own TOTP inside 1Password creates a chicken-and-egg lockout on new devices. The Emergency Kit printout provides the Secret Key for new-device sign-in (paired with the memorized master password).
 4. Download Emergency Kit PDF (Settings → Account → Save Emergency Kit). Print 2 copies. Same storage locations as Apple Recovery Key.
 5. Import from Apple Passwords: 1Password 8 → File → Import → Apple Passwords.
 6. Verify 20 random logins work via 1Password autofill.
@@ -88,8 +88,8 @@ Note: enabling Recovery Key disables Apple-support-driven account recovery. Reco
 Where each recovery credential lives, layered so nothing is stored inside the thing it unlocks and no credential sits in a loop:
 
 - **In 1Password:** every account's password and TOTP seed (except Apple, which is device-based, and 1Password itself), plus each account's backup codes as a secure note on its login item. Also the drive-encryption passwords, the iPhone-backup password, and the breakglass `.dmg` passphrase.
-- **On paper (Emergency Kit printouts + travel card), home safe + offsite:** the 1Password Secret Key and master password, the Apple Recovery Key, the backup codes for the accounts that recover everything (Google / recovery email at minimum, bank + brokerage ideally), and the drive-encryption passwords plus the breakglass `.dmg` passphrase. The recovery-anchor codes are duplicated here because both their TOTP and their codes otherwise live only in 1Password; the drive and `.dmg` passphrases are here so the drives and the breakglass export still open during a 1Password outage. An offline copy is the only breakglass if 1Password is unavailable.
-- **Memorized only:** the 1Password master password. Never stored digitally, never in any cloud, never inside 1Password.
+- **On paper (Emergency Kit printouts + travel card), home safe + offsite:** the 1Password Secret Key, the Apple Recovery Key, the backup codes for the accounts that recover everything (Google / recovery email at minimum, bank + brokerage ideally), and the drive-encryption passwords plus the breakglass `.dmg` passphrase. The recovery-anchor codes are duplicated here because both their TOTP and their codes otherwise live only in 1Password; the drive and `.dmg` passphrases are here so the drives and the breakglass export still open during a 1Password outage. An offline copy is the only breakglass if 1Password is unavailable.
+- **Memorized only:** the 1Password master password. Never written on any printout or card, never stored digitally, never in any cloud, never inside 1Password.
 
 Do not enable a separate TOTP second factor on the 1Password account itself: the Secret Key already serves as the possession factor, and a third required factor only deepens lockout risk in the all-devices-lost case (see 1Password setup step 3).
 
@@ -164,7 +164,7 @@ If short on time, the load-bearing three are the restore test, the 1Password Sec
 - [ ] Calendar + Reminders archive: Calendar → File → Export → Calendar Archive → save the `.icbu` (one bundle holds all calendars and reminders) to `~/Backups/Calendar/YYYY-Qn/`.
 - [ ] Restore test: pull 1 random file from Time Machine (home drive) and 1 file from the offsite drive after swap. Open and verify content.
 - [ ] Verify 1Password Emergency Kit Secret Key matches printed copy (read the printout, paste into a verify-only check).
-- [ ] 1Password breakglass export: Disk Utility → File → New Image → Blank Image, format APFS, encryption AES-256, strong passphrase, name `1pw-vault-YYYY-Qn`. Mount it, then 1Password → File → Export → save the `.1pux` into the mounted image (never to the Desktop first). Eject the image and move the `.dmg` to `~/Backups/1Password/YYYY-Qn/` so it rides Time Machine to both drives. Vendor-independent offline copy of the secrets themselves, for a 1Password service outage (the Emergency Kit only restores account access, which is useless if the service is down). The `.1pux` is double-encrypted at rest (your image passphrase plus APFS), so it stays protected even if the drive is unlocked. Store the image passphrase in 1Password and on the Emergency Kit printout. Delete the prior quarter's image after writing the new one.
+- [ ] 1Password breakglass export: Disk Utility → File → New Image → Blank Image, format APFS, encryption AES-256, the stable breakglass passphrase (recorded once on both Emergency Kit printouts and in 1Password, reused every quarter), name `1pw-vault-YYYY-Qn`. Mount it, then 1Password → File → Export → save the `.1pux` into the mounted image (never to the Desktop first). Eject the image and move the `.dmg` to `~/Backups/1Password/YYYY-Qn/` so it rides Time Machine to both drives. Vendor-independent offline copy of the secrets themselves, for a 1Password service outage (the Emergency Kit only restores account access, which is useless if the service is down). The `.1pux` is double-encrypted at rest (your image passphrase plus APFS), so it stays protected even if the drive is unlocked. Reuse the same passphrase every quarter so the offsite printout never goes stale; only the image contents rotate. Delete the prior quarter's image after writing the new one.
 - [ ] Confirm Apple Recovery Contacts are reachable (text them) and Recovery Key printouts are findable.
 
 ### Yearly (first weekend of January)
@@ -179,9 +179,11 @@ The plan is solid at home; a trip is where a single stolen device can cascade in
 
 - [ ] Sign 1Password into two devices carried separately (iPhone + iPad, or iPhone + Mac). Losing one device is then an inconvenience, not a lockout.
 - [ ] Bring a second Apple device signed into the Apple ID. It serves as a second trusted device for Apple two-factor and a second 1Password device at once.
-- [ ] Carry a sealed paper card, stored apart from the devices (money belt / hotel safe, never the phone case): 1Password Secret Key, Google backup codes, Apple Recovery Key. The master password stays memorized only, never written on the card, so the card alone is useless to a thief.
+- [ ] Carry a sealed paper card, stored apart from the devices (money belt / hotel safe, never the phone case): 1Password Secret Key, Google backup codes, Apple Recovery Key. The master password is never on the card, so the card alone is useless to a thief.
 - [ ] Confirm a second trusted phone number on the Apple ID (family member or travel eSIM) so an SMS factor survives losing the phone.
 - [ ] Confirm Contacts and Calendar are reachable from a browser (icloud.com and Google) in case a device must be borrowed.
+
+Residual: on the road the memorized master password is the single load-bearing credential. The breakglass `.dmg` is home/offsite only, so losing every carried device while the master password is blanked has no recovery until home. This is why the two-separately-carried-devices step above matters.
 
 ## Recovery playbook
 
@@ -190,13 +192,13 @@ The plan is solid at home; a trip is where a single stolen device can cascade in
 1. iCloud.com → Find Devices → mark device as lost; if confirmed gone, erase.
 2. On new iPhone: setup wizard → Restore from iCloud Backup (or local encrypted backup on Mac via Finder).
 3. Apple Watch re-pairs from iPhone during setup.
-4. Re-install 1Password app, sign in with master password plus Secret Key from Emergency Kit. TOTP codes for Google and every other service generate automatically from the synced 1Password vault.
+4. Re-install 1Password app, sign in with the Secret Key (from the Emergency Kit printout) plus the master password (from memory). TOTP codes for Google and every other service generate automatically from the synced 1Password vault.
 
 ### Mac broken
 
 1. Replacement Mac → boot → sign in to Apple ID.
 2. Migration Assistant → From a Mac, Time Machine backup, or Startup Disk → select the home drive (SSD). If the home drive destroyed too, retrieve HDD from offsite location.
-3. Install 1Password, sign in using master password + Secret Key from Emergency Kit.
+3. Install 1Password, sign in using the Secret Key (from the Emergency Kit printout) plus the master password (from memory).
 4. Re-add Time Machine destinations.
 5. Verify Apple Mail re-builds local message cache from Gmail.
 
@@ -241,9 +243,10 @@ The plan is solid at home; a trip is where a single stolen device can cascade in
 
 ### 1Password lockout (forgot master password OR Secret Key lost)
 
-1. Retrieve Emergency Kit printout from home safe or offsite copy.
-2. Sign in on a new device using Secret Key + master password slot from Emergency Kit.
-3. If both printed copies lost AND device cache empty: account is unrecoverable by design. Reset, rebuild from browser-saved logins and per-service password reset via email.
+1. Retrieve an Emergency Kit printout (home safe or offsite) for the Secret Key.
+2. Sign in on a new device using the Secret Key (from the printout) plus the master password (from memory).
+3. If the master password is forgotten but the secrets are still needed: open the latest breakglass `.dmg` (rides Time Machine to both drives, so the offsite drive has it) with its passphrase from the Emergency Kit printout (home safe or offsite). Recovers the stored passwords and TOTP without the 1Password master password.
+4. If the master password is forgotten AND there is no breakglass `.dmg` AND the device cache is empty: account is unrecoverable by design. Reset, rebuild from browser-saved logins and per-service password reset via email.
 
 ### Credential compromised (password or session leaked)
 

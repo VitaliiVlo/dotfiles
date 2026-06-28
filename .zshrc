@@ -1,3 +1,4 @@
+# Re-detect defensively: non-login interactive shells don't source .zprofile
 if [[ -z "${BREW_PREFIX:-}" ]]; then
   if [[ "$(uname -s)" == "Linux" ]]; then
     BREW_PREFIX="/home/linuxbrew/.linuxbrew"
@@ -31,6 +32,10 @@ alias kx='kubectx'
 alias kn='kubens'
 alias terraform='tofu'
 alias tf='tofu'
+
+# Per-machine aliases rendered by `make local-overrides` from .local/source.toml; keep the diff uncommitted
+# >>> local-overrides:aliases >>>
+# <<< local-overrides:aliases <<<
 
 if command -v bat &>/dev/null; then alias cat='bat'; fi
 

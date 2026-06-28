@@ -3,7 +3,6 @@
   "workbench.colorTheme": "Catppuccin Macchiato",
   "workbench.preferredDarkColorTheme": "Catppuccin Macchiato",
   "workbench.preferredLightColorTheme": "Catppuccin Latte",
-  "catppuccin.accentColor": "teal",
   "catppuccin.italicComments": true,
   "catppuccin.italicKeywords": true,
   "workbench.iconTheme": "material-icon-theme",
@@ -26,12 +25,12 @@
   // Window
   "window.autoDetectColorScheme": true,
   "window.commandCenter": false,
-  // pinned: dependents (commandCenter, layoutControl, navigationControl, activityBar.location) require custom title bar
+  // pinned (default): dependents (commandCenter, layoutControl, navigationControl, activityBar.location) require custom title bar
   "window.titleBarStyle": "custom",
   "window.zoomPerWindow": false,
   "window.zoomLevel": 0.5,
   // Font & Indentation
-  "editor.fontFamily": "'JetBrains Mono', 'Fira Code', 'Menlo', 'Monaco', 'Symbols Nerd Font Mono'",
+  "editor.fontFamily": "'JetBrains Mono', 'Fira Code', 'Symbols Nerd Font Mono'",
   "editor.fontSize": 14,
   "editor.lineHeight": 1.5,
   "editor.fontLigatures": true,
@@ -130,7 +129,7 @@
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
   // Terminal
-  "terminal.integrated.fontFamily": "'JetBrains Mono', 'Fira Code', 'Menlo', 'Monaco', 'Symbols Nerd Font Mono'",
+  "terminal.integrated.fontFamily": "'JetBrains Mono', 'Fira Code', 'Symbols Nerd Font Mono'",
   "terminal.integrated.cursorBlinking": true,
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.cursorWidth": 2,

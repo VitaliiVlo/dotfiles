@@ -2,7 +2,7 @@
 
 Non-obvious shortcuts and behaviors worth remembering for Fedora, Silverblue, Bluefin, Vanilla OS, Zorin OS, Ubuntu. Default assumption: **GNOME on Wayland** across the set. Atomic-specific notes (rpm-ostree / bootc / ABRoot / apx) live in [Distro-specific deltas](#distro-specific-deltas). `gsettings` recipes already applied by `make linux-defaults` are not repeated here, see `scripts/linux-defaults.sh`. macOS equivalents live in [`macos-tips.md`](macos-tips.md).
 
-Version baselines (snapshot, verify against each distro's releases page for the current version):
+Version baselines (snapshot, verify against [endoflife.date](https://endoflife.date) or each distro's releases page for the current version):
 
 | Stack                | Version baseline                                                                |
 | -------------------- | ------------------------------------------------------------------------------- |
@@ -297,7 +297,7 @@ Updates ride on `vso` (vanilla system operator); ABRoot keeps two parallel root 
 - Package manager: **`apx`**. `apx install <pkg>` defaults to a managed Distrobox subsystem (`apx list` to inspect). For host-level layering: `apx install --sysprefix vso-core <pkg>` writes into the next ABRoot deployment, reboot to apply. No direct host `apt` by default.
 - Updates: `vso update` (downloads to inactive root), reboot to apply. `vso config` for upgrade scheduling and channel pin. `vso trigger-update` for immediate check.
 - Wayland session ships default. NVIDIA users: prefer the **`vanilla-exp`** image variant for a newer driver stack.
-- GNOME 46 base lags the newer GNOME 50 on Fedora / Ubuntu; `vso update` may advance the host GNOME as the Vib pipeline cuts new Orchid images, so the gap depends on channel + update cadence rather than a fixed cycle count. Trade is atomic rollback safety + Debian package depth, not bleeding-edge GNOME features (HDR maturity, Tokyo polish).
+- GNOME 46 base lags current Fedora / Ubuntu GNOME; `vso update` may advance the host GNOME as the Vib pipeline cuts new Orchid images, so the gap depends on channel + update cadence rather than a fixed cycle count. Trade is atomic rollback safety + Debian package depth, not bleeding-edge GNOME features (HDR maturity, Tokyo polish).
 - Configs in this repo apply unchanged: XDG paths honored, `flatpak` + `brew` recommended for user-space tools.
 
 ### Zorin OS

@@ -237,6 +237,7 @@
   "fastModePerSessionOptIn": true,
   "showClearContextOnPlanAccept": true,
   "autoUpdatesChannel": "stable",
+  "tui": "fullscreen",
   "prefersReducedMotion": false,
   "showThinkingSummaries": true,
   "skipWorkflowUsageWarning": true

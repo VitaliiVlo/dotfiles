@@ -18,7 +18,7 @@ linux-defaults: ## Configure Linux/GNOME defaults: folders, input, Nautilus, des
 symlinks: ## Symlink configs to home directory
 	./scripts/symlinks.sh
 
-local-overrides: ## Render per-machine overrides from .local/source.toml into tracked git/zprofile/claude/codex configs
+local-overrides: ## Render per-machine overrides from .local/source.toml into tracked git/zprofile/claude/codex configs and .zshrc aliases
 	./scripts/local-overrides.py
 
 versions: ## Show installed Go, Node, Python versions
